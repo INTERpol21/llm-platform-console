@@ -9,6 +9,8 @@ export interface StreamResearchOptions {
   question: string;
   maxIterations?: number;
   threadId?: string | null;
+  /** Optional model override; forwarded to the gateway for this run. */
+  model?: string | null;
   signal?: AbortSignal;
   onOpen?: () => void;
   onEvent: (event: ResearchStreamEvent) => void;
@@ -18,7 +20,8 @@ export interface StreamResearchOptions {
 
 /** Open the research SSE stream and deliver typed, ordered domain events. */
 export function streamResearch(options: StreamResearchOptions): Promise<void> {
-  const { question, maxIterations, threadId, signal, onOpen, onEvent, onError, onClose } = options;
+  const { question, maxIterations, threadId, model, signal, onOpen, onEvent, onError, onClose } =
+    options;
 
   return streamSse({
     url: `${ORCHESTRATOR_BASE}/research/stream`,
@@ -27,6 +30,7 @@ export function streamResearch(options: StreamResearchOptions): Promise<void> {
       question,
       ...(maxIterations !== undefined ? { max_iterations: maxIterations } : {}),
       ...(threadId ? { thread_id: threadId } : {}),
+      ...(model ? { model } : {}),
     },
     signal,
     onOpen,

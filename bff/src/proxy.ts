@@ -95,7 +95,14 @@ export function createProxy(opts: ProxyOptions) {
     const method = c.req.method;
     const hasBody = !METHODS_WITHOUT_BODY.has(method);
 
-    const init: RequestInit & { duplex?: 'half' } = { method, headers };
+    // Bind the client's abort signal so a browser disconnect (navigation, or a
+    // stopped SSE stream) tears down the upstream fetch too — otherwise the
+    // orchestrator keeps streaming into a dead pipe and connections accumulate.
+    const init: RequestInit & { duplex?: 'half' } = {
+      method,
+      headers,
+      signal: c.req.raw.signal,
+    };
     if (hasBody) {
       init.body = c.req.raw.body;
       // Required by the fetch spec when streaming a request body.

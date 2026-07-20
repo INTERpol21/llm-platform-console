@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useMemo } from 'react';
 import { parseMarkdown } from '../../../shared/lib/index.ts';
 import type { InlineNode } from '../../../shared/lib/index.ts';
 import styles from './AnswerView.module.css';
@@ -51,7 +51,9 @@ function renderNode(
 
 /** Renders the research answer as light markdown with clickable [n] citations. */
 export function AnswerView({ text, citationCount, onCite }: AnswerViewProps) {
-  const blocks = parseMarkdown(text);
+  // During streaming `text` grows one token at a time; parsing it on every render
+  // is O(n²) over the answer length. Memoize so we only re-parse when it changes.
+  const blocks = useMemo(() => parseMarkdown(text), [text]);
   return (
     <div className={styles.answer} data-testid="answer">
       {blocks.map((block, blockIndex) => (

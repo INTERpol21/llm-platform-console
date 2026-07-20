@@ -27,12 +27,12 @@ export function formatUsd(amount: number | null | undefined): string {
 }
 
 /**
- * Format a percentage. Tolerates either a 0–100 percent value or a 0–1
- * fraction (values in `(0, 1]` are treated as fractions), matching the lenient
- * normalization the telemetry surfaces apply to open-object wire data.
+ * Format a percentage. The wire value is already percent-scale (`context_used_pct`
+ * is `total_tokens / context_window * 100`), so it is formatted directly — no
+ * fraction heuristic, which would misrender a genuine sub-1% value (e.g. `0.5`
+ * → `50%`). One decimal below 10% for resolution, whole numbers above.
  */
 export function formatPct(value: number | null | undefined): string {
   if (value === null || value === undefined || Number.isNaN(value)) return '—';
-  const pct = value > 0 && value <= 1 ? value * 100 : value;
-  return `${pct.toFixed(pct > 0 && pct < 10 ? 1 : 0)}%`;
+  return `${value.toFixed(value > 0 && value < 10 ? 1 : 0)}%`;
 }

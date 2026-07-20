@@ -5,6 +5,7 @@ import { applyEvent, initialRun, streamResearch } from '../../../entities/resear
 export interface StartOptions {
   maxIterations?: number;
   threadId?: string | null;
+  model?: string | null;
 }
 
 export interface ResearchStreamController {
@@ -50,6 +51,7 @@ export function useResearchStream(): ResearchStreamController {
         question,
         maxIterations: options?.maxIterations,
         threadId: options?.threadId ?? null,
+        model: options?.model ?? null,
         signal: controller.signal,
         onEvent: (event) => setRun((prev) => applyEvent(prev, event)),
         onError: () =>

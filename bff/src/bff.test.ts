@@ -13,6 +13,7 @@ interface Captured {
   method: string;
   headers: Headers;
   body: unknown;
+  signal: AbortSignal | null;
 }
 
 let captured: Captured[] = [];
@@ -26,6 +27,7 @@ function stubFetch(): void {
       method: init?.method ?? 'GET',
       headers: new Headers(init?.headers),
       body: init?.body ?? null,
+      signal: init?.signal ?? null,
     };
     captured.push(req);
     return responder(req);
@@ -173,6 +175,17 @@ describe('correlation id', () => {
     const echoed = res.headers.get('x-request-id');
     expect(echoed).toBeTruthy();
     expect(captured[0]?.headers.get('x-request-id')).toBe(echoed);
+  });
+});
+
+describe('client-disconnect propagation', () => {
+  it('binds an abort signal to the upstream fetch', async () => {
+    // Catches: a client disconnect (nav away / stopped SSE) leaving the upstream
+    // fetch running, so the orchestrator streams into a dead pipe and connections
+    // pile up. The proxy must pass the request's signal through to fetch.
+    const app = createApp(makeConfig());
+    await app.request('/api/orchestrator/research/stream', { method: 'POST', body: '{}' });
+    expect(captured[0]?.signal).toBeInstanceOf(AbortSignal);
   });
 });
 

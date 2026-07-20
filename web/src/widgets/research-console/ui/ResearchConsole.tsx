@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useModelCatalog } from '../../../entities/models/index.ts';
 import type { ResearchStatus } from '../../../entities/research/index.ts';
 import { QuestionForm, useResearchStream } from '../../../features/ask-research/index.ts';
-import { ModelSelect } from '../../../features/select-model/index.ts';
+import { ModelSelect, useSelectedModel } from '../../../features/select-model/index.ts';
 import { Badge, Card } from '../../../shared/ui/index.ts';
 import type { BadgeTone } from '../../../shared/ui/index.ts';
 import { AnswerView } from './AnswerView.tsx';
@@ -23,6 +23,7 @@ export function ResearchConsole() {
   const { t } = useTranslation();
   const { run, isStreaming, start, stop, reset } = useResearchStream();
   const { data: catalog } = useModelCatalog();
+  const selectedModelId = useSelectedModel((s) => s.selectedModelId);
   const [highlighted, setHighlighted] = useState<number | null>(null);
 
   const handleCite = useCallback((n: number) => {
@@ -55,7 +56,9 @@ export function ResearchConsole() {
             clear: t('research.clear'),
           }}
           isStreaming={isStreaming}
-          onSubmit={({ question, maxIterations }) => start(question, { maxIterations })}
+          onSubmit={({ question, maxIterations }) =>
+            start(question, { maxIterations, model: selectedModelId })
+          }
           onStop={stop}
           onClear={reset}
           toolbar={
