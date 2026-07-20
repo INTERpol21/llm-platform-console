@@ -58,9 +58,12 @@ jobs:
           for repo in llm-gateway rag-pgvector mcp-tools-server agent-orchestrator; do
             git clone --depth 1 "https://github.com/INTERpol21/$repo.git" "$repo"
           done
-      # No `version:` — pnpm/action-setup reads packageManager from package.json,
-      # so the pinned version lives in exactly one place.
+      # Reads packageManager from package.json, so the pinned version lives in
+      # exactly one place. This job checks the repo out into a subdirectory (the
+      # backends are cloned as siblings), so the action has to be pointed at it.
       - uses: pnpm/action-setup@v6
+        with:
+          package_json_file: llm-platform-console/package.json
       - uses: actions/setup-node@v7
         with:
           node-version: 26
