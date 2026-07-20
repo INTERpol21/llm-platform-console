@@ -97,7 +97,7 @@ services:
       GATEWAY_BASE_URL: http://gateway:8080/v1
       GATEWAY_API_KEY: ${PLATFORM_KEY:-demo-key}
       ORCHESTRATOR_MODEL: mock-small
-      RAG_BASE_URL: http://rag:8081
+      RAG_BASE_URL: http://rag:8081/v1
       RAG_API_KEY: ${PLATFORM_KEY:-demo-key}
       MCP_SERVER_URL: http://mcp:8082/mcp
       # Durable session state in its own schema, isolated from rag's tables.

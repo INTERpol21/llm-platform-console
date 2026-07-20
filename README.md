@@ -7,9 +7,9 @@ catalog with reachability pings, usage/cost, and a local-first knowledge base.
 ```
 browser ──► Caddy (single origin :8080)
                ├── /            → SPA static (web/)
-               └── /api/*       → BFF (Hono) ──► gateway :8080  /v1/*
-                                              ├─► rag :8081     /ingest /query /stats
-                                              └─► orchestrator :8083  /research(/stream) /research/history
+               └── /api/*       → BFF (Hono) ──► gateway :8080       /v1/*
+                                              ├─► rag :8081          /v1/ingest /v1/query /v1/stats
+                                              └─► orchestrator :8083 /v1/research(/stream) /v1/research/history
 ```
 
 The backends have **no CORS** and hold **no browser-safe keys**. The browser talks
@@ -82,6 +82,12 @@ Refresh a contract snapshot from a running/importable backend, then regenerate:
   result → stats, cursor-paginated.
 - **Mission control** — live health/readiness of all four backends + the BFF
   (polled through the single origin) and the M1–M5 delivery roadmap with status.
+
+## Обзор платформы
+
+This repo is the console. For the whole five-repo platform — what each service
+does, how they connect, and how to run them together — see
+[docs/PLATFORM_OVERVIEW.md](docs/PLATFORM_OVERVIEW.md).
 
 ## Architecture decisions & roadmap
 
