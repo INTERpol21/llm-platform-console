@@ -6,6 +6,7 @@ export const API_BASE = '/api';
 
 export const GATEWAY_BASE = `${API_BASE}/gateway/v1`;
 export const ORCHESTRATOR_BASE = `${API_BASE}/orchestrator`;
+export const RAG_BASE = `${API_BASE}/rag`;
 
 export const THEME_STORAGE_KEY = 'console.theme';
 export const LANG_STORAGE_KEY = 'console.lang';

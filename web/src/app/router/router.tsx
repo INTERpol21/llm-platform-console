@@ -1,6 +1,8 @@
 import { createRootRoute, createRoute, createRouter, redirect } from '@tanstack/react-router';
+import { KnowledgePage } from '../../pages/knowledge/index.ts';
 import { ModelsPage } from '../../pages/models/index.ts';
 import { ResearchPage } from '../../pages/research/index.ts';
+import { UsagePage } from '../../pages/usage/index.ts';
 import { RootLayout } from './RootLayout.tsx';
 
 const rootRoute = createRootRoute({ component: RootLayout });
@@ -25,7 +27,25 @@ const researchRoute = createRoute({
   component: ResearchPage,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, modelsRoute, researchRoute]);
+const usageRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/usage',
+  component: UsagePage,
+});
+
+const knowledgeRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/knowledge',
+  component: KnowledgePage,
+});
+
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  modelsRoute,
+  researchRoute,
+  usageRoute,
+  knowledgeRoute,
+]);
 
 export const router = createRouter({ routeTree });
 

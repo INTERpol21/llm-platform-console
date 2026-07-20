@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { Boxes, FlaskConical } from 'lucide-react';
+import { BookOpen, Boxes, FlaskConical, Receipt } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from '../../../features/switch-language/index.ts';
 import { ThemeSwitcher } from '../../../features/switch-theme/index.ts';
@@ -24,6 +24,14 @@ export function AppNav() {
         <Link to="/research" className={styles.link} activeProps={{ className: styles.active }}>
           <FlaskConical size={16} />
           {t('nav.research')}
+        </Link>
+        <Link to="/usage" className={styles.link} activeProps={{ className: styles.active }}>
+          <Receipt size={16} />
+          {t('nav.usage')}
+        </Link>
+        <Link to="/knowledge" className={styles.link} activeProps={{ className: styles.active }}>
+          <BookOpen size={16} />
+          {t('nav.knowledge')}
         </Link>
       </nav>
 
