@@ -1,6 +1,6 @@
 # BFF image. Context is the repo root so the pnpm workspace (contracts + bff)
 # resolves. Runs the Hono server via tsx.
-FROM node:22-slim
+FROM node:26-slim
 RUN corepack enable
 WORKDIR /app
 

@@ -1,6 +1,6 @@
 # Two-stage: build the SPA to static assets, then serve them from Caddy which
 # also reverse-proxies /api to the BFF (see infra/Caddyfile).
-FROM node:22-slim AS build
+FROM node:26-slim AS build
 RUN corepack enable
 WORKDIR /app
 COPY . .
