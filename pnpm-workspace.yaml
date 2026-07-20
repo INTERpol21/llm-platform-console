@@ -10,3 +10,10 @@ onlyBuiltDependencies:
   - "@biomejs/biome"
   - esbuild
   - es5-ext
+
+# Disables pnpm 11's default 24h supply-chain quarantine, which holds back any
+# version published within the last day. Deliberate: it blocked builds on
+# same-day releases and the delay was not wanted here. See
+# docs/adr/0011-no-minimum-release-age.md for the trade-off and what to do
+# instead. Set to a value in minutes (e.g. 60) to reinstate a shorter window.
+minimumReleaseAge: 0
