@@ -4,17 +4,26 @@ packages:
   - "web"
 
 # pnpm 11 no longer reads the "pnpm" field from package.json — settings live
-# here now. Without this, install fails with ERR_PNPM_IGNORED_BUILDS because
-# these packages need their build scripts to run.
+# here now. Postinstall scripts do not run unless a package is listed, so these
+# are the ones that genuinely need one: biome and esbuild both download a
+# platform binary at install time and are broken without it.
 onlyBuiltDependencies:
   - "@biomejs/biome"
   - esbuild
-  - es5-ext
+
+# Every package pnpm asks about must get an explicit yes or no, otherwise
+# `pnpm install` keeps appending an `allowBuilds:` stub to this file for a human
+# to fill in — which then lands in diffs and breaks the install if committed.
+# es5-ext's postinstall only prints a funding banner (it is wrapped in
+# try/catch and exits 0 either way), so nothing depends on it running.
+allowBuilds:
+  esbuild: true
+  es5-ext: false
 
 # pnpm 11 turns "a dependency's build script did not run" into a hard install
-# failure, including for packages we deliberately do not build. Config rather
-# than a per-command flag, so a plain `pnpm install` in CI behaves like the
-# image builds do.
+# failure. With allowBuilds above answering the question outright, this only
+# still matters for transitive packages that appear later — keeping it means a
+# new dependency does not break every build until someone triages it.
 strictDepBuilds: false
 
 # Disables pnpm 11's default 24h supply-chain quarantine, which holds back any
