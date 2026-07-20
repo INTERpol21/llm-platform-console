@@ -44,13 +44,13 @@ day, **L** ≈ multiple days.
       `minimumReleaseAge` rejecting a same-day `lightningcss` release, which clears
       by itself (~2026-07-21T05:11Z). Verify the suite once it does. **Size:** S,
       then keep green.
-- [ ] **Cover the cross-service links in CI.** The smoke script is the only thing
-      that exercises service-to-service wiring; all four unit suites use fakes, so
-      the `/v1` drift above shipped green. Add a CI job that boots the compose
-      stack and runs `scripts/platform_smoke.py`. **Size:** S.
-- [ ] **Tag `v0.1.0` + a CHANGELOG in each repo.** No repo carries a tag yet; a
-      first release tag and a short changelog are a cheap signal of process
-      maturity for a reader landing on the repos cold. **Size:** S.
+- [x] **Cover the cross-service links in CI.** Done — `scripts/platform_smoke.py`
+      runs in the `e2e` job against the live stack, and each backend now fails CI
+      when its exported `requirements.txt` drifts from `uv.lock`. Between them
+      these two gates reproduce every defect the first real run turned up.
+- [ ] **Tag `v0.1.0` in each repo.** CHANGELOGs are written and linked from the
+      READMEs; the tags themselves wait until these branches land on `main`.
+      **Size:** S.
 
 ## Next — real features (prioritized)
 
@@ -69,11 +69,10 @@ day, **L** ≈ multiple days.
       default-branch CI status and open PRs next to the roadmap. **Where:** BFF
       proxies the GitHub API (token server-side) → a `mission-control` widget.
       **Size:** M.
-- [ ] **`/v1/embeddings` passthrough (gateway).** The provider layer already has an
-      `embed` method (`gateway/app/providers/base.py`), but no route exposes it, so
-      `rag` still embeds in-process. Exposing it puts the whole platform behind one
-      entrypoint and lets rag swap to gateway-served embeddings by config. **Where:**
-      `gateway/app/api/routes/` + a rag embedder backend. **Size:** M.
+- [x] **`/v1/embeddings` passthrough (gateway).** Route shipped, sharing the
+      completions routing, fallbacks, breakers and cost accounting. What remains is
+      the other half: a `gateway` embedder backend in `rag` so it can fetch vectors
+      through the gateway instead of embedding in-process. **Size:** S.
 - [ ] **Parallel execution of independent plan steps (orchestrator).** Steps run
       sequentially today; fanning out independent ones with `asyncio.gather` cuts
       research latency on multi-step plans. **Where:** the step loop in
