@@ -1,0 +1,1 @@
+{"properties":{"id":{"type":"string","title":"Id"},"object":{"type":"string","title":"Object","default":"model"},"created":{"type":"integer","title":"Created"},"owned_by":{"type":"string","title":"Owned By","default":"llm-gateway"}},"type":"object","required":["id"],"title":"ModelInfo","description":"Entry of the /v1/models listing.","x-readme-ref-name":"ModelInfo"}

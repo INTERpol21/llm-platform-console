@@ -1,0 +1,27 @@
+/* App-wide element styling. Global CSS is confined to app/styles per FSD rules. */
+@import "./reset.css";
+@import "./tokens.css";
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  background-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+::selection {
+  background: var(--color-accent-soft);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: 999px;
+}

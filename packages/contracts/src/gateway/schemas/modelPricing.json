@@ -1,0 +1,1 @@
+{"properties":{"input_per_1k":{"type":"number","title":"Input Per 1K"},"output_per_1k":{"type":"number","title":"Output Per 1K"}},"type":"object","required":["input_per_1k","output_per_1k"],"title":"ModelPricing","description":"USD cost per 1k tokens for a model.","x-readme-ref-name":"ModelPricing"}

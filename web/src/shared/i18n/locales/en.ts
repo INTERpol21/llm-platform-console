@@ -1,0 +1,90 @@
+/** English bundle. `ru.ts` is typed against this object, so any missing key fails typecheck. */
+export const en = {
+  app: {
+    title: 'LLM Platform Console',
+  },
+  nav: {
+    models: 'Models',
+    research: 'Research',
+  },
+  theme: {
+    toggle: 'Toggle theme',
+    light: 'Light',
+    dark: 'Dark',
+  },
+  lang: {
+    toggle: 'Change language',
+    en: 'EN',
+    ru: 'RU',
+  },
+  common: {
+    retry: 'Retry',
+    loading: 'Loading…',
+    dismiss: 'Dismiss',
+  },
+  models: {
+    title: 'Model catalog',
+    subtitle: 'Aliased models available through the gateway.',
+    loading: 'Loading catalog…',
+    error: 'Could not load the model catalog.',
+    empty: 'No models are configured.',
+  },
+  model: {
+    provider: 'Provider',
+    latency: 'Latency',
+    context: 'Context',
+    pricingInput: 'In / 1k',
+    pricingOutput: 'Out / 1k',
+    streaming: 'Streaming',
+    fallbacks: 'Fallbacks',
+    tokensUnit: 'tok',
+  },
+  ping: {
+    action: 'Ping',
+    pinging: 'Pinging…',
+    reachable: 'Reachable',
+    unreachable: 'Unreachable',
+    configured: 'Configured',
+    notConfigured: 'Not configured',
+    lastChecked: 'Checked',
+    error: 'Ping failed',
+  },
+  selectModel: {
+    label: 'Model',
+    placeholder: 'Select a model',
+    none: 'No model selected',
+  },
+  research: {
+    title: 'Research console',
+    subtitle: 'Ask a question and watch the agent work in real time.',
+    questionLabel: 'Question',
+    questionPlaceholder: 'What would you like to research?',
+    maxIterationsLabel: 'Max iterations',
+    submit: 'Run research',
+    submitting: 'Running…',
+    stop: 'Stop',
+    clear: 'Clear',
+    traceTitle: 'Agent trace',
+    traceWaiting: 'Waiting for the agent…',
+    traceEmpty: 'The reasoning trace will appear here.',
+    answerTitle: 'Answer',
+    answerEmpty: 'The answer will appear here once the run completes.',
+    answerStreaming: 'Composing answer…',
+    evidenceTitle: 'Evidence',
+    evidenceEmpty: 'Cited sources will appear here.',
+    sourceRag: 'Knowledge base',
+    sourceWeb: 'Web',
+    score: 'Score',
+    iterations: 'Iterations',
+    statusIdle: 'Idle',
+    statusStreaming: 'Streaming',
+    statusDone: 'Done',
+    statusError: 'Error',
+    errorGeneric: 'Something went wrong during the research run.',
+    errorStream: 'The stream was interrupted.',
+  },
+} as const;
+
+export type Resources = {
+  [Namespace in keyof typeof en]: { [Key in keyof (typeof en)[Namespace]]: string };
+};

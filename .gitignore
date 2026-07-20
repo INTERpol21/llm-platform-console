@@ -1,0 +1,14 @@
+node_modules/
+dist/
+build/
+coverage/
+*.local
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+.vite/
+web/src/shared/api/generated/
+playwright-report/
+test-results/

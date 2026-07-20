@@ -1,0 +1,28 @@
+{
+  "name": "@console/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "OpenAPI snapshots of the platform backends + generated TS types and Zod schemas (single source of truth, no schema drift).",
+  "exports": {
+    ".": "./src/index.ts",
+    "./gateway": "./src/gateway/index.ts",
+    "./rag": "./src/rag/index.ts",
+    "./orchestrator": "./src/orchestrator/index.ts"
+  },
+  "scripts": {
+    "generate": "kubb generate --config kubb.config.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@kubb/cli": "^3.5.0",
+    "@kubb/core": "^3.5.0",
+    "@kubb/plugin-oas": "^3.5.0",
+    "@kubb/plugin-ts": "^3.5.0",
+    "@kubb/plugin-zod": "^3.5.0",
+    "typescript": "^5.7.2"
+  }
+}

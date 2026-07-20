@@ -1,0 +1,30 @@
+# Single origin for the whole console. Serves the SPA and proxies /api/* to the
+# BFF, streaming SSE without buffering. This is why the browser needs no CORS.
+:80 {
+	encode gzip
+
+	# API → BFF. SSE trace must stream: disable flush buffering on this handler.
+	handle /api/* {
+		reverse_proxy bff:8787 {
+			flush_interval -1
+			header_up X-Request-ID {http.request.header.X-Request-ID}
+		}
+	}
+
+	# SPA static assets + client-side routing fallback.
+	handle {
+		root * /srv
+		try_files {path} /index.html
+		file_server
+	}
+
+	# Baseline security headers. CSP kept strict but self-hostable (inline styles
+	# allowed for CSS-in-head; adjust if you add third-party origins).
+	header {
+		Content-Security-Policy "default-src 'self'; connect-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; frame-ancestors 'none'; base-uri 'self'"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		X-Frame-Options "DENY"
+		-Server
+	}
+}

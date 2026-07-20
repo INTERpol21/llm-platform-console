@@ -1,0 +1,121 @@
+/*
+ * Design tokens — restrained "blueprint / engineering" theme.
+ * Light is the default; dark is applied via an explicit data-theme attribute
+ * and also honoured from the OS preference when no explicit choice is stored.
+ */
+:root {
+  /* Type */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Menlo, Consolas, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-md: 0.9375rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-8: 3rem;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  --border-width: 1px;
+
+  /* Blueprint grid accent used on panels */
+  --grid-line: rgba(37, 99, 235, 0.06);
+
+  /* Light palette */
+  --color-bg: #f5f7fa;
+  --color-surface: #ffffff;
+  --color-surface-2: #eef2f7;
+  --color-border: #d3dbe6;
+  --color-border-strong: #b6c2d4;
+  --color-text: #0f1b2d;
+  --color-text-muted: #5a6b82;
+  --color-text-faint: #8a99ad;
+  --color-accent: #2563eb;
+  --color-accent-hover: #1d4ed8;
+  --color-accent-soft: rgba(37, 99, 235, 0.1);
+  --color-on-accent: #ffffff;
+
+  --color-ok: #16794a;
+  --color-ok-soft: rgba(22, 121, 74, 0.12);
+  --color-warn: #a15c07;
+  --color-warn-soft: rgba(161, 92, 7, 0.12);
+  --color-danger: #b3261e;
+  --color-danger-soft: rgba(179, 38, 30, 0.12);
+
+  --shadow-sm: 0 1px 2px rgba(15, 27, 45, 0.06);
+  --shadow-md: 0 4px 16px rgba(15, 27, 45, 0.08);
+
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --grid-line: rgba(96, 165, 250, 0.07);
+
+  --color-bg: #0b1220;
+  --color-surface: #111a2b;
+  --color-surface-2: #16213a;
+  --color-border: #26344f;
+  --color-border-strong: #35486b;
+  --color-text: #e6edf7;
+  --color-text-muted: #9fb0c9;
+  --color-text-faint: #6b7d99;
+  --color-accent: #4f8cff;
+  --color-accent-hover: #6ba0ff;
+  --color-accent-soft: rgba(79, 140, 255, 0.16);
+  --color-on-accent: #06101f;
+
+  --color-ok: #4ade80;
+  --color-ok-soft: rgba(74, 222, 128, 0.14);
+  --color-warn: #fbbf24;
+  --color-warn-soft: rgba(251, 191, 36, 0.14);
+  --color-danger: #f87171;
+  --color-danger-soft: rgba(248, 113, 113, 0.14);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 6px 24px rgba(0, 0, 0, 0.5);
+
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --grid-line: rgba(96, 165, 250, 0.07);
+
+    --color-bg: #0b1220;
+    --color-surface: #111a2b;
+    --color-surface-2: #16213a;
+    --color-border: #26344f;
+    --color-border-strong: #35486b;
+    --color-text: #e6edf7;
+    --color-text-muted: #9fb0c9;
+    --color-text-faint: #6b7d99;
+    --color-accent: #4f8cff;
+    --color-accent-hover: #6ba0ff;
+    --color-accent-soft: rgba(79, 140, 255, 0.16);
+    --color-on-accent: #06101f;
+
+    --color-ok: #4ade80;
+    --color-ok-soft: rgba(74, 222, 128, 0.14);
+    --color-warn: #fbbf24;
+    --color-warn-soft: rgba(251, 191, 36, 0.14);
+    --color-danger: #f87171;
+    --color-danger-soft: rgba(248, 113, 113, 0.14);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 6px 24px rgba(0, 0, 0, 0.5);
+
+    color-scheme: dark;
+  }
+}
