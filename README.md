@@ -83,11 +83,12 @@ Refresh a contract snapshot from a running/importable backend, then regenerate:
 - **Mission control** — live health/readiness of all four backends + the BFF
   (polled through the single origin) and the M1–M5 delivery roadmap with status.
 
-## Architecture decisions
+## Architecture decisions & roadmap
 
 The platform-wide ADRs (polyrepo+contracts, single Postgres/schemas, checkpointer,
 FSD, backend skeleton, Kubb, unified `/v1`, single-origin BFF, prompt-injection
-fencing, CSS Modules) live in [`docs/adr/`](docs/adr/README.md).
+fencing, CSS Modules) live in [`docs/adr/`](docs/adr/README.md). What's shipped and
+what's next — prioritized — is in [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ## Status
 
