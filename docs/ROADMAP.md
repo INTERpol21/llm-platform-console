@@ -24,16 +24,33 @@ day, **L** ≈ multiple days.
 - **Quality:** jsdom axe a11y gate + Playwright e2e harness; deps current
   (Biome 2, Vite 8, Vitest 4, Zod 4, Kubb 4, React 19); ADRs (10) + CONTRIBUTING
   in every repo.
+- **Runs for real (2026-07-20):** the whole 8-container stack builds and comes up
+  healthy on a laptop, with `scripts/platform_smoke.py` green 10/10 both direct
+  and through Caddy+BFF. Getting there took six fixes that no unit suite caught,
+  because every suite mocks its neighbours: two lockfile/dependency drifts, a
+  missing `/v1` in the orchestrator's RAG client (every retrieval 404'd, and the
+  agent degraded quietly into evidence-free answers), and three pnpm 11
+  breakages that had left the BFF and web images never-built.
 
 ## Now — unblock and close out (small actions)
 
 - [x] **Publish the console repo & push.** Done — the repo is at
       `INTERpol21/llm-platform-console` and `main` is pushed.
-- [ ] **Run the umbrella e2e for real.** Playwright + axe are wired
-      (`web/e2e`, CI `e2e` job) but the sandbox proxy blocks Docker Hub's blob CDN
-      (CloudFront 403), so `docker compose up --build` can't pull base images.
-      Runs where Docker Hub is reachable (GitHub CI on the first PR). **Size:** S
-      (verify), then keep green.
+- [x] **Bring the stack up for real.** Done 2026-07-20 — see the delivered
+      snapshot above for what it found.
+- [ ] **Run the browser e2e for real.** Playwright + axe are wired (`web/e2e`, CI
+      `e2e` job) but have never actually run — the web image did not build until
+      now. A clean `docker compose build` is still blocked by pnpm's
+      `minimumReleaseAge` rejecting a same-day `lightningcss` release, which clears
+      by itself (~2026-07-21T05:11Z). Verify the suite once it does. **Size:** S,
+      then keep green.
+- [x] **Cover the cross-service links in CI.** Done — `scripts/platform_smoke.py`
+      runs in the `e2e` job against the live stack, and each backend now fails CI
+      when its exported `requirements.txt` drifts from `uv.lock`. Between them
+      these two gates reproduce every defect the first real run turned up.
+- [ ] **Tag `v0.1.0` in each repo.** CHANGELOGs are written and linked from the
+      READMEs; the tags themselves wait until these branches land on `main`.
+      **Size:** S.
 
 ## Next — real features (prioritized)
 
@@ -51,6 +68,19 @@ day, **L** ≈ multiple days.
 - [ ] **GitHub branch/CI status in Mission-control.** Read-only: show each repo's
       default-branch CI status and open PRs next to the roadmap. **Where:** BFF
       proxies the GitHub API (token server-side) → a `mission-control` widget.
+      **Size:** M.
+- [x] **`/v1/embeddings` passthrough (gateway).** Route shipped, sharing the
+      completions routing, fallbacks, breakers and cost accounting. What remains is
+      the other half: a `gateway` embedder backend in `rag` so it can fetch vectors
+      through the gateway instead of embedding in-process. **Size:** S.
+- [ ] **Parallel execution of independent plan steps (orchestrator).** Steps run
+      sequentially today; fanning out independent ones with `asyncio.gather` cuts
+      research latency on multi-step plans. **Where:** the step loop in
+      `agent-orchestrator/app/services`. **Size:** M.
+- [ ] **Bearer auth on the MCP streamable-http transport.** `mcp-tools-server` is
+      unauthenticated over HTTP (deliberate for the offline demo); the tools are
+      reachable by anyone who can hit the port. Gate it behind the same `demo-key`
+      layer as the other services. **Where:** `mcp-tools-server/app/server.py`.
       **Size:** M.
 - [ ] **Trivy image scan in CI.** Add image/filesystem CVE scanning to complement
       pip-audit/bandit/CodeQL. **Where:** a CI job per repo (and the console).
@@ -79,8 +109,14 @@ day, **L** ≈ multiple days.
 
 ## Known constraints (environment, not code)
 
-- The dev sandbox runs a Docker daemon but its egress proxy blocks Docker Hub's
-  blob CDN — image pulls 403, so the umbrella stack builds only where Docker Hub
-  is reachable (developer laptop, GitHub CI).
+- The cloud dev sandbox runs a Docker daemon but its egress proxy blocks Docker
+  Hub's blob CDN — image pulls 403 there. On a developer laptop Docker Hub is
+  reachable and the backend stack builds and runs (verified 2026-07-20); only the
+  web/Caddy image is still blocked, by the pnpm release-age policy above.
+- In the umbrella stack the backends are **not** published on the host: Caddy owns
+  `:8080` and everything else is reached through it via the BFF. To hit a backend
+  directly (e.g. for the smoke script's `--direct` mode) publish its port with a
+  compose override; `SMOKE_*_PORT` env vars let the script follow a remapped port
+  when another local dev server already owns 8080-8083.
 - The GitHub integration has push access to existing repos but not repo-creation;
   new repos must be created by a human first.

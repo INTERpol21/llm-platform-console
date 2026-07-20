@@ -7,9 +7,9 @@ catalog with reachability pings, usage/cost, and a local-first knowledge base.
 ```
 browser ──► Caddy (single origin :8080)
                ├── /            → SPA static (web/)
-               └── /api/*       → BFF (Hono) ──► gateway :8080  /v1/*
-                                              ├─► rag :8081     /ingest /query /stats
-                                              └─► orchestrator :8083  /research(/stream) /research/history
+               └── /api/*       → BFF (Hono) ──► gateway :8080       /v1/*
+                                              ├─► rag :8081          /v1/ingest /v1/query /v1/stats
+                                              └─► orchestrator :8083 /v1/research(/stream) /v1/research/history
 ```
 
 The backends have **no CORS** and hold **no browser-safe keys**. The browser talks
@@ -83,6 +83,12 @@ Refresh a contract snapshot from a running/importable backend, then regenerate:
 - **Mission control** — live health/readiness of all four backends + the BFF
   (polled through the single origin) and the M1–M5 delivery roadmap with status.
 
+## Обзор платформы
+
+This repo is the console. For the whole five-repo platform — what each service
+does, how they connect, and how to run them together — see
+[docs/PLATFORM_OVERVIEW.md](docs/PLATFORM_OVERVIEW.md).
+
 ## Architecture decisions & roadmap
 
 The platform-wide ADRs (polyrepo+contracts, single Postgres/schemas, checkpointer,
@@ -107,10 +113,14 @@ umbrella stack in the `e2e` CI job — it drives boot → route → streamed res
 → a11y scan. The unit gate needs no services; the e2e job brings the stack up
 with `docker compose --wait` (needs Docker Hub reachable).
 
-Remaining (M5): running the e2e job in an environment where Docker Hub base
-images are pullable, and wiring the backend promptfoo (OWASP-LLM) eval into CI.
+The promptfoo (OWASP-LLM) eval is wired into the rag repo's CI. Remaining (M5):
+running the browser e2e job, which needs Docker Hub base images to be pullable.
 Dependencies are current as of 2026-07 (Biome 2, Vite 8, Vitest 4, Zod 4 + Kubb 4,
 React 19); TypeScript is held at 5.9 until the tsgo/TS7 toolchain certifies.
 
 > Versions target the plan's stack (React 19, Vite, TanStack Router/Query, Zod).
 > TypeScript is pinned to a stable 5.x for a reliable build; a TS 7 bump is tracked.
+
+## Releases
+
+Version history is in [CHANGELOG.md](CHANGELOG.md).
