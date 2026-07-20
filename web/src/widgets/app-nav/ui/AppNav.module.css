@@ -44,7 +44,9 @@
   font-size: var(--text-sm);
   font-weight: 500;
   color: var(--color-text-muted);
-  transition: color 0.15s ease, background-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
 }
 
 .link:hover {

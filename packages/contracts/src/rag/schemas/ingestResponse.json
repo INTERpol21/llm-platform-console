@@ -1,1 +1,11 @@
-{"properties":{"document_ids":{"items":{"type":"string"},"type":"array","title":"Document Ids"},"chunks_indexed":{"type":"integer","title":"Chunks Indexed"},"skipped":{"type":"integer","title":"Skipped"}},"type":"object","required":["document_ids","chunks_indexed","skipped"],"title":"IngestResponse","x-readme-ref-name":"IngestResponse"}
+{
+  "properties": {
+    "document_ids": { "items": { "type": "string" }, "type": "array", "title": "Document Ids" },
+    "chunks_indexed": { "type": "integer", "title": "Chunks Indexed" },
+    "skipped": { "type": "integer", "title": "Skipped" }
+  },
+  "type": "object",
+  "required": ["document_ids", "chunks_indexed", "skipped"],
+  "title": "IngestResponse",
+  "x-readme-ref-name": "IngestResponse"
+}

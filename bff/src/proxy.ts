@@ -3,7 +3,7 @@
  *
  * One handler per backend group. It strips the `/api/<svc>` mount prefix,
  * injects the platform Bearer key (replacing any browser-supplied
- * Authorization), forwards method/query/headers/body, propagates a correlation
+ * Authorization), forwards method/query/headers/body, propagates a request
  * id, and returns the upstream status + body. SSE bodies are streamed through
  * untouched with buffering disabled so traces arrive live.
  */
@@ -19,7 +19,7 @@ export interface ProxyOptions {
   readonly key: string;
 }
 
-export const CORRELATION_HEADER = 'x-request-id';
+export const REQUEST_ID_HEADER = 'x-request-id';
 
 /**
  * Hop-by-hop headers (RFC 7230 6.1) plus framing headers that must not be
@@ -43,23 +43,23 @@ function isSse(contentType: string | null): boolean {
 }
 
 /** Build the request headers sent upstream. */
-function buildRequestHeaders(c: Context, opts: ProxyOptions, correlationId: string): Headers {
+function buildRequestHeaders(c: Context, opts: ProxyOptions, requestId: string): Headers {
   const out = new Headers();
   c.req.raw.headers.forEach((value, name) => {
     const lower = name.toLowerCase();
     if (HOP_BY_HOP.has(lower)) return;
     // Drop any browser-supplied Authorization; we inject the platform key below.
     if (lower === 'authorization') return;
-    if (lower === CORRELATION_HEADER) return;
+    if (lower === REQUEST_ID_HEADER) return;
     out.set(name, value);
   });
   out.set('authorization', `Bearer ${opts.key}`);
-  out.set(CORRELATION_HEADER, correlationId);
+  out.set(REQUEST_ID_HEADER, requestId);
   return out;
 }
 
 /** Build the response headers returned to the browser. */
-function buildResponseHeaders(upstream: Response, correlationId: string): Headers {
+function buildResponseHeaders(upstream: Response, requestId: string): Headers {
   const out = new Headers();
   upstream.headers.forEach((value, name) => {
     const lower = name.toLowerCase();
@@ -68,7 +68,7 @@ function buildResponseHeaders(upstream: Response, correlationId: string): Header
     if (lower === 'content-encoding') return;
     out.set(name, value);
   });
-  out.set(CORRELATION_HEADER, correlationId);
+  out.set(REQUEST_ID_HEADER, requestId);
 
   if (isSse(upstream.headers.get('content-type'))) {
     // Defeat reverse-proxy buffering (nginx et al.) so events flush live.
@@ -89,8 +89,8 @@ export function createProxy(opts: ProxyOptions) {
     if (path === '') path = '/';
     const target = `${opts.base}${path}${incoming.search}`;
 
-    const correlationId = c.req.header(CORRELATION_HEADER) ?? crypto.randomUUID();
-    const headers = buildRequestHeaders(c, opts, correlationId);
+    const requestId = c.req.header(REQUEST_ID_HEADER) ?? crypto.randomUUID();
+    const headers = buildRequestHeaders(c, opts, requestId);
 
     const method = c.req.method;
     const hasBody = !METHODS_WITHOUT_BODY.has(method);
@@ -116,11 +116,11 @@ export function createProxy(opts: ProxyOptions) {
       // Never surface backend URLs/keys; just report the gateway failure.
       const message = err instanceof Error ? err.message : 'upstream fetch failed';
       return c.json({ error: 'bad_gateway', detail: message }, 502, {
-        [CORRELATION_HEADER]: correlationId,
+        [REQUEST_ID_HEADER]: requestId,
       });
     }
 
-    const responseHeaders = buildResponseHeaders(upstream, correlationId);
+    const responseHeaders = buildResponseHeaders(upstream, requestId);
 
     // Stream the body straight through (SSE or otherwise) — no buffering.
     return new Response(upstream.body, {

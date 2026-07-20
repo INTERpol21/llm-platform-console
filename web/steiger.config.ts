@@ -17,11 +17,14 @@ export default defineConfig([
   {
     // Advisory (non-boundary) rules that don't fit a compact, single-consumer console:
     //  - insignificant-slice: every widget/feature here has exactly one caller by design;
-    //  - inconsistent-naming: entity slice names ("models", "research") are intentional.
+    //  - inconsistent-naming: entity slice names ("models", "research") are intentional;
+    //  - segments-by-purpose: `app/providers` is the conventional app-layer segment name
+    //    (the app layer is initialization, not standard purpose-named segments).
     // All import-direction / public-API boundary rules remain enabled.
     rules: {
       'fsd/insignificant-slice': 'off',
       'fsd/inconsistent-naming': 'off',
+      'fsd/segments-by-purpose': 'off',
     },
   },
 ]);

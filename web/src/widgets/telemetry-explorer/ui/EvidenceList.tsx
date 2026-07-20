@@ -21,7 +21,12 @@ export function EvidenceList({ items, labels }: EvidenceListProps) {
         const n = index + 1;
         const sourceLabel = item.source === 'web' ? labels.sourceWeb : labels.sourceRag;
         return (
-          <li key={`${item.ref}-${index}`} className={styles.card} data-testid="evidence-item">
+          <li
+            // biome-ignore lint/suspicious/noArrayIndexKey: evidence is positional — index is the citation [n] identity
+            key={`${item.ref}-${index}`}
+            className={styles.card}
+            data-testid="evidence-item"
+          >
             <div className={styles.head}>
               <span className={styles.index}>[{n}]</span>
               <Badge tone={item.source === 'web' ? 'accent' : 'neutral'} data-testid="source-badge">

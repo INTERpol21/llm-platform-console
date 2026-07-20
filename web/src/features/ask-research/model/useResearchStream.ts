@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { ResearchRun } from '../../../entities/research/index.ts';
+import type { ResearchRunState } from '../../../entities/research/index.ts';
 import { applyEvent, initialRun, streamResearch } from '../../../entities/research/index.ts';
 
 export interface StartOptions {
@@ -9,7 +9,7 @@ export interface StartOptions {
 }
 
 export interface ResearchStreamController {
-  run: ResearchRun;
+  run: ResearchRunState;
   isStreaming: boolean;
   start: (question: string, options?: StartOptions) => void;
   stop: () => void;
@@ -18,11 +18,11 @@ export interface ResearchStreamController {
 
 /**
  * Drives one research run: owns the abort controller and folds the ordered
- * event stream into `ResearchRun`. A transport failure flips status to `error`
+ * event stream into `ResearchRunState`. A transport failure flips status to `error`
  * without throwing, so the UI never crashes mid-stream.
  */
 export function useResearchStream(): ResearchStreamController {
-  const [run, setRun] = useState<ResearchRun>(() => initialRun());
+  const [run, setRun] = useState<ResearchRunState>(() => initialRun());
   const controllerRef = useRef<AbortController | null>(null);
 
   const abort = useCallback(() => {

@@ -1,8 +1,8 @@
 import { AlertTriangle } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ModelCard, useModelCatalog } from '../../../entities/models/index.ts';
 import type { CatalogEntry, ModelCardLabels, PingResult } from '../../../entities/models/index.ts';
+import { ModelCard, useModelCatalog } from '../../../entities/models/index.ts';
 import { PingButton } from '../../../features/ping-model/index.ts';
 import { Button, Spinner } from '../../../shared/ui/index.ts';
 import styles from './ModelCatalog.module.css';

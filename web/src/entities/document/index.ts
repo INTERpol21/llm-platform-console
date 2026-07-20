@@ -1,24 +1,24 @@
+export {
+  documentKeys,
+  fetchStats,
+  ingestDocuments,
+  queryKnowledge,
+  useIngest,
+  useKnowledgeQuery,
+  useStats,
+} from './api/documents.ts';
+export { normalizeStats } from './model/stats.ts';
 export type {
   CitationOut,
   DocumentIn,
   DocumentInSourceEnum,
   IngestRequest,
   IngestResponse,
+  KnowledgeStats,
   QueryRequest,
   QueryRequestSourcesEnum,
   QueryResponse,
   RetrievedChunkOut,
   StatsResponse,
   StatsV1StatsGet200,
-  KnowledgeStats,
 } from './model/types.ts';
-export { normalizeStats } from './model/stats.ts';
-export {
-  documentKeys,
-  ingestDocuments,
-  queryKnowledge,
-  fetchStats,
-  useIngest,
-  useKnowledgeQuery,
-  useStats,
-} from './api/documents.ts';

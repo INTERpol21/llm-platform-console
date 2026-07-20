@@ -5,8 +5,8 @@
  */
 
 import { getConnInfo } from '@hono/node-server/conninfo';
-import { Hono } from 'hono';
 import type { Context } from 'hono';
+import { Hono } from 'hono';
 import { type Config, config as defaultConfig } from './config.ts';
 import { createProxy } from './proxy.ts';
 import { RateLimiter } from './rate-limit.ts';

@@ -64,7 +64,7 @@ describe('UsageDashboard', () => {
   it('renders stat tiles and a chart from the mocked usage report', async () => {
     // Catches: totals not aggregated/normalized, or the chart never mounting —
     // i.e. the whole usage surface silently rendering blank.
-    const { container } = renderWithProviders(<UsageDashboard />);
+    renderWithProviders(<UsageDashboard />);
 
     // Stat tiles: derived totals with the app's own deterministic formatters.
     expect(await screen.findByText('63')).toBeInTheDocument();

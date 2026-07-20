@@ -1,7 +1,7 @@
 import { Database, Zap } from 'lucide-react';
 import { formatMs, formatPct, formatTokens, formatUsd } from '../../../shared/lib/index.ts';
-import { Badge } from '../../../shared/ui/index.ts';
 import type { BadgeTone } from '../../../shared/ui/index.ts';
+import { Badge } from '../../../shared/ui/index.ts';
 import type { ModelRun } from '../model/types.ts';
 import styles from './ModelRunRow.module.css';
 

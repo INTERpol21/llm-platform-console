@@ -1,1 +1,14 @@
-{"properties":{"chunk_id":{"type":"string","title":"Chunk Id"},"document_id":{"type":"string","title":"Document Id"},"title":{"type":"string","title":"Title"},"ord":{"type":"integer","title":"Ord"},"score":{"type":"number","title":"Score"},"source":{"type":"string","title":"Source","default":"local"}},"type":"object","required":["chunk_id","document_id","title","ord","score"],"title":"RetrievedChunkOut","x-readme-ref-name":"RetrievedChunkOut"}
+{
+  "properties": {
+    "chunk_id": { "type": "string", "title": "Chunk Id" },
+    "document_id": { "type": "string", "title": "Document Id" },
+    "title": { "type": "string", "title": "Title" },
+    "ord": { "type": "integer", "title": "Ord" },
+    "score": { "type": "number", "title": "Score" },
+    "source": { "type": "string", "title": "Source", "default": "local" }
+  },
+  "type": "object",
+  "required": ["chunk_id", "document_id", "title", "ord", "score"],
+  "title": "RetrievedChunkOut",
+  "x-readme-ref-name": "RetrievedChunkOut"
+}

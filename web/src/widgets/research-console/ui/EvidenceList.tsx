@@ -23,6 +23,7 @@ export function EvidenceList({ items, labels, highlighted }: EvidenceListProps) 
         const sourceLabel = item.source === 'web' ? labels.sourceWeb : labels.sourceRag;
         return (
           <li
+            // biome-ignore lint/suspicious/noArrayIndexKey: evidence is positional — index is the citation [n] identity
             key={`${item.ref}-${index}`}
             id={`evidence-${n}`}
             className={n === highlighted ? `${styles.card} ${styles.active}` : styles.card}

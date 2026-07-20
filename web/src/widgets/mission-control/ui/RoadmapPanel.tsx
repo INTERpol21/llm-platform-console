@@ -1,7 +1,7 @@
 import { CircleCheck, CircleDashed, CircleDot } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Badge } from '../../../shared/ui/index.ts';
 import type { BadgeTone } from '../../../shared/ui/index.ts';
+import { Badge } from '../../../shared/ui/index.ts';
 import styles from './RoadmapPanel.module.css';
 
 type MilestoneStatus = 'done' | 'active' | 'planned';

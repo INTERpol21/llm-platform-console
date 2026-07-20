@@ -1,7 +1,7 @@
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { parseResearchEvent } from '../entities/research/index.ts';
 import type { ResearchStreamEvent } from '../entities/research/index.ts';
+import { parseResearchEvent } from '../entities/research/index.ts';
 import { streamSse } from '../shared/api/index.ts';
 
 vi.mock('@microsoft/fetch-event-source', () => ({

@@ -10,7 +10,9 @@
   border-radius: var(--radius-md);
   background-color: var(--color-surface);
   scroll-margin-top: var(--space-5);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .active {

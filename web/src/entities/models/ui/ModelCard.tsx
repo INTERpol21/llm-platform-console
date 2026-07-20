@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { formatMs, formatTokens, formatUsd } from '../../../shared/lib/index.ts';
-import { Badge, Card } from '../../../shared/ui/index.ts';
 import type { BadgeTone } from '../../../shared/ui/index.ts';
+import { Badge, Card } from '../../../shared/ui/index.ts';
 import type { CatalogEntry, PingResult } from '../model/types.ts';
 import styles from './ModelCard.module.css';
 

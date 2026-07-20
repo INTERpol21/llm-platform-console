@@ -1,8 +1,8 @@
 // Re-export the generated backend contract types — never redefined here.
 export type {
-  ResearchRunsPage as ResearchRunsWirePage,
-  ResearchRunOut,
   Evidence,
+  ResearchRunOut,
+  ResearchRunsPage as ResearchRunsWirePage,
 } from '@console/contracts/orchestrator';
 
 import type { Evidence } from '@console/contracts/orchestrator';

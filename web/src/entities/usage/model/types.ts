@@ -1,8 +1,8 @@
 // Re-export the generated backend contract types — never redefined here.
 export type {
-  UsageReportV1UsageGet200,
-  UsageReport,
   UsageModelRow as UsageModelRowWire,
+  UsageReport,
+  UsageReportV1UsageGet200,
 } from '@console/contracts/gateway';
 
 /** One model's slice of the usage report, projected to the fields the UI shows. */

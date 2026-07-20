@@ -1,11 +1,11 @@
-export { useResearchStream } from './model/useResearchStream.ts';
 export type {
   ResearchStreamController,
   StartOptions,
 } from './model/useResearchStream.ts';
-export { QuestionForm } from './ui/QuestionForm.tsx';
+export { useResearchStream } from './model/useResearchStream.ts';
 export type {
-  QuestionFormProps,
   QuestionFormLabels,
+  QuestionFormProps,
   QuestionFormValues,
 } from './ui/QuestionForm.tsx';
+export { QuestionForm } from './ui/QuestionForm.tsx';

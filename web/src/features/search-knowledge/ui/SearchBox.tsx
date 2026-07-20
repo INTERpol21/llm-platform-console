@@ -2,8 +2,8 @@ import { Search } from 'lucide-react';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
 import { useKnowledgeQuery } from '../../../entities/document/index.ts';
-import { Badge, Button, Spinner } from '../../../shared/ui/index.ts';
 import type { BadgeTone } from '../../../shared/ui/index.ts';
+import { Badge, Button, Spinner } from '../../../shared/ui/index.ts';
 import styles from './SearchBox.module.css';
 
 export interface SearchBoxLabels {

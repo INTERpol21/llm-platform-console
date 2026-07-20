@@ -1,1 +1,31 @@
-{"properties":{"object":{"type":"string","title":"Object","default":"usage"},"api_key":{"type":"string","title":"Api Key"},"requests":{"type":"integer","title":"Requests","default":0},"prompt_tokens":{"type":"integer","title":"Prompt Tokens","default":0},"completion_tokens":{"type":"integer","title":"Completion Tokens","default":0},"cost_usd":{"type":"number","title":"Cost Usd","default":0},"models":{"additionalProperties":{"properties":{"requests":{"type":"integer","title":"Requests","default":0},"prompt_tokens":{"type":"integer","title":"Prompt Tokens","default":0},"completion_tokens":{"type":"integer","title":"Completion Tokens","default":0},"cost_usd":{"type":"number","title":"Cost Usd","default":0}},"type":"object","title":"UsageModelRow","description":"Per-model usage aggregate (requests, tokens, USD cost) inside a report.","x-readme-ref-name":"UsageModelRow"},"type":"object","title":"Models"}},"type":"object","required":["api_key"],"title":"UsageReport","description":"Aggregated usage and USD cost for one API key, per model (/v1/usage).","x-readme-ref-name":"UsageReport"}
+{
+  "properties": {
+    "object": { "type": "string", "title": "Object", "default": "usage" },
+    "api_key": { "type": "string", "title": "Api Key" },
+    "requests": { "type": "integer", "title": "Requests", "default": 0 },
+    "prompt_tokens": { "type": "integer", "title": "Prompt Tokens", "default": 0 },
+    "completion_tokens": { "type": "integer", "title": "Completion Tokens", "default": 0 },
+    "cost_usd": { "type": "number", "title": "Cost Usd", "default": 0 },
+    "models": {
+      "additionalProperties": {
+        "properties": {
+          "requests": { "type": "integer", "title": "Requests", "default": 0 },
+          "prompt_tokens": { "type": "integer", "title": "Prompt Tokens", "default": 0 },
+          "completion_tokens": { "type": "integer", "title": "Completion Tokens", "default": 0 },
+          "cost_usd": { "type": "number", "title": "Cost Usd", "default": 0 }
+        },
+        "type": "object",
+        "title": "UsageModelRow",
+        "description": "Per-model usage aggregate (requests, tokens, USD cost) inside a report.",
+        "x-readme-ref-name": "UsageModelRow"
+      },
+      "type": "object",
+      "title": "Models"
+    }
+  },
+  "type": "object",
+  "required": ["api_key"],
+  "title": "UsageReport",
+  "description": "Aggregated usage and USD cost for one API key, per model (/v1/usage).",
+  "x-readme-ref-name": "UsageReport"
+}

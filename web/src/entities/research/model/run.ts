@@ -3,7 +3,7 @@ import type { Evidence, ResearchStreamEvent } from './events.ts';
 export type ResearchStatus = 'idle' | 'streaming' | 'done' | 'error';
 
 /** Accumulated state of a single research run, built up from the event stream. */
-export interface ResearchRun {
+export interface ResearchRunState {
   status: ResearchStatus;
   question: string;
   trace: string[];
@@ -14,7 +14,7 @@ export interface ResearchRun {
   error: string | null;
 }
 
-export function initialRun(question = ''): ResearchRun {
+export function initialRun(question = ''): ResearchRunState {
   return {
     status: 'idle',
     question,
@@ -28,7 +28,7 @@ export function initialRun(question = ''): ResearchRun {
 }
 
 /** Pure reducer: fold one stream event into the run state. */
-export function applyEvent(state: ResearchRun, event: ResearchStreamEvent): ResearchRun {
+export function applyEvent(state: ResearchRunState, event: ResearchStreamEvent): ResearchRunState {
   switch (event.type) {
     case 'trace':
       return { ...state, status: 'streaming', trace: [...state.trace, event.step] };

@@ -1,1 +1,17 @@
-{"properties":{"source":{"type":"string","enum":["rag","web"],"title":"Source"},"ref":{"type":"string","title":"Ref","description":"Document title or URL the content came from"},"content":{"type":"string","title":"Content"},"score":{"anyOf":[{"type":"number"},{"type":"null"}],"title":"Score"}},"type":"object","required":["source","ref","content"],"title":"Evidence","description":"One piece of retrieved evidence, cited as ``[n]`` in the final answer.","x-readme-ref-name":"Evidence"}
+{
+  "properties": {
+    "source": { "type": "string", "enum": ["rag", "web"], "title": "Source" },
+    "ref": {
+      "type": "string",
+      "title": "Ref",
+      "description": "Document title or URL the content came from"
+    },
+    "content": { "type": "string", "title": "Content" },
+    "score": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Score" }
+  },
+  "type": "object",
+  "required": ["source", "ref", "content"],
+  "title": "Evidence",
+  "description": "One piece of retrieved evidence, cited as ``[n]`` in the final answer.",
+  "x-readme-ref-name": "Evidence"
+}

@@ -7,7 +7,8 @@ body {
   font-size: var(--text-md);
   background-color: var(--color-bg);
   color: var(--color-text);
-  background-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 28px 28px;
 }

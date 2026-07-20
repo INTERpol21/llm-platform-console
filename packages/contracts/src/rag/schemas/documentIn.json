@@ -1,1 +1,29 @@
-{"properties":{"id":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Id"},"title":{"type":"string","maxLength":1000,"minLength":1,"title":"Title"},"text":{"type":"string","maxLength":1000000,"minLength":1,"title":"Text"},"metadata":{"additionalProperties":true,"type":"object","title":"Metadata"},"source":{"type":"string","enum":["local","web","other"],"title":"Source","default":"local"},"priority":{"type":"integer","maximum":1000,"minimum":0,"title":"Priority","default":100},"owner":{"anyOf":[{"type":"string","maxLength":1000},{"type":"null"}],"title":"Owner"}},"type":"object","required":["title","text"],"title":"DocumentIn","x-readme-ref-name":"DocumentIn"}
+{
+  "properties": {
+    "id": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Id" },
+    "title": { "type": "string", "maxLength": 1000, "minLength": 1, "title": "Title" },
+    "text": { "type": "string", "maxLength": 1000000, "minLength": 1, "title": "Text" },
+    "metadata": { "additionalProperties": true, "type": "object", "title": "Metadata" },
+    "source": {
+      "type": "string",
+      "enum": ["local", "web", "other"],
+      "title": "Source",
+      "default": "local"
+    },
+    "priority": {
+      "type": "integer",
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Priority",
+      "default": 100
+    },
+    "owner": {
+      "anyOf": [{ "type": "string", "maxLength": 1000 }, { "type": "null" }],
+      "title": "Owner"
+    }
+  },
+  "type": "object",
+  "required": ["title", "text"],
+  "title": "DocumentIn",
+  "x-readme-ref-name": "DocumentIn"
+}

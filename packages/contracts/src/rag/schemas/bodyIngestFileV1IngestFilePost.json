@@ -1,1 +1,17 @@
-{"properties":{"file":{"type":"string","contentMediaType":"application/octet-stream","title":"File"},"title":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Title"},"source":{"type":"string","enum":["local","web","other"],"title":"Source","default":"local"},"owner":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Owner"}},"type":"object","required":["file"],"title":"Body_ingest_file_v1_ingest_file_post","x-readme-ref-name":"Body_ingest_file_v1_ingest_file_post"}
+{
+  "properties": {
+    "file": { "type": "string", "contentMediaType": "application/octet-stream", "title": "File" },
+    "title": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Title" },
+    "source": {
+      "type": "string",
+      "enum": ["local", "web", "other"],
+      "title": "Source",
+      "default": "local"
+    },
+    "owner": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Owner" }
+  },
+  "type": "object",
+  "required": ["file"],
+  "title": "Body_ingest_file_v1_ingest_file_post",
+  "x-readme-ref-name": "Body_ingest_file_v1_ingest_file_post"
+}

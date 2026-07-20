@@ -1,2 +1,2 @@
+export type { LangOption, LangToggleProps } from './LangToggle.tsx';
 export { LangToggle } from './LangToggle.tsx';
-export type { LangToggleProps, LangOption } from './LangToggle.tsx';

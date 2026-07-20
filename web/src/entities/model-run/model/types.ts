@@ -1,8 +1,8 @@
 // Re-export the generated backend contract types — never redefined here.
 export type {
-  ModelRunsV1ModelRunsGet200,
   ModelRunOut,
   ModelRunsPage as ModelRunsWirePage,
+  ModelRunsV1ModelRunsGet200,
 } from '@console/contracts/gateway';
 
 /**

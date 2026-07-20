@@ -1,1 +1,42 @@
-{"properties":{"thread_id":{"type":"string","title":"Thread Id"},"exists":{"type":"boolean","title":"Exists"},"question":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Question"},"answer":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Answer"},"evidence":{"items":{"properties":{"source":{"type":"string","enum":["rag","web"],"title":"Source"},"ref":{"type":"string","title":"Ref","description":"Document title or URL the content came from"},"content":{"type":"string","title":"Content"},"score":{"anyOf":[{"type":"number"},{"type":"null"}],"title":"Score"}},"type":"object","required":["source","ref","content"],"title":"Evidence","description":"One piece of retrieved evidence, cited as ``[n]`` in the final answer.","x-readme-ref-name":"Evidence"},"type":"array","title":"Evidence"},"trace":{"items":{"type":"string"},"type":"array","title":"Trace"},"iterations":{"type":"integer","title":"Iterations","default":0},"checkpoints":{"type":"integer","title":"Checkpoints","description":"Number of persisted checkpoints (superstep snapshots)","default":0}},"type":"object","required":["thread_id","exists"],"title":"ResearchHistoryResponse","description":"Latest checkpointed snapshot for a ``thread_id`` (empty if unknown).","x-readme-ref-name":"ResearchHistoryResponse"}
+{
+  "properties": {
+    "thread_id": { "type": "string", "title": "Thread Id" },
+    "exists": { "type": "boolean", "title": "Exists" },
+    "question": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Question" },
+    "answer": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Answer" },
+    "evidence": {
+      "items": {
+        "properties": {
+          "source": { "type": "string", "enum": ["rag", "web"], "title": "Source" },
+          "ref": {
+            "type": "string",
+            "title": "Ref",
+            "description": "Document title or URL the content came from"
+          },
+          "content": { "type": "string", "title": "Content" },
+          "score": { "anyOf": [{ "type": "number" }, { "type": "null" }], "title": "Score" }
+        },
+        "type": "object",
+        "required": ["source", "ref", "content"],
+        "title": "Evidence",
+        "description": "One piece of retrieved evidence, cited as ``[n]`` in the final answer.",
+        "x-readme-ref-name": "Evidence"
+      },
+      "type": "array",
+      "title": "Evidence"
+    },
+    "trace": { "items": { "type": "string" }, "type": "array", "title": "Trace" },
+    "iterations": { "type": "integer", "title": "Iterations", "default": 0 },
+    "checkpoints": {
+      "type": "integer",
+      "title": "Checkpoints",
+      "description": "Number of persisted checkpoints (superstep snapshots)",
+      "default": 0
+    }
+  },
+  "type": "object",
+  "required": ["thread_id", "exists"],
+  "title": "ResearchHistoryResponse",
+  "description": "Latest checkpointed snapshot for a ``thread_id`` (empty if unknown).",
+  "x-readme-ref-name": "ResearchHistoryResponse"
+}

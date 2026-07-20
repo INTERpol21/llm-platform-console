@@ -1,4 +1,4 @@
-export { apiGet, apiPost, ApiError } from './client.ts';
 export type { ApiRequestOptions } from './client.ts';
-export { streamSse } from './sse.ts';
+export { ApiError, apiGet, apiPost } from './client.ts';
 export type { SseMessage, StreamSseOptions } from './sse.ts';
+export { streamSse } from './sse.ts';

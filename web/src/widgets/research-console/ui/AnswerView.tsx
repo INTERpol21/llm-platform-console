@@ -1,6 +1,6 @@
 import { Fragment, useMemo } from 'react';
-import { parseMarkdown } from '../../../shared/lib/index.ts';
 import type { InlineNode } from '../../../shared/lib/index.ts';
+import { parseMarkdown } from '../../../shared/lib/index.ts';
 import styles from './AnswerView.module.css';
 
 export interface AnswerViewProps {

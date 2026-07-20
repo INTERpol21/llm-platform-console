@@ -1,1 +1,49 @@
-{"properties":{"answer":{"type":"string","title":"Answer"},"citations":{"items":{"properties":{"document_id":{"type":"string","title":"Document Id"},"title":{"type":"string","title":"Title"},"chunk_id":{"type":"string","title":"Chunk Id"},"snippet":{"type":"string","title":"Snippet"},"score":{"type":"number","title":"Score"},"source":{"type":"string","title":"Source","default":"local"}},"type":"object","required":["document_id","title","chunk_id","snippet","score"],"title":"CitationOut","x-readme-ref-name":"CitationOut"},"type":"array","title":"Citations"},"retrieved":{"items":{"properties":{"chunk_id":{"type":"string","title":"Chunk Id"},"document_id":{"type":"string","title":"Document Id"},"title":{"type":"string","title":"Title"},"ord":{"type":"integer","title":"Ord"},"score":{"type":"number","title":"Score"},"source":{"type":"string","title":"Source","default":"local"}},"type":"object","required":["chunk_id","document_id","title","ord","score"],"title":"RetrievedChunkOut","x-readme-ref-name":"RetrievedChunkOut"},"type":"array","title":"Retrieved"},"usage":{"anyOf":[{"additionalProperties":true,"type":"object"},{"type":"null"}],"title":"Usage"}},"type":"object","required":["answer","citations","retrieved"],"title":"QueryResponse","x-readme-ref-name":"QueryResponse"}
+{
+  "properties": {
+    "answer": { "type": "string", "title": "Answer" },
+    "citations": {
+      "items": {
+        "properties": {
+          "document_id": { "type": "string", "title": "Document Id" },
+          "title": { "type": "string", "title": "Title" },
+          "chunk_id": { "type": "string", "title": "Chunk Id" },
+          "snippet": { "type": "string", "title": "Snippet" },
+          "score": { "type": "number", "title": "Score" },
+          "source": { "type": "string", "title": "Source", "default": "local" }
+        },
+        "type": "object",
+        "required": ["document_id", "title", "chunk_id", "snippet", "score"],
+        "title": "CitationOut",
+        "x-readme-ref-name": "CitationOut"
+      },
+      "type": "array",
+      "title": "Citations"
+    },
+    "retrieved": {
+      "items": {
+        "properties": {
+          "chunk_id": { "type": "string", "title": "Chunk Id" },
+          "document_id": { "type": "string", "title": "Document Id" },
+          "title": { "type": "string", "title": "Title" },
+          "ord": { "type": "integer", "title": "Ord" },
+          "score": { "type": "number", "title": "Score" },
+          "source": { "type": "string", "title": "Source", "default": "local" }
+        },
+        "type": "object",
+        "required": ["chunk_id", "document_id", "title", "ord", "score"],
+        "title": "RetrievedChunkOut",
+        "x-readme-ref-name": "RetrievedChunkOut"
+      },
+      "type": "array",
+      "title": "Retrieved"
+    },
+    "usage": {
+      "anyOf": [{ "additionalProperties": true, "type": "object" }, { "type": "null" }],
+      "title": "Usage"
+    }
+  },
+  "type": "object",
+  "required": ["answer", "citations", "retrieved"],
+  "title": "QueryResponse",
+  "x-readme-ref-name": "QueryResponse"
+}

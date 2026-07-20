@@ -8,7 +8,9 @@
   border: var(--border-width) solid var(--color-border);
   background-color: var(--color-surface);
   color: var(--color-text-muted);
-  transition: color 0.15s ease, border-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .toggle:hover {
