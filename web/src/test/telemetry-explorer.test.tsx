@@ -20,7 +20,7 @@ const modelPage1 = {
   next_cursor: 10,
   items: [
     {
-      id: 'm1',
+      id: 1,
       request_id: 'req-1',
       provider: 'openai',
       model: 'gpt-4o',
@@ -46,18 +46,19 @@ const modelPage2 = {
   next_cursor: null,
   items: [
     {
-      id: 'm2',
+      id: 2,
       provider: 'anthropic',
       model: 'claude-3-sonnet',
+      served_model: 'claude-3-sonnet-2024',
       status: 'ok',
       streaming: true,
       cache_hit: false,
       prompt_tokens: 100,
       completion_tokens: 50,
       total_tokens: 150,
-      context_used_pct: 10,
       cost_usd: 0.02,
       total_ms: 800,
+      created_at: '2026-07-20T09:30:00Z',
     },
   ],
 };
@@ -67,7 +68,7 @@ const researchPage = {
   next_cursor: null,
   items: [
     {
-      id: 'r1',
+      id: 1,
       thread_id: 't1',
       question: 'What is Feature-Sliced Design?',
       mode: 'deep',

@@ -9,21 +9,15 @@ export type {
   QueryRequestSourcesEnum,
   QueryResponse,
   RetrievedChunkOut,
+  StatsResponse,
   StatsStatsGet200,
 } from '@console/contracts/rag';
 
-/** One source's contribution to the index, normalized from the open stats object. */
-export interface KnowledgeSourceStat {
-  source: string;
-  count: number;
-}
-
 /**
- * Normalized view of the RAG `/stats` response. The wire schema is an open
- * object, so this is the shape the stats panel actually renders.
+ * Index stats the panel renders, projected from the generated `StatsResponse`
+ * contract — see `stats.ts` for the (fully typed) mapping.
  */
 export interface KnowledgeStats {
   documents: number;
   chunks: number;
-  sources: KnowledgeSourceStat[];
 }

@@ -4,6 +4,7 @@
 */
 
 import type { HTTPValidationError } from "./HTTPValidationError.ts";
+import type { ModelRunsPage } from "./ModelRunsPage.ts";
 
 export type ModelRunsV1ModelRunsGetQueryParams = {
     /**
@@ -17,9 +18,7 @@ export type ModelRunsV1ModelRunsGetQueryParams = {
 /**
  * @description Successful Response
 */
-export type ModelRunsV1ModelRunsGet200 = {
-    [key: string]: any;
-};
+export type ModelRunsV1ModelRunsGet200 = ModelRunsPage;
 
 /**
  * @description Validation Error

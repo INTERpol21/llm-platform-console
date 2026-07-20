@@ -1,7 +1,11 @@
-// Re-export the generated backend contract type — never redefined here.
-export type { UsageReportV1UsageGet200 } from '@console/contracts/gateway';
+// Re-export the generated backend contract types — never redefined here.
+export type {
+  UsageReportV1UsageGet200,
+  UsageReport,
+  UsageModelRow as UsageModelRowWire,
+} from '@console/contracts/gateway';
 
-/** One model's slice of the usage report, normalized to the fields the UI shows. */
+/** One model's slice of the usage report, projected to the fields the UI shows. */
 export interface UsageModelRow {
   model: string;
   requests: number;
@@ -10,12 +14,11 @@ export interface UsageModelRow {
 }
 
 /**
- * Flat, chart-ready view of the gateway usage report. The wire schema is an
- * open object (`additionalProperties: true`), so this is the normalized shape
- * the widgets actually render.
+ * Flat, chart-ready view of the gateway usage report. Derived from the
+ * generated `UsageReport` contract — see `normalize.ts` for the (fully typed)
+ * report → summary mapping.
  */
 export interface UsageSummary {
-  window: string | null;
   totalRequests: number;
   totalTokens: number;
   totalCostUsd: number;

@@ -15,11 +15,7 @@ export function KnowledgeManager() {
   const statsLabels = {
     documents: t('knowledge.statsDocuments'),
     chunks: t('knowledge.statsChunks'),
-    sources: t('knowledge.statsSources'),
     empty: t('knowledge.statsEmpty'),
-    sourceLocal: t('knowledge.sourceLocal'),
-    sourceWeb: t('knowledge.sourceWeb'),
-    sourceOther: t('knowledge.sourceOther'),
   };
 
   return (

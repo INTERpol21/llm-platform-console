@@ -6,6 +6,7 @@ export type { ResearchHistoryResponse } from "./types/ResearchHistoryResponse.ts
 export type { ResearchRequestModeEnum, ResearchRequest } from "./types/ResearchRequest.ts";
 export type { ResearchResearchPost200, ResearchResearchPost422, ResearchResearchPostMutationRequest, ResearchResearchPostMutationResponse, ResearchResearchPostMutation } from "./types/ResearchResearchPost.ts";
 export type { ResearchResponse } from "./types/ResearchResponse.ts";
+export type { ResearchRunOut } from "./types/ResearchRunOut.ts";
 export type { ResearchRunsPage } from "./types/ResearchRunsPage.ts";
 export type { ResearchRunsResearchRunsGetQueryParams, ResearchRunsResearchRunsGet200, ResearchRunsResearchRunsGet422, ResearchRunsResearchRunsGetQueryResponse, ResearchRunsResearchRunsGetQuery } from "./types/ResearchRunsResearchRunsGet.ts";
 export type { ResearchStreamResearchStreamPost200, ResearchStreamResearchStreamPost422, ResearchStreamResearchStreamPostMutationRequest, ResearchStreamResearchStreamPostMutationResponse, ResearchStreamResearchStreamPostMutation } from "./types/ResearchStreamResearchStreamPost.ts";
@@ -18,6 +19,7 @@ export { researchHistoryResponseSchema } from "./zod/researchHistoryResponseSche
 export { researchRequestSchema } from "./zod/researchRequestSchema.ts";
 export { researchResearchPost200Schema, researchResearchPost422Schema, researchResearchPostMutationRequestSchema, researchResearchPostMutationResponseSchema } from "./zod/researchResearchPostSchema.ts";
 export { researchResponseSchema } from "./zod/researchResponseSchema.ts";
+export { researchRunOutSchema } from "./zod/researchRunOutSchema.ts";
 export { researchRunsPageSchema } from "./zod/researchRunsPageSchema.ts";
 export { researchRunsResearchRunsGetQueryParamsSchema, researchRunsResearchRunsGet200Schema, researchRunsResearchRunsGet422Schema, researchRunsResearchRunsGetQueryResponseSchema } from "./zod/researchRunsResearchRunsGetSchema.ts";
 export { researchStreamResearchStreamPost200Schema, researchStreamResearchStreamPost422Schema, researchStreamResearchStreamPostMutationRequestSchema, researchStreamResearchStreamPostMutationResponseSchema } from "./zod/researchStreamResearchStreamPostSchema.ts";

@@ -8,8 +8,8 @@ export type {
   QueryRequestSourcesEnum,
   QueryResponse,
   RetrievedChunkOut,
+  StatsResponse,
   StatsStatsGet200,
-  KnowledgeSourceStat,
   KnowledgeStats,
 } from './model/types.ts';
 export { normalizeStats } from './model/stats.ts';

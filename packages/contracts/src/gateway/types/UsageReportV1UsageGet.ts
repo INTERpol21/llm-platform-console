@@ -3,13 +3,12 @@
 * Do not edit manually.
 */
 
+import type { UsageReport } from "./UsageReport.ts";
 
 /**
  * @description Successful Response
 */
-export type UsageReportV1UsageGet200 = {
-    [key: string]: any;
-};
+export type UsageReportV1UsageGet200 = UsageReport;
 
 export type UsageReportV1UsageGetQueryResponse = UsageReportV1UsageGet200;
 

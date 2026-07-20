@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { ResearchRunOut } from "./ResearchRunOut.ts";
 
 /**
  * @description A page of research-run telemetry, newest first, with a keyset cursor.
@@ -11,9 +12,7 @@ export type ResearchRunsPage = {
     /**
      * @type array
     */
-    items: {
-        [key: string]: any;
-    }[];
+    items: ResearchRunOut[];
     /**
      * @description Pass back as ?cursor= for the next page; null at the end
     */

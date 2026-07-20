@@ -3,13 +3,12 @@
 * Do not edit manually.
 */
 
+import type { HealthResponse } from "./HealthResponse.ts";
 
 /**
  * @description Successful Response
 */
-export type HealthzHealthzGet200 = {
-    [key: string]: any;
-};
+export type HealthzHealthzGet200 = HealthResponse;
 
 export type HealthzHealthzGetQueryResponse = HealthzHealthzGet200;
 

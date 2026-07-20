@@ -1,5 +1,6 @@
 export { citationOutSchema } from "./citationOutSchema.ts";
 export { documentInSchema } from "./documentInSchema.ts";
+export { healthResponseSchema } from "./healthResponseSchema.ts";
 export { healthzHealthzGet200Schema, healthzHealthzGetQueryResponseSchema } from "./healthzHealthzGetSchema.ts";
 export { HTTPValidationErrorSchema } from "./HTTPValidationErrorSchema.ts";
 export { ingestIngestPost200Schema, ingestIngestPost422Schema, ingestIngestPostMutationRequestSchema, ingestIngestPostMutationResponseSchema } from "./ingestIngestPostSchema.ts";
@@ -9,5 +10,6 @@ export { queryQueryPost200Schema, queryQueryPost422Schema, queryQueryPostMutatio
 export { queryRequestSchema } from "./queryRequestSchema.ts";
 export { queryResponseSchema } from "./queryResponseSchema.ts";
 export { retrievedChunkOutSchema } from "./retrievedChunkOutSchema.ts";
+export { statsResponseSchema } from "./statsResponseSchema.ts";
 export { statsStatsGet200Schema, statsStatsGetQueryResponseSchema } from "./statsStatsGetSchema.ts";
 export { validationErrorSchema } from "./validationErrorSchema.ts";

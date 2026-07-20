@@ -1,4 +1,3 @@
-import type { ModelRunsV1ModelRunsGet200 } from '@console/contracts/gateway';
 import { modelRunsV1ModelRunsGet200Schema } from '@console/contracts/gateway';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { apiGet } from '../../../shared/api/index.ts';

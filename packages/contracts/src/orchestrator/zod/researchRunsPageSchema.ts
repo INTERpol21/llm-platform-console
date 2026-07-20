@@ -5,15 +5,14 @@
 
 import type { ResearchRunsPage } from "../types/ResearchRunsPage.ts";
 import type { ToZod } from "@kubb/plugin-zod/utils";
+import { researchRunOutSchema } from "./researchRunOutSchema.ts";
 import { z } from "zod";
 
 /**
  * @description A page of research-run telemetry, newest first, with a keyset cursor.
  */
 export const researchRunsPageSchema = z.object({
-    "items": z.array(z.object({
-    
-    }).catchall(z.any())),
+    "items": z.array(z.lazy(() => researchRunOutSchema).describe("One persisted research-run telemetry row, as returned by the console API.\n\nMirrors ``telemetry.research_runs``: the recorded question/mode/model, the\nanswer with its full provenance (``trace`` + ``evidence``), per-run timing and\nthe durable id/timestamp. Named so ``/openapi.json`` exposes a real schema\ninstead of a free-form object.")),
 "next_cursor": z.union([z.number().int(), z.null()]).describe("Pass back as ?cursor= for the next page; null at the end").optional(),
 "enabled": z.boolean().describe("False when no telemetry database is configured")
     }).describe("A page of research-run telemetry, newest first, with a keyset cursor.") as unknown as ToZod<ResearchRunsPage>

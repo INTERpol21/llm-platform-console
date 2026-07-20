@@ -6,6 +6,7 @@
 import type { ModelRunsV1ModelRunsGetQueryParams, ModelRunsV1ModelRunsGet200, ModelRunsV1ModelRunsGet422, ModelRunsV1ModelRunsGetQueryResponse } from "../types/ModelRunsV1ModelRunsGet.ts";
 import type { ToZod } from "@kubb/plugin-zod/utils";
 import { HTTPValidationErrorSchema } from "./HTTPValidationErrorSchema.ts";
+import { modelRunsPageSchema } from "./modelRunsPageSchema.ts";
 import { z } from "zod";
 
 export const modelRunsV1ModelRunsGetQueryParamsSchema = z.object({
@@ -16,9 +17,7 @@ export const modelRunsV1ModelRunsGetQueryParamsSchema = z.object({
 /**
  * @description Successful Response
  */
-export const modelRunsV1ModelRunsGet200Schema = z.object({
-    
-    }).catchall(z.any()) as unknown as ToZod<ModelRunsV1ModelRunsGet200>
+export const modelRunsV1ModelRunsGet200Schema = z.lazy(() => modelRunsPageSchema).describe("A newest-first page of model-run telemetry with a keyset cursor.\n\n``enabled`` is false (and ``items`` empty) when no telemetry database is\nconfigured; pass ``next_cursor`` back as ``cursor`` for the next page.") as unknown as ToZod<ModelRunsV1ModelRunsGet200>
 
 /**
  * @description Validation Error

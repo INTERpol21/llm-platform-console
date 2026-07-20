@@ -13,7 +13,17 @@ function jsonResponse(body: unknown, ok = true, status = 200): Response {
   } as Response;
 }
 
-const emptyStats = { documents: 0, chunks: 0, sources: {} };
+// Shape matches the named `StatsResponse` contract (store counts + backends).
+const emptyStats = {
+  backend: 'memory',
+  documents: 0,
+  chunks: 0,
+  embeddings_backend: 'hash',
+  llm_backend: 'stub',
+  embedding_dim: 384,
+  search_mode: 'vector',
+  reranker: 'none',
+};
 
 interface RouteOverrides {
   ingest?: () => Promise<Response>;

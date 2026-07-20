@@ -1,5 +1,6 @@
 export type { CitationOut } from "./types/CitationOut.ts";
 export type { DocumentInSourceEnum, DocumentIn } from "./types/DocumentIn.ts";
+export type { HealthResponse } from "./types/HealthResponse.ts";
 export type { HealthzHealthzGet200, HealthzHealthzGetQueryResponse, HealthzHealthzGetQuery } from "./types/HealthzHealthzGet.ts";
 export type { HTTPValidationError } from "./types/HTTPValidationError.ts";
 export type { IngestIngestPost200, IngestIngestPost422, IngestIngestPostMutationRequest, IngestIngestPostMutationResponse, IngestIngestPostMutation } from "./types/IngestIngestPost.ts";
@@ -9,10 +10,12 @@ export type { QueryQueryPost200, QueryQueryPost422, QueryQueryPostMutationReques
 export type { QueryRequestSourcesEnum, QueryRequest } from "./types/QueryRequest.ts";
 export type { QueryResponse } from "./types/QueryResponse.ts";
 export type { RetrievedChunkOut } from "./types/RetrievedChunkOut.ts";
+export type { StatsResponse } from "./types/StatsResponse.ts";
 export type { StatsStatsGet200, StatsStatsGetQueryResponse, StatsStatsGetQuery } from "./types/StatsStatsGet.ts";
 export type { ValidationError } from "./types/ValidationError.ts";
 export { citationOutSchema } from "./zod/citationOutSchema.ts";
 export { documentInSchema } from "./zod/documentInSchema.ts";
+export { healthResponseSchema } from "./zod/healthResponseSchema.ts";
 export { healthzHealthzGet200Schema, healthzHealthzGetQueryResponseSchema } from "./zod/healthzHealthzGetSchema.ts";
 export { HTTPValidationErrorSchema } from "./zod/HTTPValidationErrorSchema.ts";
 export { ingestIngestPost200Schema, ingestIngestPost422Schema, ingestIngestPostMutationRequestSchema, ingestIngestPostMutationResponseSchema } from "./zod/ingestIngestPostSchema.ts";
@@ -22,5 +25,6 @@ export { queryQueryPost200Schema, queryQueryPost422Schema, queryQueryPostMutatio
 export { queryRequestSchema } from "./zod/queryRequestSchema.ts";
 export { queryResponseSchema } from "./zod/queryResponseSchema.ts";
 export { retrievedChunkOutSchema } from "./zod/retrievedChunkOutSchema.ts";
+export { statsResponseSchema } from "./zod/statsResponseSchema.ts";
 export { statsStatsGet200Schema, statsStatsGetQueryResponseSchema } from "./zod/statsStatsGetSchema.ts";
 export { validationErrorSchema } from "./zod/validationErrorSchema.ts";

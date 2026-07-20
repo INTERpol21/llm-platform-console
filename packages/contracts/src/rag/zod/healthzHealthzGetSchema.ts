@@ -5,13 +5,12 @@
 
 import type { HealthzHealthzGet200, HealthzHealthzGetQueryResponse } from "../types/HealthzHealthzGet.ts";
 import type { ToZod } from "@kubb/plugin-zod/utils";
+import { healthResponseSchema } from "./healthResponseSchema.ts";
 import { z } from "zod";
 
 /**
  * @description Successful Response
  */
-export const healthzHealthzGet200Schema = z.object({
-    
-    }).catchall(z.any()) as unknown as ToZod<HealthzHealthzGet200>
+export const healthzHealthzGet200Schema = z.lazy(() => healthResponseSchema).describe("Liveness probe payload.") as unknown as ToZod<HealthzHealthzGet200>
 
 export const healthzHealthzGetQueryResponseSchema = z.lazy(() => healthzHealthzGet200Schema) as unknown as ToZod<HealthzHealthzGetQueryResponse>

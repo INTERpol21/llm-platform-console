@@ -30,19 +30,19 @@ function jsonResponse(body: unknown): Response {
 }
 
 // Requests kept < 1000 so toLocaleString has no locale-dependent separators.
+// Shape matches the named `UsageReport` contract: top-level aggregate totals
+// plus a per-model breakdown keyed by model name.
 const usageReport = {
-  window: '24h',
-  totals: { requests: 63, input_tokens: 800_000, output_tokens: 400_000, cost_usd: 12.5 },
-  by_model: [
-    { model: 'gpt-4o', requests: 42, input_tokens: 500_000, output_tokens: 300_000, cost_usd: 9.0 },
-    {
-      model: 'claude-3',
-      requests: 21,
-      input_tokens: 300_000,
-      output_tokens: 100_000,
-      cost_usd: 3.5,
-    },
-  ],
+  object: 'usage',
+  api_key: 'sk-test',
+  requests: 63,
+  prompt_tokens: 800_000,
+  completion_tokens: 400_000,
+  cost_usd: 12.5,
+  models: {
+    'gpt-4o': { requests: 42, prompt_tokens: 500_000, completion_tokens: 300_000, cost_usd: 9.0 },
+    'claude-3': { requests: 21, prompt_tokens: 300_000, completion_tokens: 100_000, cost_usd: 3.5 },
+  },
 };
 
 function stubUsage(body: unknown) {
@@ -86,7 +86,7 @@ describe('UsageDashboard', () => {
   it('shows an empty state when there is zero usage', async () => {
     // Catches: a division-by-zero / empty-data crash instead of a graceful
     // "no usage yet" message when the report has no per-model rows.
-    stubUsage({ window: '24h', totals: { requests: 0, cost_usd: 0 }, by_model: [] });
+    stubUsage({ api_key: 'sk-test', requests: 0, cost_usd: 0, models: {} });
 
     renderWithProviders(<UsageDashboard />);
 

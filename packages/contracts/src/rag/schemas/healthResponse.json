@@ -1,0 +1,1 @@
+{"properties":{"status":{"type":"string","title":"Status","default":"ok"}},"type":"object","title":"HealthResponse","description":"Liveness probe payload.","x-readme-ref-name":"HealthResponse"}

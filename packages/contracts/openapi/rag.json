@@ -16,9 +16,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": true,
-                  "type": "object",
-                  "title": "Response Healthz Healthz Get"
+                  "$ref": "#/components/schemas/HealthResponse"
                 }
               }
             }
@@ -112,9 +110,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": true,
-                  "type": "object",
-                  "title": "Response Stats Stats Get"
+                  "$ref": "#/components/schemas/StatsResponse"
                 }
               }
             }
@@ -242,6 +238,18 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "ok"
+          }
+        },
+        "type": "object",
+        "title": "HealthResponse",
+        "description": "Liveness probe payload."
       },
       "IngestRequest": {
         "properties": {
@@ -406,6 +414,55 @@
           "score"
         ],
         "title": "RetrievedChunkOut"
+      },
+      "StatsResponse": {
+        "properties": {
+          "backend": {
+            "type": "string",
+            "title": "Backend"
+          },
+          "documents": {
+            "type": "integer",
+            "title": "Documents"
+          },
+          "chunks": {
+            "type": "integer",
+            "title": "Chunks"
+          },
+          "embeddings_backend": {
+            "type": "string",
+            "title": "Embeddings Backend"
+          },
+          "llm_backend": {
+            "type": "string",
+            "title": "Llm Backend"
+          },
+          "embedding_dim": {
+            "type": "integer",
+            "title": "Embedding Dim"
+          },
+          "search_mode": {
+            "type": "string",
+            "title": "Search Mode"
+          },
+          "reranker": {
+            "type": "string",
+            "title": "Reranker"
+          }
+        },
+        "type": "object",
+        "required": [
+          "backend",
+          "documents",
+          "chunks",
+          "embeddings_backend",
+          "llm_backend",
+          "embedding_dim",
+          "search_mode",
+          "reranker"
+        ],
+        "title": "StatsResponse",
+        "description": "Store counts plus the active backends (see the ``/stats`` route)."
       },
       "ValidationError": {
         "properties": {

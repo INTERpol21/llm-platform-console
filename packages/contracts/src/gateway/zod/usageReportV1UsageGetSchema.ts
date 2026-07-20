@@ -5,13 +5,12 @@
 
 import type { UsageReportV1UsageGet200, UsageReportV1UsageGetQueryResponse } from "../types/UsageReportV1UsageGet.ts";
 import type { ToZod } from "@kubb/plugin-zod/utils";
+import { usageReportSchema } from "./usageReportSchema.ts";
 import { z } from "zod";
 
 /**
  * @description Successful Response
  */
-export const usageReportV1UsageGet200Schema = z.object({
-    
-    }).catchall(z.any()) as unknown as ToZod<UsageReportV1UsageGet200>
+export const usageReportV1UsageGet200Schema = z.lazy(() => usageReportSchema).describe("Aggregated usage and USD cost for one API key, per model (/v1/usage).") as unknown as ToZod<UsageReportV1UsageGet200>
 
 export const usageReportV1UsageGetQueryResponseSchema = z.lazy(() => usageReportV1UsageGet200Schema) as unknown as ToZod<UsageReportV1UsageGetQueryResponse>

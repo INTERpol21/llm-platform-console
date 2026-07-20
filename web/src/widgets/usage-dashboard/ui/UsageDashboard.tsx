@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { StatTile, useUsage } from '../../../entities/usage/index.ts';
 import { formatTokens, formatUsd } from '../../../shared/lib/index.ts';
-import { Badge, Button, Card, Spinner } from '../../../shared/ui/index.ts';
+import { Button, Card, Spinner } from '../../../shared/ui/index.ts';
 import styles from './UsageDashboard.module.css';
 
 type Metric = 'requests' | 'tokens' | 'cost';
@@ -69,11 +69,6 @@ export function UsageDashboard() {
       <Card className={styles.panel}>
         <header className={styles.panelHead}>
           <h2 className={styles.panelTitle}>{t('usage.chartTitle')}</h2>
-          {data.window ? (
-            <Badge tone="neutral">
-              {t('usage.window')}: {data.window}
-            </Badge>
-          ) : null}
         </header>
 
         <Tabs.Root value={metric} onValueChange={(value) => setMetric(value as Metric)}>

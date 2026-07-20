@@ -3,13 +3,12 @@
 * Do not edit manually.
 */
 
+import type { StatsResponse } from "./StatsResponse.ts";
 
 /**
  * @description Successful Response
 */
-export type StatsStatsGet200 = {
-    [key: string]: any;
-};
+export type StatsStatsGet200 = StatsResponse;
 
 export type StatsStatsGetQueryResponse = StatsStatsGet200;
 

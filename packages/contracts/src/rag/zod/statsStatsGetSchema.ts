@@ -5,13 +5,12 @@
 
 import type { StatsStatsGet200, StatsStatsGetQueryResponse } from "../types/StatsStatsGet.ts";
 import type { ToZod } from "@kubb/plugin-zod/utils";
+import { statsResponseSchema } from "./statsResponseSchema.ts";
 import { z } from "zod";
 
 /**
  * @description Successful Response
  */
-export const statsStatsGet200Schema = z.object({
-    
-    }).catchall(z.any()) as unknown as ToZod<StatsStatsGet200>
+export const statsStatsGet200Schema = z.lazy(() => statsResponseSchema).describe("Store counts plus the active backends (see the ``/stats`` route).") as unknown as ToZod<StatsStatsGet200>
 
 export const statsStatsGetQueryResponseSchema = z.lazy(() => statsStatsGet200Schema) as unknown as ToZod<StatsStatsGetQueryResponse>

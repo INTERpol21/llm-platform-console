@@ -122,9 +122,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": true,
-                  "type": "object",
-                  "title": "Response Usage Report V1 Usage Get"
+                  "$ref": "#/components/schemas/UsageReport"
                 }
               }
             }
@@ -171,9 +169,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "title": "Response Model Runs V1 Model Runs Get"
+                  "$ref": "#/components/schemas/ModelRunsPage"
                 }
               }
             }
@@ -447,6 +443,157 @@
         "title": "ModelPricing",
         "description": "USD cost per 1k tokens for a model."
       },
+      "ModelRunOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Request Id"
+          },
+          "provider": {
+            "type": "string",
+            "title": "Provider"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "served_model": {
+            "type": "string",
+            "title": "Served Model"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "streaming": {
+            "type": "boolean",
+            "title": "Streaming"
+          },
+          "cache_hit": {
+            "type": "boolean",
+            "title": "Cache Hit"
+          },
+          "prompt_tokens": {
+            "type": "integer",
+            "title": "Prompt Tokens"
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "title": "Completion Tokens"
+          },
+          "total_tokens": {
+            "type": "integer",
+            "title": "Total Tokens"
+          },
+          "context_window": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context Window"
+          },
+          "context_used_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context Used Pct"
+          },
+          "cost_usd": {
+            "type": "number",
+            "title": "Cost Usd"
+          },
+          "total_ms": {
+            "type": "number",
+            "title": "Total Ms"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "provider",
+          "model",
+          "served_model",
+          "status",
+          "streaming",
+          "cache_hit",
+          "prompt_tokens",
+          "completion_tokens",
+          "total_tokens",
+          "cost_usd",
+          "total_ms",
+          "created_at"
+        ],
+        "title": "ModelRunOut",
+        "description": "One per-call telemetry row as served by /v1/model-runs (read side)."
+      },
+      "ModelRunsPage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ModelRunOut"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          }
+        },
+        "type": "object",
+        "required": [
+          "enabled"
+        ],
+        "title": "ModelRunsPage",
+        "description": "A newest-first page of model-run telemetry with a keyset cursor.\n\n``enabled`` is false (and ``items`` empty) when no telemetry database is\nconfigured; pass ``next_cursor`` back as ``cursor`` for the next page."
+      },
       "PingResult": {
         "properties": {
           "id": {
@@ -495,6 +642,79 @@
         ],
         "title": "PingResult",
         "description": "Result of a lightweight reachability probe for one model."
+      },
+      "UsageModelRow": {
+        "properties": {
+          "requests": {
+            "type": "integer",
+            "title": "Requests",
+            "default": 0
+          },
+          "prompt_tokens": {
+            "type": "integer",
+            "title": "Prompt Tokens",
+            "default": 0
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "title": "Completion Tokens",
+            "default": 0
+          },
+          "cost_usd": {
+            "type": "number",
+            "title": "Cost Usd",
+            "default": 0.0
+          }
+        },
+        "type": "object",
+        "title": "UsageModelRow",
+        "description": "Per-model usage aggregate (requests, tokens, USD cost) inside a report."
+      },
+      "UsageReport": {
+        "properties": {
+          "object": {
+            "type": "string",
+            "title": "Object",
+            "default": "usage"
+          },
+          "api_key": {
+            "type": "string",
+            "title": "Api Key"
+          },
+          "requests": {
+            "type": "integer",
+            "title": "Requests",
+            "default": 0
+          },
+          "prompt_tokens": {
+            "type": "integer",
+            "title": "Prompt Tokens",
+            "default": 0
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "title": "Completion Tokens",
+            "default": 0
+          },
+          "cost_usd": {
+            "type": "number",
+            "title": "Cost Usd",
+            "default": 0.0
+          },
+          "models": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/UsageModelRow"
+            },
+            "type": "object",
+            "title": "Models"
+          }
+        },
+        "type": "object",
+        "required": [
+          "api_key"
+        ],
+        "title": "UsageReport",
+        "description": "Aggregated usage and USD cost for one API key, per model (/v1/usage)."
       },
       "ValidationError": {
         "properties": {
