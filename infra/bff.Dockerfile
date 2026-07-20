@@ -10,16 +10,12 @@ WORKDIR /app
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml .npmrc tsconfig.base.json ./
 COPY packages/contracts ./packages/contracts
 COPY bff ./bff
-# strictDepBuilds=false: pnpm 11 turns "some dependency's build script was not
-# run" into a hard install failure. The packages that need building are listed
-# in pnpm-workspace.yaml (onlyBuiltDependencies) and do get built — the strict
-# gate still fails the install over the ones we deliberately do not build.
-# verifyDepsBeforeRun=false: node_modules is baked into the image, and pnpm's
-# start-up check would re-verify the lockfile against the supply-chain policy at
-# *runtime* — crash-looping the container whenever a dependency is newer than
-# the release-age window. The check belongs in CI, not in a shipped image.
+# verifyDepsBeforeRun=false: node_modules is baked into the image, so pnpm's
+# start-up dependency check is pure overhead here — and it re-reads the lockfile
+# at *runtime*, which can crash-loop the container on a policy it cannot fix.
+# (strictDepBuilds lives in pnpm-workspace.yaml so CI and the image agree.)
 RUN pnpm config set verifyDepsBeforeRun false \
-  && pnpm install --frozen-lockfile --config.strictDepBuilds=false
+  && pnpm install --frozen-lockfile
 
 EXPOSE 8787
 ENV BFF_PORT=8787

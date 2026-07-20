@@ -5,11 +5,10 @@ FROM node:26-slim AS build
 RUN npm install -g pnpm@11
 WORKDIR /app
 COPY . .
-# See infra/bff.Dockerfile for why strictDepBuilds is relaxed. It goes in the
-# global config rather than on the command line because `kubb generate` shells
-# out to its own `pnpm install`, which would not inherit a --config flag.
-RUN pnpm config set strictDepBuilds false \
-  && pnpm install --frozen-lockfile \
+# pnpm settings (strictDepBuilds, onlyBuiltDependencies) live in
+# pnpm-workspace.yaml, which `kubb generate`'s own nested `pnpm install` reads
+# too — a --config flag here would not reach it.
+RUN pnpm install --frozen-lockfile \
   && pnpm --filter @console/contracts generate \
   && pnpm --filter @console/web build
 
