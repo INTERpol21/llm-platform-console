@@ -4,7 +4,11 @@ FROM node:22-slim AS build
 RUN corepack enable
 WORKDIR /app
 COPY . .
-RUN pnpm install --frozen-lockfile \
+# See infra/bff.Dockerfile for why strictDepBuilds is relaxed. It goes in the
+# global config rather than on the command line because `kubb generate` shells
+# out to its own `pnpm install`, which would not inherit a --config flag.
+RUN pnpm config set strictDepBuilds false \
+  && pnpm install --frozen-lockfile \
   && pnpm --filter @console/contracts generate \
   && pnpm --filter @console/web build
 

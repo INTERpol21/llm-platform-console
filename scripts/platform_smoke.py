@@ -57,11 +57,12 @@ class Endpoints:
             self.orch = f"http://{host}:{os.environ.get('SMOKE_ORCH_PORT', '8083')}"
             self.health = f"{self.gateway}/healthz"
         else:
-            base = "http://127.0.0.1:8080/api"
+            host = os.environ.get("SMOKE_HOST", "127.0.0.1")
+            base = f"http://{host}:{os.environ.get('SMOKE_CADDY_PORT', '8080')}/api"
             self.gateway = f"{base}/gateway"
             self.rag = f"{base}/rag"
             self.orch = f"{base}/orchestrator"
-            self.health = "http://127.0.0.1:8080/api/health"
+            self.health = f"{base}/health"
         self.direct = direct
 
 

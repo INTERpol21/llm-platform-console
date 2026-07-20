@@ -2,3 +2,11 @@ packages:
   - "packages/*"
   - "bff"
   - "web"
+
+# pnpm 11 no longer reads the "pnpm" field from package.json — settings live
+# here now. Without this, install fails with ERR_PNPM_IGNORED_BUILDS because
+# these packages need their build scripts to run.
+onlyBuiltDependencies:
+  - "@biomejs/biome"
+  - esbuild
+  - es5-ext
