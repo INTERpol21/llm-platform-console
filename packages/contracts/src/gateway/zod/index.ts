@@ -9,6 +9,7 @@ export { modelInfoSchema } from "./modelInfoSchema.ts";
 export { modelListSchema } from "./modelListSchema.ts";
 export { modelPingV1ModelsModelIdPingGetPathParamsSchema, modelPingV1ModelsModelIdPingGet200Schema, modelPingV1ModelsModelIdPingGet422Schema, modelPingV1ModelsModelIdPingGetQueryResponseSchema } from "./modelPingV1ModelsModelIdPingGetSchema.ts";
 export { modelPricingSchema } from "./modelPricingSchema.ts";
+export { modelRunsV1ModelRunsGetQueryParamsSchema, modelRunsV1ModelRunsGet200Schema, modelRunsV1ModelRunsGet422Schema, modelRunsV1ModelRunsGetQueryResponseSchema } from "./modelRunsV1ModelRunsGetSchema.ts";
 export { modelsCatalogV1ModelsCatalogGet200Schema, modelsCatalogV1ModelsCatalogGetQueryResponseSchema } from "./modelsCatalogV1ModelsCatalogGetSchema.ts";
 export { pingResultSchema } from "./pingResultSchema.ts";
 export { usageReportV1UsageGet200Schema, usageReportV1UsageGetQueryResponseSchema } from "./usageReportV1UsageGetSchema.ts";

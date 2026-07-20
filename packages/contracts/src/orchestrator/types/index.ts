@@ -3,8 +3,10 @@ export type { HealthzHealthzGet200, HealthzHealthzGetQueryResponse, HealthzHealt
 export type { HTTPValidationError } from "./HTTPValidationError.ts";
 export type { ResearchHistoryResearchHistoryThreadIdGetPathParams, ResearchHistoryResearchHistoryThreadIdGet200, ResearchHistoryResearchHistoryThreadIdGet422, ResearchHistoryResearchHistoryThreadIdGetQueryResponse, ResearchHistoryResearchHistoryThreadIdGetQuery } from "./ResearchHistoryResearchHistoryThreadIdGet.ts";
 export type { ResearchHistoryResponse } from "./ResearchHistoryResponse.ts";
-export type { ResearchRequest } from "./ResearchRequest.ts";
+export type { ResearchRequestModeEnum, ResearchRequest } from "./ResearchRequest.ts";
 export type { ResearchResearchPost200, ResearchResearchPost422, ResearchResearchPostMutationRequest, ResearchResearchPostMutationResponse, ResearchResearchPostMutation } from "./ResearchResearchPost.ts";
 export type { ResearchResponse } from "./ResearchResponse.ts";
+export type { ResearchRunsPage } from "./ResearchRunsPage.ts";
+export type { ResearchRunsResearchRunsGetQueryParams, ResearchRunsResearchRunsGet200, ResearchRunsResearchRunsGet422, ResearchRunsResearchRunsGetQueryResponse, ResearchRunsResearchRunsGetQuery } from "./ResearchRunsResearchRunsGet.ts";
 export type { ResearchStreamResearchStreamPost200, ResearchStreamResearchStreamPost422, ResearchStreamResearchStreamPostMutationRequest, ResearchStreamResearchStreamPostMutationResponse, ResearchStreamResearchStreamPostMutation } from "./ResearchStreamResearchStreamPost.ts";
 export type { ValidationError } from "./ValidationError.ts";

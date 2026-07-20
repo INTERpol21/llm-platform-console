@@ -13,5 +13,7 @@ import { z } from "zod";
 export const researchRequestSchema = z.object({
     "question": z.string().min(1).max(4096).describe("Research question to answer"),
 "max_iterations": z.number().int().min(1).max(10).default(3).describe("Hard cap on reflection iterations"),
-"thread_id": z.union([z.string(), z.null()]).describe("Session id for durable state. Reuse a prior thread_id to continue that session (resume/audit); omit to start a fresh one.").optional()
+"thread_id": z.union([z.string(), z.null()]).describe("Session id for durable state. Reuse a prior thread_id to continue that session (resume/audit); omit to start a fresh one.").optional(),
+"mode": z.enum(["priority", "strict"]).default("priority").describe("Local-first policy. 'priority' (default): consult your local data first, web supplements. 'strict': local only — no web fallback; if local coverage is missing the answer says so."),
+"model": z.union([z.string(), z.null()]).describe("Gateway model id to use for this run (planner/reflector/synthesizer). Omit to use the orchestrator's configured default.").optional()
     }).describe("Body of ``POST /research``.") as unknown as ToZod<ResearchRequest>

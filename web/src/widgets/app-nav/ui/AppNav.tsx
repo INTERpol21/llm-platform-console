@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { BookOpen, Boxes, FlaskConical, Receipt } from 'lucide-react';
+import { Activity, BookOpen, Boxes, FlaskConical, Receipt } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from '../../../features/switch-language/index.ts';
 import { ThemeSwitcher } from '../../../features/switch-theme/index.ts';
@@ -32,6 +32,10 @@ export function AppNav() {
         <Link to="/knowledge" className={styles.link} activeProps={{ className: styles.active }}>
           <BookOpen size={16} />
           {t('nav.knowledge')}
+        </Link>
+        <Link to="/telemetry" className={styles.link} activeProps={{ className: styles.active }}>
+          <Activity size={16} />
+          {t('nav.telemetry')}
         </Link>
       </nav>
 

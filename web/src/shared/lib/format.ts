@@ -1,4 +1,4 @@
-/** Human formatters for the units this console shows: latency, tokens, USD. */
+/** Human formatters for the units this console shows: latency, tokens, USD, percent. */
 
 /** Format a latency in milliseconds, e.g. `840 ms` or `1.24 s`. */
 export function formatMs(ms: number | null | undefined): string {
@@ -24,4 +24,15 @@ export function formatUsd(amount: number | null | undefined): string {
   if (amount === 0) return '$0.00';
   const fractionDigits = Math.abs(amount) < 0.01 ? 4 : 2;
   return `$${amount.toFixed(fractionDigits)}`;
+}
+
+/**
+ * Format a percentage. Tolerates either a 0–100 percent value or a 0–1
+ * fraction (values in `(0, 1]` are treated as fractions), matching the lenient
+ * normalization the telemetry surfaces apply to open-object wire data.
+ */
+export function formatPct(value: number | null | undefined): string {
+  if (value === null || value === undefined || Number.isNaN(value)) return '—';
+  const pct = value > 0 && value <= 1 ? value * 100 : value;
+  return `${pct.toFixed(pct > 0 && pct < 10 ? 1 : 0)}%`;
 }

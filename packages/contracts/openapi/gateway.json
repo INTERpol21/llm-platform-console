@@ -132,6 +132,65 @@
         }
       }
     },
+    "/v1/model-runs": {
+      "get": {
+        "summary": "Model Runs",
+        "description": "Per-call model telemetry, newest first, with keyset cursor pagination.\n\n``enabled=false`` (empty page) when no telemetry database is configured. Pass\nthe returned ``next_cursor`` back as ``cursor`` for the next page.",
+        "operationId": "model_runs_v1_model_runs_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Model Runs V1 Model Runs Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/chat/completions": {
       "post": {
         "summary": "Chat Completions",

@@ -2,6 +2,7 @@ import { createRootRoute, createRoute, createRouter, redirect } from '@tanstack/
 import { KnowledgePage } from '../../pages/knowledge/index.ts';
 import { ModelsPage } from '../../pages/models/index.ts';
 import { ResearchPage } from '../../pages/research/index.ts';
+import { TelemetryPage } from '../../pages/telemetry/index.ts';
 import { UsagePage } from '../../pages/usage/index.ts';
 import { RootLayout } from './RootLayout.tsx';
 
@@ -39,12 +40,19 @@ const knowledgeRoute = createRoute({
   component: KnowledgePage,
 });
 
+const telemetryRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/telemetry',
+  component: TelemetryPage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   modelsRoute,
   researchRoute,
   usageRoute,
   knowledgeRoute,
+  telemetryRoute,
 ]);
 
 export const router = createRouter({ routeTree });

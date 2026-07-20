@@ -9,6 +9,7 @@ export type { ModelInfo } from "./ModelInfo.ts";
 export type { ModelList } from "./ModelList.ts";
 export type { ModelPingV1ModelsModelIdPingGetPathParams, ModelPingV1ModelsModelIdPingGet200, ModelPingV1ModelsModelIdPingGet422, ModelPingV1ModelsModelIdPingGetQueryResponse, ModelPingV1ModelsModelIdPingGetQuery } from "./ModelPingV1ModelsModelIdPingGet.ts";
 export type { ModelPricing } from "./ModelPricing.ts";
+export type { ModelRunsV1ModelRunsGetQueryParams, ModelRunsV1ModelRunsGet200, ModelRunsV1ModelRunsGet422, ModelRunsV1ModelRunsGetQueryResponse, ModelRunsV1ModelRunsGetQuery } from "./ModelRunsV1ModelRunsGet.ts";
 export type { ModelsCatalogV1ModelsCatalogGet200, ModelsCatalogV1ModelsCatalogGetQueryResponse, ModelsCatalogV1ModelsCatalogGetQuery } from "./ModelsCatalogV1ModelsCatalogGet.ts";
 export type { PingResult } from "./PingResult.ts";
 export type { UsageReportV1UsageGet200, UsageReportV1UsageGetQueryResponse, UsageReportV1UsageGetQuery } from "./UsageReportV1UsageGet.ts";

@@ -4,6 +4,8 @@
 */
 
 
+export type ResearchRequestModeEnum = "priority" | "strict";
+
 /**
  * @description Body of ``POST /research``.
 */
@@ -27,4 +29,14 @@ export type ResearchRequest = {
      * @description Session id for durable state. Reuse a prior thread_id to continue that session (resume/audit); omit to start a fresh one.
     */
     thread_id?: (string | null);
+    /**
+     * @description Local-first policy. \'priority\' (default): consult your local data first, web supplements. \'strict\': local only — no web fallback; if local coverage is missing the answer says so.
+     * @default "priority"
+     * @type string | undefined
+    */
+    mode?: ResearchRequestModeEnum;
+    /**
+     * @description Gateway model id to use for this run (planner/reflector/synthesizer). Omit to use the orchestrator\'s configured default.
+    */
+    model?: (string | null);
 };
