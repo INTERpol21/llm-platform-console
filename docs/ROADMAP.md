@@ -48,9 +48,8 @@ day, **L** ≈ multiple days.
       runs in the `e2e` job against the live stack, and each backend now fails CI
       when its exported `requirements.txt` drifts from `uv.lock`. Between them
       these two gates reproduce every defect the first real run turned up.
-- [ ] **Tag `v0.1.0` in each repo.** CHANGELOGs are written and linked from the
-      READMEs; the tags themselves wait until these branches land on `main`.
-      **Size:** S.
+- [x] **Tag `v0.1.0` in each repo.** Done — all five repos carry an annotated
+      `v0.1.0` on `main`, with a CHANGELOG linked from each README.
 
 ## Next — real features (prioritized)
 

@@ -115,11 +115,16 @@ with `docker compose --wait` (needs Docker Hub reachable).
 
 The promptfoo (OWASP-LLM) eval is wired into the rag repo's CI. Remaining (M5):
 running the browser e2e job, which needs Docker Hub base images to be pullable.
-Dependencies are current as of 2026-07 (Biome 2, Vite 8, Vitest 4, Zod 4 + Kubb 4,
-React 19); TypeScript is held at 5.9 until the tsgo/TS7 toolchain certifies.
+Dependencies are current as of 2026-07: Biome 2, Vite 8, Vitest 4, Zod 4 + Kubb 4,
+React 19, and **TypeScript 7** (the native `tsgo` compiler).
 
 > Versions target the plan's stack (React 19, Vite, TanStack Router/Query, Zod).
-> TypeScript is pinned to a stable 5.x for a reliable build; a TS 7 bump is tracked.
+>
+> **TypeScript 7 note.** The native compiler exports only `version` and
+> `versionMajorMinor` — the JS compiler API (`findConfigFile`, `readConfigFile`,
+> `sys`, …) is gone. Any tool that loads a `.ts` config through cosmiconfig
+> therefore fails, which is why `steiger.config` is a `.js` file. Expect the same
+> for other tooling that reads tsconfig programmatically.
 
 ## Releases
 
