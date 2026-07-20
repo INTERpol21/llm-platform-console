@@ -39,11 +39,13 @@ day, **L** ≈ multiple days.
       made every `rag_search` 404 and silently produced answers with zero
       evidence. Fixed.
 - [ ] **Run the browser e2e for real.** Playwright + axe are wired (`web/e2e`, CI
-      `e2e` job) but the web/Caddy image still hasn't been built: pnpm's
-      `minimumReleaseAge` policy rejects a same-day `lightningcss` release, so
-      `pnpm install --frozen-lockfile` fails inside the image. Clears on its own
-      once the package ages past the window; re-verify then. **Size:** S (verify),
-      then keep green.
+      `e2e` job). The BFF and web images had never been built and turned out to be
+      broken under pnpm 11 in three separate ways — fixed, and the full 8-container
+      stack now comes up healthy with the smoke green through Caddy+BFF. The only
+      thing still blocking a clean `docker compose build` is the
+      `minimumReleaseAge` policy rejecting a same-day `lightningcss` release;
+      that clears on its own (~2026-07-21T05:11Z). Run the e2e suite once it does.
+      **Size:** S (verify), then keep green.
 - [ ] **Cover the cross-service links in CI.** The smoke script is the only thing
       that exercises service-to-service wiring; all four unit suites use fakes, so
       the `/v1` drift above shipped green. Add a CI job that boots the compose
