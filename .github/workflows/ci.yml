@@ -52,8 +52,11 @@ jobs:
           path: llm-platform-console
       - name: Check out backend siblings
         run: |
+          # No `|| skip`: compose builds these from source, so a missing sibling
+          # means the stack is silently incomplete and every later step is
+          # meaningless.
           for repo in llm-gateway rag-pgvector mcp-tools-server agent-orchestrator; do
-            git clone --depth 1 "https://github.com/INTERpol21/$repo.git" "$repo" || echo "skip $repo"
+            git clone --depth 1 "https://github.com/INTERpol21/$repo.git" "$repo"
           done
       - uses: pnpm/action-setup@v4
         with:
@@ -66,6 +69,16 @@ jobs:
       - name: Bring up the umbrella stack (offline, mock models)
         working-directory: llm-platform-console
         run: docker compose up -d --build --wait
+      # Runs before the browser suite: it is the only thing that exercises
+      # service-to-service wiring. Every backend's unit suite mocks its
+      # neighbours, so a missing /v1 prefix in the orchestrator's RAG client once
+      # shipped green through ruff, mypy, pytest and CodeQL — every retrieval
+      # 404'd and the agent quietly answered with no evidence at all.
+      - name: Cross-service smoke
+        working-directory: llm-platform-console
+        run: |
+          python3 -m pip install --quiet httpx
+          python3 scripts/platform_smoke.py
       - name: Install + Playwright browser
         working-directory: llm-platform-console
         run: |
