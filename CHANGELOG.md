@@ -6,6 +6,12 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- TypeScript 5.9 → 7 (the native `tsgo` compiler). Two adjustments were needed:
+  `baseUrl` was removed from the language, and the native compiler no longer
+  exposes the JS compiler API, so `steiger.config` had to move from `.ts` to
+  `.js` (cosmiconfig loads `.ts` configs through `typescript.findConfigFile`).
+
 ## [0.1.0] - 2026-07-20
 
 First tagged release. A React 19 console over the four-service platform, served
