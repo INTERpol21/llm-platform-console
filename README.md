@@ -67,11 +67,30 @@ Refresh a contract snapshot from a running/importable backend, then regenerate:
   enforced by **Steiger** (`pnpm --filter @console/web lint:fsd`).
 - **Types/mocks:** generated from OpenAPI (Kubb) — never hand-edit `generated/`.
 
+## Sections
+
+- **Research** — `POST /api/orchestrator/research/stream` (SSE): live plan→execute→
+  reflect→synthesize trace, then a grounded answer with clickable `[n]` citations
+  and evidence; model selector; local-first mode.
+- **Models** — `/api/gateway/v1/models/catalog` cards with provider, status,
+  fallbacks, context window, pricing; per-card reachability **ping**.
+- **Usage** — `/api/gateway/v1/usage`: requests/tokens/USD cost per model (Recharts).
+- **Knowledge** — ingest documents + `/api/rag/query` with source-badged chunks +
+  `/stats` panel.
+- **Telemetry** — per-call model runs (`/api/gateway/v1/model-runs`) and per-run
+  research telemetry (`/api/orchestrator/research/runs`): what was fed → steps →
+  result → stats, cursor-paginated.
+
 ## Status
 
-M4 in progress: foundation, contracts codegen, BFF, and the web scaffold with the
-Models and Research sections. Usage and Knowledge sections, umbrella e2e, and the
-full CI gate (Vitest/RTL/Playwright/axe/Steiger) land next (M5).
+M4 delivered: monorepo, contracts (Kubb) codegen, Hono BFF, and the web app with
+all five sections above — strict FSD (Steiger), CSS Modules, i18n RU/EN. Console
+CI (Biome + Steiger + typecheck + Vitest + build + contracts-in-sync) is wired
+(`.github/workflows/ci.yml`). Typing is end-to-end: backend responses are named
+schemas, so the frontend consumes real generated types (no open-object stubs).
+
+Remaining (M5): umbrella e2e via `docker compose` (Playwright/axe), a
+Mission-control section, and ADRs.
 
 > Versions target the plan's stack (React 19, Vite, TanStack Router/Query, Zod).
 > TypeScript is pinned to a stable 5.x for a reliable build; a TS 7 bump is tracked.
