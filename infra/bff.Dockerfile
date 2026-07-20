@@ -1,10 +1,10 @@
 # BFF image. Context is the repo root so the pnpm workspace (contracts + bff)
 # resolves. Runs the Hono server via tsx.
 FROM node:26-slim
-# Node 26 ships without corepack, so pnpm is installed directly. Pinned to the
-# major the lockfile was written by — an unpinned `latest` would silently change
-# the resolver between builds.
-RUN npm install -g pnpm@11
+# Node 26 ships without corepack, so pnpm is installed directly. Exact version,
+# matching `packageManager` in package.json: a floating `pnpm@11` would let the
+# resolver change between builds of the same commit.
+RUN npm install -g pnpm@11.15.1
 WORKDIR /app
 
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml .npmrc tsconfig.base.json ./

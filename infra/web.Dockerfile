@@ -1,8 +1,9 @@
 # Two-stage: build the SPA to static assets, then serve them from Caddy which
 # also reverse-proxies /api to the BFF (see infra/Caddyfile).
 FROM node:26-slim AS build
-# See infra/bff.Dockerfile: Node 26 ships without corepack.
-RUN npm install -g pnpm@11
+# See infra/bff.Dockerfile: Node 26 ships without corepack. Kept in step with
+# `packageManager` in package.json.
+RUN npm install -g pnpm@11.15.1
 WORKDIR /app
 COPY . .
 # pnpm settings (strictDepBuilds, onlyBuiltDependencies) live in
