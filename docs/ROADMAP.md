@@ -27,9 +27,8 @@ day, **L** ≈ multiple days.
 
 ## Now — unblock and close out (small actions)
 
-- [ ] **Publish the console repo & push.** The GitHub integration can't create a
-      repo (403). Create an empty private `INTERpol21/llm-platform-console`, then
-      push the 12 local commits. **Where:** GitHub + `git push`. **Size:** S.
+- [x] **Publish the console repo & push.** Done — the repo is at
+      `INTERpol21/llm-platform-console` and `main` is pushed.
 - [ ] **Run the umbrella e2e for real.** Playwright + axe are wired
       (`web/e2e`, CI `e2e` job) but the sandbox proxy blocks Docker Hub's blob CDN
       (CloudFront 403), so `docker compose up --build` can't pull base images.
