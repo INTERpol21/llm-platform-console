@@ -9,7 +9,7 @@ export type {
   QueryResponse,
   RetrievedChunkOut,
   StatsResponse,
-  StatsStatsGet200,
+  StatsV1StatsGet200,
   KnowledgeStats,
 } from './model/types.ts';
 export { normalizeStats } from './model/stats.ts';

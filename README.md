@@ -78,19 +78,29 @@ Refresh a contract snapshot from a running/importable backend, then regenerate:
 - **Knowledge** — ingest documents + `/api/rag/query` with source-badged chunks +
   `/stats` panel.
 - **Telemetry** — per-call model runs (`/api/gateway/v1/model-runs`) and per-run
-  research telemetry (`/api/orchestrator/research/runs`): what was fed → steps →
+  research telemetry (`/api/orchestrator/v1/research/runs`): what was fed → steps →
   result → stats, cursor-paginated.
+- **Mission control** — live health/readiness of all four backends + the BFF
+  (polled through the single origin) and the M1–M5 delivery roadmap with status.
+
+## Architecture decisions
+
+The platform-wide ADRs (polyrepo+contracts, single Postgres/schemas, checkpointer,
+FSD, backend skeleton, Kubb, unified `/v1`, single-origin BFF, prompt-injection
+fencing, CSS Modules) live in [`docs/adr/`](docs/adr/README.md).
 
 ## Status
 
 M4 delivered: monorepo, contracts (Kubb) codegen, Hono BFF, and the web app with
-all five sections above — strict FSD (Steiger), CSS Modules, i18n RU/EN. Console
+all six sections above — strict FSD (Steiger), CSS Modules, i18n RU/EN. Console
 CI (Biome + Steiger + typecheck + Vitest + build + contracts-in-sync) is wired
 (`.github/workflows/ci.yml`). Typing is end-to-end: backend responses are named
 schemas, so the frontend consumes real generated types (no open-object stubs).
+The API is unified under `/v1` across services, the Mission-control section is in,
+and the ADRs are written.
 
-Remaining (M5): umbrella e2e via `docker compose` (Playwright/axe), a
-Mission-control section, and ADRs.
+Remaining (M5): umbrella e2e via `docker compose` (Playwright/axe) and CI wiring
+of the backend security/promptfoo gates.
 
 > Versions target the plan's stack (React 19, Vite, TanStack Router/Query, Zod).
 > TypeScript is pinned to a stable 5.x for a reliable build; a TS 7 bump is tracked.

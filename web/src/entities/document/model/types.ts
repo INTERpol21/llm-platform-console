@@ -10,7 +10,7 @@ export type {
   QueryResponse,
   RetrievedChunkOut,
   StatsResponse,
-  StatsStatsGet200,
+  StatsV1StatsGet200,
 } from '@console/contracts/rag';
 
 /**

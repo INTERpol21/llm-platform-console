@@ -1,5 +1,6 @@
 import { createRootRoute, createRoute, createRouter, redirect } from '@tanstack/react-router';
 import { KnowledgePage } from '../../pages/knowledge/index.ts';
+import { MissionControlPage } from '../../pages/mission-control/index.ts';
 import { ModelsPage } from '../../pages/models/index.ts';
 import { ResearchPage } from '../../pages/research/index.ts';
 import { TelemetryPage } from '../../pages/telemetry/index.ts';
@@ -46,6 +47,12 @@ const telemetryRoute = createRoute({
   component: TelemetryPage,
 });
 
+const missionRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/mission',
+  component: MissionControlPage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   modelsRoute,
@@ -53,6 +60,7 @@ const routeTree = rootRoute.addChildren([
   usageRoute,
   knowledgeRoute,
   telemetryRoute,
+  missionRoute,
 ]);
 
 export const router = createRouter({ routeTree });

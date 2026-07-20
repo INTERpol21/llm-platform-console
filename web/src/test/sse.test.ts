@@ -44,7 +44,7 @@ describe('streamSse + parseResearchEvent', () => {
 
     const received: ResearchStreamEvent[] = [];
     await streamSse({
-      url: '/api/orchestrator/research/stream',
+      url: '/api/orchestrator/v1/research/stream',
       body: { question: 'q' },
       onMessage: (message) => {
         const event = parseResearchEvent(message);
@@ -71,7 +71,7 @@ describe('streamSse + parseResearchEvent', () => {
     ]);
 
     await streamSse({
-      url: '/api/orchestrator/research/stream',
+      url: '/api/orchestrator/v1/research/stream',
       body: { question: 'q' },
       signal: controller.signal,
       onMessage: (message) => {

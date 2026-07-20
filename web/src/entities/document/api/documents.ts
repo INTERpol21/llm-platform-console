@@ -3,12 +3,12 @@ import type {
   IngestResponse,
   QueryRequest,
   QueryResponse,
-  StatsStatsGet200,
+  StatsV1StatsGet200,
 } from '@console/contracts/rag';
 import {
   ingestResponseSchema,
   queryResponseSchema,
-  statsStatsGet200Schema,
+  statsV1StatsGet200Schema,
 } from '@console/contracts/rag';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { apiGet, apiPost } from '../../../shared/api/index.ts';
@@ -40,9 +40,9 @@ export async function queryKnowledge(
 }
 
 /** Fetch + runtime-validate the raw index stats object. */
-export async function fetchStats(signal?: AbortSignal): Promise<StatsStatsGet200> {
+export async function fetchStats(signal?: AbortSignal): Promise<StatsV1StatsGet200> {
   const raw = await apiGet<unknown>(`${RAG_BASE}/stats`, { signal });
-  return statsStatsGet200Schema.parse(raw);
+  return statsV1StatsGet200Schema.parse(raw);
 }
 
 /** Mutation wrapper around document ingestion. */
@@ -62,7 +62,7 @@ export function useKnowledgeQuery() {
 
 /** React Query hook returning the normalized index stats. */
 export function useStats() {
-  return useQuery<StatsStatsGet200, Error, KnowledgeStats>({
+  return useQuery<StatsV1StatsGet200, Error, KnowledgeStats>({
     queryKey: documentKeys.stats(),
     queryFn: ({ signal }) => fetchStats(signal),
     select: normalizeStats,

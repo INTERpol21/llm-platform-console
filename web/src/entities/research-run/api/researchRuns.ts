@@ -1,4 +1,4 @@
-import { researchRunsResearchRunsGet200Schema } from '@console/contracts/orchestrator';
+import { researchRunsV1ResearchRunsGet200Schema } from '@console/contracts/orchestrator';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { apiGet } from '../../../shared/api/index.ts';
 import { ORCHESTRATOR_BASE } from '../../../shared/config/index.ts';
@@ -27,7 +27,7 @@ export async function fetchResearchRuns({
   const raw = await apiGet<unknown>(`${ORCHESTRATOR_BASE}/research/runs?${params.toString()}`, {
     signal,
   });
-  return normalizeResearchRunsPage(researchRunsResearchRunsGet200Schema.parse(raw));
+  return normalizeResearchRunsPage(researchRunsV1ResearchRunsGet200Schema.parse(raw));
 }
 
 export interface ResearchRunsView {

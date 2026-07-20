@@ -1,5 +1,5 @@
 import type { ResearchHistoryResponse } from '@console/contracts/orchestrator';
-import { researchHistoryResearchHistoryThreadIdGet200Schema } from '@console/contracts/orchestrator';
+import { researchHistoryV1ResearchHistoryThreadIdGet200Schema } from '@console/contracts/orchestrator';
 import { apiGet, streamSse } from '../../../shared/api/index.ts';
 import { ORCHESTRATOR_BASE } from '../../../shared/config/index.ts';
 import type { ResearchStreamEvent } from '../model/events.ts';
@@ -52,5 +52,5 @@ export async function fetchResearchHistory(
     `${ORCHESTRATOR_BASE}/research/history/${encodeURIComponent(threadId)}`,
     { signal },
   );
-  return researchHistoryResearchHistoryThreadIdGet200Schema.parse(raw);
+  return researchHistoryV1ResearchHistoryThreadIdGet200Schema.parse(raw);
 }

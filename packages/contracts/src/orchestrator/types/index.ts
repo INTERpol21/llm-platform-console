@@ -1,13 +1,13 @@
 export type { EvidenceSourceEnum, Evidence } from "./Evidence.ts";
 export type { HealthzHealthzGet200, HealthzHealthzGetQueryResponse, HealthzHealthzGetQuery } from "./HealthzHealthzGet.ts";
 export type { HTTPValidationError } from "./HTTPValidationError.ts";
-export type { ResearchHistoryResearchHistoryThreadIdGetPathParams, ResearchHistoryResearchHistoryThreadIdGet200, ResearchHistoryResearchHistoryThreadIdGet422, ResearchHistoryResearchHistoryThreadIdGetQueryResponse, ResearchHistoryResearchHistoryThreadIdGetQuery } from "./ResearchHistoryResearchHistoryThreadIdGet.ts";
 export type { ResearchHistoryResponse } from "./ResearchHistoryResponse.ts";
+export type { ResearchHistoryV1ResearchHistoryThreadIdGetPathParams, ResearchHistoryV1ResearchHistoryThreadIdGet200, ResearchHistoryV1ResearchHistoryThreadIdGet422, ResearchHistoryV1ResearchHistoryThreadIdGetQueryResponse, ResearchHistoryV1ResearchHistoryThreadIdGetQuery } from "./ResearchHistoryV1ResearchHistoryThreadIdGet.ts";
 export type { ResearchRequestModeEnum, ResearchRequest } from "./ResearchRequest.ts";
-export type { ResearchResearchPost200, ResearchResearchPost422, ResearchResearchPostMutationRequest, ResearchResearchPostMutationResponse, ResearchResearchPostMutation } from "./ResearchResearchPost.ts";
 export type { ResearchResponse } from "./ResearchResponse.ts";
 export type { ResearchRunOut } from "./ResearchRunOut.ts";
 export type { ResearchRunsPage } from "./ResearchRunsPage.ts";
-export type { ResearchRunsResearchRunsGetQueryParams, ResearchRunsResearchRunsGet200, ResearchRunsResearchRunsGet422, ResearchRunsResearchRunsGetQueryResponse, ResearchRunsResearchRunsGetQuery } from "./ResearchRunsResearchRunsGet.ts";
-export type { ResearchStreamResearchStreamPost200, ResearchStreamResearchStreamPost422, ResearchStreamResearchStreamPostMutationRequest, ResearchStreamResearchStreamPostMutationResponse, ResearchStreamResearchStreamPostMutation } from "./ResearchStreamResearchStreamPost.ts";
+export type { ResearchRunsV1ResearchRunsGetQueryParams, ResearchRunsV1ResearchRunsGet200, ResearchRunsV1ResearchRunsGet422, ResearchRunsV1ResearchRunsGetQueryResponse, ResearchRunsV1ResearchRunsGetQuery } from "./ResearchRunsV1ResearchRunsGet.ts";
+export type { ResearchStreamV1ResearchStreamPost200, ResearchStreamV1ResearchStreamPost422, ResearchStreamV1ResearchStreamPostMutationRequest, ResearchStreamV1ResearchStreamPostMutationResponse, ResearchStreamV1ResearchStreamPostMutation } from "./ResearchStreamV1ResearchStreamPost.ts";
+export type { ResearchV1ResearchPost200, ResearchV1ResearchPost422, ResearchV1ResearchPostMutationRequest, ResearchV1ResearchPostMutationResponse, ResearchV1ResearchPostMutation } from "./ResearchV1ResearchPost.ts";
 export type { ValidationError } from "./ValidationError.ts";

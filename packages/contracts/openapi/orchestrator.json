@@ -28,10 +28,10 @@
         }
       }
     },
-    "/research": {
+    "/v1/research": {
       "post": {
         "summary": "Research",
-        "operationId": "research_research_post",
+        "operationId": "research_v1_research_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -66,11 +66,11 @@
         }
       }
     },
-    "/research/stream": {
+    "/v1/research/stream": {
       "post": {
         "summary": "Research Stream",
         "description": "Stream the agent's trace live over SSE, then a final ``result`` event.\n\nUses ``astream(stream_mode=[\"updates\", \"custom\"])`` (not ``astream_events``,\nwhich does not compose with a checkpointer): each node's ``trace`` delta is\nrelayed as it happens; answer/evidence/iterations are accumulated for the\nterminal ``result`` event, closed by ``[DONE]``.",
-        "operationId": "research_stream_research_stream_post",
+        "operationId": "research_stream_v1_research_stream_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -103,11 +103,11 @@
         }
       }
     },
-    "/research/history/{thread_id}": {
+    "/v1/research/history/{thread_id}": {
       "get": {
         "summary": "Research History",
-        "description": "Return the latest persisted snapshot for a session, or ``exists=false``.\n\nReads straight from the checkpointer, so it works across restarts when a\ndurable backend is configured and reflects only committed supersteps.",
-        "operationId": "research_history_research_history__thread_id__get",
+        "description": "Return the latest persisted snapshot for a session, or ``exists=false``.\n\nReads straight from the checkpointer, so it works across restarts when a\ndurable backend is configured and reflects only committed supersteps.\n\nTrust boundary: ``thread_id`` is not scoped to the caller \u2014 any holder of a\nvalid ``ORCH_API_KEY`` can read any thread's snapshot. This is intentional\nfor the single-operator console this service backs (every key holder is\ntrusted to see all runs). If ``ORCH_API_KEYS`` is ever shared across\nmutually-distrusting principals, add per-key ownership scoping here and in\n``/research/runs`` before relying on it.",
+        "operationId": "research_history_v1_research_history__thread_id__get",
         "parameters": [
           {
             "name": "thread_id",
@@ -143,11 +143,11 @@
         }
       }
     },
-    "/research/runs": {
+    "/v1/research/runs": {
       "get": {
         "summary": "Research Runs",
         "description": "List recent research-run telemetry, newest first, with cursor pagination.\n\n``enabled=false`` (and an empty page) when no telemetry database is\nconfigured. Pass the returned ``next_cursor`` back as ``cursor`` for the\nnext page; it is null on the last page.",
-        "operationId": "research_runs_research_runs_get",
+        "operationId": "research_runs_v1_research_runs_get",
         "parameters": [
           {
             "name": "limit",

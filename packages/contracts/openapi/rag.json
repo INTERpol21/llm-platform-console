@@ -24,10 +24,10 @@
         }
       }
     },
-    "/ingest": {
+    "/v1/ingest": {
       "post": {
         "summary": "Ingest",
-        "operationId": "ingest_ingest_post",
+        "operationId": "ingest_v1_ingest_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -62,10 +62,49 @@
         }
       }
     },
-    "/query": {
+    "/v1/ingest/file": {
+      "post": {
+        "summary": "Ingest File",
+        "description": "Upload a md/txt/pdf/docx file; its text is extracted and ingested.",
+        "operationId": "ingest_file_v1_ingest_file_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_ingest_file_v1_ingest_file_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IngestResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/query": {
       "post": {
         "summary": "Query",
-        "operationId": "query_query_post",
+        "operationId": "query_v1_query_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -100,10 +139,10 @@
         }
       }
     },
-    "/stats": {
+    "/v1/stats": {
       "get": {
         "summary": "Stats",
-        "operationId": "stats_stats_get",
+        "operationId": "stats_v1_stats_get",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -121,6 +160,52 @@
   },
   "components": {
     "schemas": {
+      "Body_ingest_file_v1_ingest_file_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "local",
+              "web",
+              "other"
+            ],
+            "title": "Source",
+            "default": "local"
+          },
+          "owner": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Owner"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_ingest_file_v1_ingest_file_post"
+      },
       "CitationOut": {
         "properties": {
           "document_id": {

@@ -30,21 +30,21 @@ interface RouteOverrides {
   query?: () => Promise<Response>;
 }
 
-/** Route the BFF calls the widget makes: /rag/stats (GET), /rag/ingest, /rag/query (POST). */
+/** Route the BFF calls the widget makes: /rag/v1/stats (GET), /rag/v1/ingest, /rag/v1/query (POST). */
 function stubRag(overrides: RouteOverrides = {}) {
   vi.stubGlobal(
     'fetch',
     vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input);
       const method = init?.method ?? 'GET';
-      if (url.includes('/rag/stats')) return Promise.resolve(jsonResponse(emptyStats));
-      if (url.includes('/rag/ingest') && method === 'POST') {
+      if (url.includes('/rag/v1/stats')) return Promise.resolve(jsonResponse(emptyStats));
+      if (url.includes('/rag/v1/ingest') && method === 'POST') {
         return (
           overrides.ingest?.() ??
           Promise.resolve(jsonResponse({ document_ids: ['d1'], chunks_indexed: 3, skipped: 0 }))
         );
       }
-      if (url.includes('/rag/query') && method === 'POST') {
+      if (url.includes('/rag/v1/query') && method === 'POST') {
         return (
           overrides.query?.() ??
           Promise.resolve(jsonResponse({ answer: '', citations: [], retrieved: [] }))
