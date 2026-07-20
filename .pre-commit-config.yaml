@@ -1,0 +1,30 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+  # Local hooks run through pnpm so contributors need no extra global tools.
+  - repo: local
+    hooks:
+      - id: biome
+        name: biome check (lint + format)
+        entry: pnpm exec biome check --write
+        language: system
+        types_or: [ts, tsx, javascript, jsx, json, css]
+        pass_filenames: false
+      - id: steiger
+        name: steiger (FSD boundaries)
+        entry: pnpm --filter @console/web lint:fsd
+        language: system
+        files: ^web/src/
+        pass_filenames: false
+      - id: typecheck
+        name: tsc typecheck
+        entry: pnpm -r typecheck
+        language: system
+        types_or: [ts, tsx]
+        pass_filenames: false

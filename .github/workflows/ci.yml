@@ -1,0 +1,41 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      # Generated contracts are committed; fail if they drift from the specs.
+      - name: Contracts in sync
+        run: |
+          pnpm --filter @console/contracts generate
+          git diff --exit-code packages/contracts/src
+
+      - name: Lint + format (Biome)
+        run: pnpm exec biome check .
+
+      - name: FSD boundaries (Steiger)
+        run: pnpm --filter @console/web lint:fsd
+
+      - name: Typecheck
+        run: pnpm -r typecheck
+
+      - name: Test
+        run: pnpm -r test
+
+      - name: Build
+        run: pnpm --filter @console/web build
