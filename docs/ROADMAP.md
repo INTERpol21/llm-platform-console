@@ -24,28 +24,26 @@ day, **L** ≈ multiple days.
 - **Quality:** jsdom axe a11y gate + Playwright e2e harness; deps current
   (Biome 2, Vite 8, Vitest 4, Zod 4, Kubb 4, React 19); ADRs (10) + CONTRIBUTING
   in every repo.
+- **Runs for real (2026-07-20):** the whole 8-container stack builds and comes up
+  healthy on a laptop, with `scripts/platform_smoke.py` green 10/10 both direct
+  and through Caddy+BFF. Getting there took six fixes that no unit suite caught,
+  because every suite mocks its neighbours: two lockfile/dependency drifts, a
+  missing `/v1` in the orchestrator's RAG client (every retrieval 404'd, and the
+  agent degraded quietly into evidence-free answers), and three pnpm 11
+  breakages that had left the BFF and web images never-built.
 
 ## Now — unblock and close out (small actions)
 
 - [x] **Publish the console repo & push.** Done — the repo is at
       `INTERpol21/llm-platform-console` and `main` is pushed.
-- [x] **Bring the backend stack up for real.** Done on a developer laptop
-      (2026-07-20): all four backends + Postgres + Redis healthy under the umbrella
-      compose, and `scripts/platform_smoke.py --direct` green at 10/10. This found
-      three real defects that the unit suites could not: two lockfile/dependency
-      drifts (`psycopg-pool` missing from the gateway's exported
-      `requirements.txt`; `psycopg` arriving without the `binary` extra in the
-      orchestrator) and a missing `/v1` in the orchestrator's RAG client, which
-      made every `rag_search` 404 and silently produced answers with zero
-      evidence. Fixed.
+- [x] **Bring the stack up for real.** Done 2026-07-20 — see the delivered
+      snapshot above for what it found.
 - [ ] **Run the browser e2e for real.** Playwright + axe are wired (`web/e2e`, CI
-      `e2e` job). The BFF and web images had never been built and turned out to be
-      broken under pnpm 11 in three separate ways — fixed, and the full 8-container
-      stack now comes up healthy with the smoke green through Caddy+BFF. The only
-      thing still blocking a clean `docker compose build` is the
-      `minimumReleaseAge` policy rejecting a same-day `lightningcss` release;
-      that clears on its own (~2026-07-21T05:11Z). Run the e2e suite once it does.
-      **Size:** S (verify), then keep green.
+      `e2e` job) but have never actually run — the web image did not build until
+      now. A clean `docker compose build` is still blocked by pnpm's
+      `minimumReleaseAge` rejecting a same-day `lightningcss` release, which clears
+      by itself (~2026-07-21T05:11Z). Verify the suite once it does. **Size:** S,
+      then keep green.
 - [ ] **Cover the cross-service links in CI.** The smoke script is the only thing
       that exercises service-to-service wiring; all four unit suites use fakes, so
       the `/v1` drift above shipped green. Add a CI job that boots the compose
