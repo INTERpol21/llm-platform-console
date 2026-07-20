@@ -24,7 +24,7 @@ export function MissionControl() {
 
   return (
     <div className={styles.grid}>
-      <Card className={styles.panel}>
+      <Card as="section" className={styles.panel}>
         <header className={styles.panelHead}>
           <h2 className={styles.panelTitle}>{t('mission.healthTitle')}</h2>
         </header>
@@ -35,7 +35,7 @@ export function MissionControl() {
         </div>
       </Card>
 
-      <Card className={styles.panel}>
+      <Card as="section" className={styles.panel}>
         <header className={styles.panelHead}>
           <h2 className={styles.panelTitle}>{t('mission.roadmapTitle')}</h2>
         </header>

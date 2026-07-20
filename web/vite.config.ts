@@ -29,5 +29,7 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
     css: true,
+    // Unit/component tests live under src; e2e/ is Playwright's (its own runner).
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
   },
 });

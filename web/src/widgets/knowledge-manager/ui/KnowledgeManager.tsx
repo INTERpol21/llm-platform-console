@@ -21,7 +21,7 @@ export function KnowledgeManager() {
   return (
     <div className={styles.manager}>
       <div className={styles.column}>
-        <Card className={styles.panel}>
+        <Card as="section" className={styles.panel}>
           <header className={styles.panelHead}>
             <h2 className={styles.panelTitle}>{t('knowledge.ingestTitle')}</h2>
           </header>
@@ -50,7 +50,7 @@ export function KnowledgeManager() {
           />
         </Card>
 
-        <Card className={styles.panel}>
+        <Card as="section" className={styles.panel}>
           <header className={styles.panelHead}>
             <h2 className={styles.panelTitle}>{t('knowledge.statsTitle')}</h2>
           </header>
@@ -74,7 +74,7 @@ export function KnowledgeManager() {
       </div>
 
       <div className={styles.column}>
-        <Card className={styles.panel}>
+        <Card as="section" className={styles.panel}>
           <header className={styles.panelHead}>
             <h2 className={styles.panelTitle}>{t('knowledge.queryTitle')}</h2>
           </header>

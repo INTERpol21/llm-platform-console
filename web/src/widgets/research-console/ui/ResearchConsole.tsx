@@ -44,7 +44,7 @@ export function ResearchConsole() {
 
   return (
     <div className={styles.console}>
-      <Card className={styles.panel}>
+      <Card as="section" className={styles.panel}>
         <QuestionForm
           labels={{
             questionLabel: t('research.questionLabel'),
@@ -72,7 +72,7 @@ export function ResearchConsole() {
       </Card>
 
       <div className={styles.columns}>
-        <Card className={styles.panel}>
+        <Card as="section" className={styles.panel}>
           <header className={styles.panelHead}>
             <h2 className={styles.panelTitle}>{t('research.traceTitle')}</h2>
             <Badge tone={STATUS_TONE[run.status]}>{statusLabel}</Badge>
@@ -86,7 +86,7 @@ export function ResearchConsole() {
         </Card>
 
         <div className={styles.results}>
-          <Card className={styles.panel}>
+          <Card as="section" className={styles.panel}>
             <header className={styles.panelHead}>
               <h2 className={styles.panelTitle}>{t('research.answerTitle')}</h2>
               {run.status === 'done' ? (
@@ -117,7 +117,7 @@ export function ResearchConsole() {
             )}
           </Card>
 
-          <Card className={styles.panel}>
+          <Card as="section" className={styles.panel}>
             <header className={styles.panelHead}>
               <h2 className={styles.panelTitle}>{t('research.evidenceTitle')}</h2>
               {run.evidence.length > 0 ? <Badge tone="neutral">{run.evidence.length}</Badge> : null}

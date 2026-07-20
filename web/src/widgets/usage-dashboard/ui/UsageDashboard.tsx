@@ -66,7 +66,7 @@ export function UsageDashboard() {
         <StatTile label={t('usage.cost')} value={formatUsd(data.totalCostUsd)} />
       </div>
 
-      <Card className={styles.panel}>
+      <Card as="section" className={styles.panel}>
         <header className={styles.panelHead}>
           <h2 className={styles.panelTitle}>{t('usage.chartTitle')}</h2>
         </header>
@@ -107,7 +107,7 @@ export function UsageDashboard() {
         </div>
       </Card>
 
-      <Card className={styles.panel}>
+      <Card as="section" className={styles.panel}>
         <header className={styles.panelHead}>
           <h2 className={styles.panelTitle}>{t('usage.byModel')}</h2>
         </header>

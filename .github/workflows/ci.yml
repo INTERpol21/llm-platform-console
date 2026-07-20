@@ -39,3 +39,44 @@ jobs:
 
       - name: Build
         run: pnpm --filter @console/web build
+
+  # End-to-end against the umbrella stack. Separate job: it needs the four backend
+  # repos checked out as siblings and Docker Hub reachable (base images), which the
+  # unit job above does not. The unit gate already runs the jsdom axe checks; this
+  # adds live-browser Playwright + axe against the running console.
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: llm-platform-console
+      - name: Check out backend siblings
+        run: |
+          for repo in llm-gateway rag-pgvector mcp-tools-server agent-orchestrator; do
+            git clone --depth 1 "https://github.com/INTERpol21/$repo.git" "$repo" || echo "skip $repo"
+          done
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: llm-platform-console/pnpm-lock.yaml
+      - name: Bring up the umbrella stack (offline, mock models)
+        working-directory: llm-platform-console
+        run: docker compose up -d --build --wait
+      - name: Install + Playwright browser
+        working-directory: llm-platform-console
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm --filter @console/web exec playwright install --with-deps chromium
+      - name: E2E (Playwright + axe)
+        working-directory: llm-platform-console
+        env:
+          E2E_BASE_URL: http://localhost:8080
+        run: pnpm --filter @console/web test:e2e
+      - name: Stack logs on failure
+        if: failure()
+        working-directory: llm-platform-console
+        run: docker compose logs --no-color | tail -200

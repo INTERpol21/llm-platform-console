@@ -99,8 +99,17 @@ schemas, so the frontend consumes real generated types (no open-object stubs).
 The API is unified under `/v1` across services, the Mission-control section is in,
 and the ADRs are written.
 
-Remaining (M5): umbrella e2e via `docker compose` (Playwright/axe) and CI wiring
-of the backend security/promptfoo gates.
+**Accessibility is gated two ways:** a fast **axe** pass runs in the unit suite
+(jsdom, DOM-inspectable rules) on every push, and a live-browser **Playwright +
+axe** e2e (`web/e2e/`, `pnpm --filter @console/web test:e2e`) runs against the
+umbrella stack in the `e2e` CI job — it drives boot → route → streamed research
+→ a11y scan. The unit gate needs no services; the e2e job brings the stack up
+with `docker compose --wait` (needs Docker Hub reachable).
+
+Remaining (M5): running the e2e job in an environment where Docker Hub base
+images are pullable, and wiring the backend promptfoo (OWASP-LLM) eval into CI.
+Dependencies are current as of 2026-07 (Biome 2, Vite 8, Vitest 4, Zod 4 + Kubb 4,
+React 19); TypeScript is held at 5.9 until the tsgo/TS7 toolchain certifies.
 
 > Versions target the plan's stack (React 19, Vite, TanStack Router/Query, Zod).
 > TypeScript is pinned to a stable 5.x for a reliable build; a TS 7 bump is tracked.
