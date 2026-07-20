@@ -1,6 +1,6 @@
 {
   "name": "@console/web",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "description": "Vite SPA console (React 19 / strict FSD / CSS Modules): research chat with live agent trace, model catalog, usage, knowledge base.",

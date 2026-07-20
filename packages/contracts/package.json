@@ -1,6 +1,6 @@
 {
   "name": "@console/contracts",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "description": "OpenAPI snapshots of the platform backends + generated TS types and Zod schemas (single source of truth, no schema drift).",
