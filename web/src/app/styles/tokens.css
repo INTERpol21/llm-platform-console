@@ -41,10 +41,16 @@
   --color-border-strong: #b6c2d4;
   --color-text: #0f1b2d;
   --color-text-muted: #5a6b82;
-  --color-text-faint: #8a99ad;
-  --color-accent: #2563eb;
-  --color-accent-hover: #1d4ed8;
-  --color-accent-soft: rgba(37, 99, 235, 0.1);
+  /* Darkened from #8a99ad, which sat at 2.9 against white — well under WCAG AA.
+     It is used for real content (labels, hints), not decoration, so it has to
+     clear 4.5; this is 4.56. */
+  --color-text-faint: #68778c;
+  /* Darkened from #2563eb, which failed WCAG AA as link text: 4.49 on the soft
+     accent background (needs 4.5) and 2.9 where axe measured it against white.
+     This clears both with room to spare (5.82 / 6.70). */
+  --color-accent: #1d4ed8;
+  --color-accent-hover: #1a3fa8;
+  --color-accent-soft: rgba(29, 78, 216, 0.1);
   --color-on-accent: #ffffff;
 
   --color-ok: #16794a;
