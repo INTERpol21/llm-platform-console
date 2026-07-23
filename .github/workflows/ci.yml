@@ -79,13 +79,23 @@ jobs:
       # Build in the background and install the browser while it runs: the
       # build is network/CPU on Docker's side, the install is network on ours,
       # and nothing below needs the images until the `up` step.
-      - name: Build images (background)
+      - name: Build + pull images (background)
         working-directory: llm-platform-console
         run: |
           # Steps run in separate shells, so `wait <pid>` is impossible later —
-          # the subshell records its own exit code instead.
-          ( COMPOSE_BAKE=true docker compose -f docker-compose.yml -f docker-compose.ci.yml build \
-              > /tmp/stack-build.log 2>&1; echo $? > /tmp/stack-build.exit ) &
+          # the subshell records its own exit code instead. The base-image pull
+          # (postgres/redis, ~25s) runs alongside the build: `up` used to pull
+          # them serially after everything else was ready.
+          (
+            set -e
+            docker compose pull --quiet postgres redis &
+            PULL=$!
+            COMPOSE_BAKE=true docker compose -f docker-compose.yml -f docker-compose.ci.yml build &
+            BUILD=$!
+            wait "$PULL"
+            wait "$BUILD"
+            echo 0 > /tmp/stack-build.exit
+          ) > /tmp/stack-build.log 2>&1 || echo 1 > /tmp/stack-build.exit &
       - name: Playwright browser cache
         uses: actions/cache@v4
         with:
@@ -95,8 +105,10 @@ jobs:
         working-directory: llm-platform-console
         run: |
           pnpm install --frozen-lockfile
-          # With the cache hot this only verifies + installs apt deps.
-          pnpm --filter @console/web exec playwright install --with-deps chromium
+          # No --with-deps: ubuntu-latest runners already carry the chromium
+          # system libraries, and the apt round-trip cost ~15s per run. With
+          # the browser cache hot this is a no-op verify.
+          pnpm --filter @console/web exec playwright install chromium
       - name: Bring up the umbrella stack (offline, mock models)
         working-directory: llm-platform-console
         run: |
