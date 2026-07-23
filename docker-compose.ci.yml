@@ -1,0 +1,38 @@
+# CI-only overlay: registry-less BuildKit layer caching via the GitHub Actions
+# cache backend. Merged on top of docker-compose.yml ONLY in the e2e job:
+#
+#   COMPOSE_BAKE=true docker compose -f docker-compose.yml -f docker-compose.ci.yml build
+#
+# Requires a docker-container BuildKit builder and the ACTIONS_* runtime env
+# (docker/setup-buildx-action + crazy-max/ghaction-github-runtime in ci.yml).
+# Do NOT use locally: without those credentials `type=gha` fails the build —
+# plain `docker compose build` already reuses the local layer cache anyway.
+#
+# mode=max caches intermediate layers too, so a requirements/lockfile-unchanged
+# rebuild skips the expensive pip/pnpm install layers entirely. Scopes keep the
+# six images from evicting each other's cache entries.
+services:
+  gateway:
+    build:
+      cache_from: ["type=gha,scope=img-gateway"]
+      cache_to: ["type=gha,scope=img-gateway,mode=max"]
+  rag:
+    build:
+      cache_from: ["type=gha,scope=img-rag"]
+      cache_to: ["type=gha,scope=img-rag,mode=max"]
+  mcp:
+    build:
+      cache_from: ["type=gha,scope=img-mcp"]
+      cache_to: ["type=gha,scope=img-mcp,mode=max"]
+  orchestrator:
+    build:
+      cache_from: ["type=gha,scope=img-orchestrator"]
+      cache_to: ["type=gha,scope=img-orchestrator,mode=max"]
+  bff:
+    build:
+      cache_from: ["type=gha,scope=img-bff"]
+      cache_to: ["type=gha,scope=img-bff,mode=max"]
+  caddy:
+    build:
+      cache_from: ["type=gha,scope=img-caddy"]
+      cache_to: ["type=gha,scope=img-caddy,mode=max"]

@@ -69,9 +69,43 @@ jobs:
           node-version: 26
           cache: pnpm
           cache-dependency-path: llm-platform-console/pnpm-lock.yaml
+      # BuildKit layer cache in the GHA cache backend (docker-compose.ci.yml
+      # adds cache_from/cache_to). A lockfile-unchanged rebuild skips the
+      # pip/pnpm install layers entirely — this took the stack build from ~76s
+      # to warm-cache territory. github-runtime exposes the ACTIONS_* env that
+      # the `type=gha` cache exporter needs.
+      - uses: docker/setup-buildx-action@v3
+      - uses: crazy-max/ghaction-github-runtime@v3
+      # Build in the background and install the browser while it runs: the
+      # build is network/CPU on Docker's side, the install is network on ours,
+      # and nothing below needs the images until the `up` step.
+      - name: Build images (background)
+        working-directory: llm-platform-console
+        run: |
+          # Steps run in separate shells, so `wait <pid>` is impossible later —
+          # the subshell records its own exit code instead.
+          ( COMPOSE_BAKE=true docker compose -f docker-compose.yml -f docker-compose.ci.yml build \
+              > /tmp/stack-build.log 2>&1; echo $? > /tmp/stack-build.exit ) &
+      - name: Playwright browser cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('llm-platform-console/pnpm-lock.yaml') }}
+      - name: Install + Playwright browser
+        working-directory: llm-platform-console
+        run: |
+          pnpm install --frozen-lockfile
+          # With the cache hot this only verifies + installs apt deps.
+          pnpm --filter @console/web exec playwright install --with-deps chromium
       - name: Bring up the umbrella stack (offline, mock models)
         working-directory: llm-platform-console
-        run: docker compose up -d --build --wait
+        run: |
+          while [ ! -f /tmp/stack-build.exit ]; do sleep 2; done
+          if [ "$(cat /tmp/stack-build.exit)" != "0" ]; then
+            echo "::error::image build failed"; tail -100 /tmp/stack-build.log; exit 1
+          fi
+          tail -5 /tmp/stack-build.log
+          docker compose up -d --wait --no-build
       # Runs before the browser suite: it is the only thing that exercises
       # service-to-service wiring. Every backend's unit suite mocks its
       # neighbours, so a missing /v1 prefix in the orchestrator's RAG client once
@@ -82,11 +116,6 @@ jobs:
         run: |
           python3 -m pip install --quiet httpx
           python3 scripts/platform_smoke.py
-      - name: Install + Playwright browser
-        working-directory: llm-platform-console
-        run: |
-          pnpm install --frozen-lockfile
-          pnpm --filter @console/web exec playwright install --with-deps chromium
       - name: E2E (Playwright + axe)
         working-directory: llm-platform-console
         env:
