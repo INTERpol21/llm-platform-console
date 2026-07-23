@@ -46,6 +46,9 @@ services:
     build: ../llm-gateway
     environment:
       GATEWAY_API_KEYS: ${PLATFORM_KEY:-demo-key}
+      # Without this the console's whole Telemetry section reads "disabled" —
+      # in the very stack that ships the Postgres it needs.
+      TELEMETRY_DATABASE_URL: postgresql://${POSTGRES_USER:-platform}:${POSTGRES_PASSWORD:-platform}@postgres:5432/${POSTGRES_DB:-platform}
       REDIS_URL: redis://redis:6379/0
       RATE_LIMIT_RPM: "120"
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
@@ -54,6 +57,8 @@ services:
       DASHSCOPE_API_KEY: ${DASHSCOPE_API_KEY:-}
     depends_on:
       redis:
+        condition: service_healthy
+      postgres:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8080/healthz')"]
