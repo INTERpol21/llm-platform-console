@@ -1,13 +1,6 @@
-export {
-  documentKeys,
-  fetchStats,
-  ingestDocuments,
-  queryKnowledge,
-  useIngest,
-  useKnowledgeQuery,
-  useStats,
-} from './api/documents.ts';
-export { normalizeStats } from './model/stats.ts';
+// Public API is the hooks + types; the raw fetchers/keys/normalizer are
+// slice-internal (nothing outside ever imported them).
+export { useIngest, useKnowledgeQuery, useStats } from './api/documents.ts';
 export type {
   CitationOut,
   DocumentIn,

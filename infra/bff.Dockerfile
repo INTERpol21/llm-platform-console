@@ -8,11 +8,10 @@ RUN npm install -g pnpm@11.15.1
 WORKDIR /app
 
 # Manifests first, sources after: copying the full source trees before install
-# meant every bff/contracts edit invalidated the pnpm install layer. web is
-# deliberately absent — pnpm skips workspace members whose directory does not
-# exist, and this image must not carry the SPA's dependency tree.
+# meant every bff edit invalidated the pnpm install layer. web and contracts
+# are deliberately absent — pnpm skips workspace members whose directory does
+# not exist, and the BFF is a blind proxy that depends on neither.
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml .npmrc tsconfig.base.json ./
-COPY packages/contracts/package.json ./packages/contracts/
 COPY bff/package.json ./bff/
 # verifyDepsBeforeRun=false: node_modules is baked into the image, so pnpm's
 # start-up dependency check is pure overhead here — and it re-reads the lockfile
@@ -20,7 +19,6 @@ COPY bff/package.json ./bff/
 # (strictDepBuilds lives in pnpm-workspace.yaml so CI and the image agree.)
 RUN pnpm config set verifyDepsBeforeRun false \
   && pnpm install --frozen-lockfile
-COPY packages/contracts ./packages/contracts
 COPY bff ./bff
 
 EXPOSE 8787
