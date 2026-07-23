@@ -131,10 +131,13 @@ audit opened.
       (needs a small rag listing endpoint too), and mcp-tools-server is absent
       from the Mission-control health board (the BFF has no mcp probe — it can
       be down while the board is all green). **Size:** M.
-- [ ] **rag: re-embed on backend switch.** Content-hash dedup skips unchanged
-      documents on ingest, so switching EMBEDDINGS_BACKEND leaves old vectors
-      in place (same dim — the guard cannot catch it) and mixes incompatible
-      embeddings. Add a force flag or embedder-fingerprint column. **Size:** S.
+- [x] ~~**rag: re-embed on backend switch.**~~ Done 2026-07-24 (rag 1.3.0):
+      embedders carry a vector-space fingerprint (model+dim, deliberately not
+      URL — gateway vs direct with the same model does not re-embed); the
+      store records it (pgvector: index_meta, migration 008) and startup
+      re-embeds the whole corpus on mismatch before serving traffic.
+      Pre-fingerprint stores are adopted as-is. Verified live in the umbrella
+      stack: model switch logged reembedded:3 both ways, smoke 10/10.
 - [x] ~~**Console: feed Mission-control from reality.**~~ Done 2026-07-24
       (console 1.1.0): RoadmapPanel now renders THIS file — sections and
       checkboxes parsed from docs/ROADMAP.md at build time via a Vite ?raw
