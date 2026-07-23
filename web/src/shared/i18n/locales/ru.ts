@@ -191,6 +191,7 @@ export const ru: Resources = {
     status_down: 'Недоступен',
     status_checking: 'Проверка',
     status_done: 'Готово',
+    status_active: 'В работе',
     status_open: 'В плане',
     sectionProgress: '{{done}}/{{total}} готово',
     service_gateway: 'llm-gateway',

@@ -51,6 +51,10 @@
   color: var(--color-text-faint);
 }
 
+.iconActive {
+  color: var(--color-accent);
+}
+
 .item[data-status="done"] .itemTitle {
   color: var(--color-text-muted);
   text-decoration: line-through;
