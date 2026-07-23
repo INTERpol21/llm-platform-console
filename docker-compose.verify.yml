@@ -1,0 +1,9 @@
+# Overlay for `make verify`: publish Caddy on a configurable localhost port
+# instead of 8080, which on dev machines is routinely owned by another dev
+# server (and compose then binds IPv6-only while 127.0.0.1 silently reaches
+# the other process). `!override` REPLACES the port list — a plain merge would
+# append, keeping the 8080 conflict.
+services:
+  caddy:
+    ports: !override
+      - "127.0.0.1:${VERIFY_PORT:-18000}:80"

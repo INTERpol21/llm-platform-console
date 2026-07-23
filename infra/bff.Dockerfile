@@ -3,8 +3,11 @@
 FROM node:26-slim
 # Node 26 ships without corepack, so pnpm is installed directly. Exact version,
 # matching `packageManager` in package.json: a floating `pnpm@11` would let the
-# resolver change between builds of the same commit.
-RUN npm install -g pnpm@11.15.1
+# resolver change between builds of the same commit. npm itself is then removed:
+# the runtime only ever invokes pnpm, and npm's vendored node_modules (tar et
+# al.) is a recurring CVE source the image does not need to carry.
+RUN npm install -g pnpm@11.15.1 \
+  && rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx
 WORKDIR /app
 
 # Manifests first, sources after: copying the full source trees before install
