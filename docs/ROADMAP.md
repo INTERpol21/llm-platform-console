@@ -103,11 +103,13 @@ audit opened.
       node; results collect in plan order so traces and citation numbering
       stay deterministic; per-step degradation survives the fan-out. Guarded
       by a rendezvous test that deadlocks under sequential execution.
-- [ ] **mcp: bearer auth on streamable-http.** The tools are reachable by
-      anyone who can hit the port (deliberate for the offline demo, now a
-      recorded risk). Gate behind the same `demo-key` layer as the other
-      services; stdio stays open. **Where:** `mcp-tools-server/app/server.py`.
-      **Size:** M.
+- [x] ~~**mcp: bearer auth on streamable-http.**~~ Done 2026-07-23
+      (mcp-tools-server 1.1.0 + agent-orchestrator 1.2.0): /mcp requires
+      `Authorization: Bearer` with a key from `MCP_API_KEYS` (constant-time,
+      401 + WWW-Authenticate otherwise); the orchestrator client sends
+      `MCP_API_KEY`; both default to the platform's shared `demo-key` and the
+      umbrella compose wires `PLATFORM_KEY` into each. stdio stays open —
+      its client is whoever spawned the process.
 - [x] ~~**CI: test on the production Python.**~~ Done 2026-07-23: setup-uv pins
       python-version 3.14 in every backend job, after a local 3.14 run of all
       four suites proved green first.
