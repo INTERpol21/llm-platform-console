@@ -62,18 +62,3 @@ export function parseMarkdown(text: string): Block[] {
       nodes: tokenizeInline(chunk.replace(/\s*\n\s*/g, ' ')),
     }));
 }
-
-/** Collect the distinct citation indices referenced by a text, in first-seen order. */
-export function citationIndices(text: string): number[] {
-  const seen = new Set<number>();
-  const result: number[] = [];
-  for (const block of parseMarkdown(text)) {
-    for (const node of block.nodes) {
-      if (node.type === 'citation' && !seen.has(node.n)) {
-        seen.add(node.n);
-        result.push(node.n);
-      }
-    }
-  }
-  return result;
-}

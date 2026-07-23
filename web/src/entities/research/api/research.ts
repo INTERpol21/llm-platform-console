@@ -1,6 +1,4 @@
-import type { ResearchHistoryResponse } from '@console/contracts/orchestrator';
-import { researchHistoryV1ResearchHistoryThreadIdGet200Schema } from '@console/contracts/orchestrator';
-import { apiGet, streamSse } from '../../../shared/api/index.ts';
+import { streamSse } from '../../../shared/api/index.ts';
 import { ORCHESTRATOR_BASE } from '../../../shared/config/index.ts';
 import type { ResearchStreamEvent } from '../model/events.ts';
 import { parseResearchEvent } from '../model/events.ts';
@@ -41,16 +39,4 @@ export function streamResearch(options: StreamResearchOptions): Promise<void> {
     onError,
     onClose,
   });
-}
-
-/** Load the latest checkpointed snapshot for a thread. */
-export async function fetchResearchHistory(
-  threadId: string,
-  signal?: AbortSignal,
-): Promise<ResearchHistoryResponse> {
-  const raw = await apiGet<unknown>(
-    `${ORCHESTRATOR_BASE}/research/history/${encodeURIComponent(threadId)}`,
-    { signal },
-  );
-  return researchHistoryV1ResearchHistoryThreadIdGet200Schema.parse(raw);
 }
