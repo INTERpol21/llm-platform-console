@@ -5,12 +5,20 @@ FROM node:26-slim AS build
 # `packageManager` in package.json.
 RUN npm install -g pnpm@11.15.1
 WORKDIR /app
-COPY . .
+# Manifests first, sources after: `COPY . .` before install meant EVERY source
+# commit invalidated the pnpm install layer and CI rebuilt node_modules from
+# scratch. This way the install layer only turns over when a manifest does.
+# (.dockerignore excludes node_modules, so the later COPY cannot clobber it.)
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml .npmrc tsconfig.base.json ./
+COPY packages/contracts/package.json packages/contracts/
+COPY bff/package.json bff/
+COPY web/package.json web/
 # pnpm settings (strictDepBuilds, onlyBuiltDependencies) live in
 # pnpm-workspace.yaml, which `kubb generate`'s own nested `pnpm install` reads
 # too — a --config flag here would not reach it.
-RUN pnpm install --frozen-lockfile \
-  && pnpm --filter @console/contracts generate \
+RUN pnpm install --frozen-lockfile
+COPY . .
+RUN pnpm --filter @console/contracts generate \
   && pnpm --filter @console/web build
 
 FROM caddy:2-alpine
