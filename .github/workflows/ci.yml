@@ -140,6 +140,21 @@ jobs:
         env:
           E2E_BASE_URL: http://localhost:8080
         run: pnpm --filter @console/web test:e2e
+      # Image CVE gate. Runs here because this is the only job that builds all
+      # six images. Policy: fail on CRITICAL with an available fix; unfixable
+      # base-image findings (debian's perl et al. carry perpetual HIGHs with no
+      # patch) must not hold CI hostage — package-level CVEs are already watched
+      # by pip-audit and Dependabot. Partly repays the supply-chain window
+      # opened by disabling minimumReleaseAge (ADR-0011).
+      - name: Image CVE gate (Trivy)
+        run: |
+          for img in gateway rag mcp orchestrator bff caddy; do
+            echo "── llm-platform-${img} ──"
+            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+              -v "$HOME/.cache/trivy:/root/.cache/trivy" \
+              aquasec/trivy:latest image --scanners vuln --severity CRITICAL \
+              --ignore-unfixed --exit-code 1 --quiet "llm-platform-${img}:latest"
+          done
       - name: Stack logs on failure
         if: failure()
         working-directory: llm-platform-console

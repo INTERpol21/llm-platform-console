@@ -107,14 +107,13 @@ audit opened.
       recorded risk). Gate behind the same `demo-key` layer as the other
       services; stdio stays open. **Where:** `mcp-tools-server/app/server.py`.
       **Size:** M.
-- [ ] **CI: test on the production Python.** Images run 3.14; CI resolves
-      whatever Python the runner has. Pin `uv` to 3.14 in the test jobs (or a
-      `.python-version`) so the tested interpreter is the shipped one.
-      All four backends. **Size:** S.
-- [ ] **One-command verify.** `make verify` at the portfolio root: compose up →
-      smoke (both modes) → e2e → down. Every session this week rebuilt that
-      pipeline by hand. **Where:** a root Makefile/script in the console repo.
-      **Size:** S.
+- [x] ~~**CI: test on the production Python.**~~ Done 2026-07-23: setup-uv pins
+      python-version 3.14 in every backend job, after a local 3.14 run of all
+      four suites proved green first.
+- [x] ~~**One-command verify.**~~ Done 2026-07-23: `make verify` (and
+      `make verify E2E=1`) in the console repo — stack up on a configurable
+      port (8080 is habitually taken locally), smoke, optional Playwright,
+      guaranteed teardown via trap.
 - [ ] **Console: feed Mission-control from reality.** RoadmapPanel's M1–M5
       statuses are hardcoded in the widget; this file is the source of truth.
       Parse ROADMAP.md (served via BFF) or the GitHub API into the panel so the
@@ -139,13 +138,27 @@ audit opened.
       default-branch CI status and open PRs next to the roadmap. **Where:** BFF
       proxies the GitHub API (token server-side) → a `mission-control` widget.
       **Size:** M.
-- [ ] **Trivy image scan in CI.** Image/filesystem CVE scanning to complement
-      pip-audit/bandit/CodeQL — and to partly repay the supply-chain window
-      opened by disabling `minimumReleaseAge` (ADR-0011). **Size:** S.
+- [x] ~~**Trivy image scan in CI.**~~ Done 2026-07-23: the e2e job (the only
+      place all six images exist) gates on CRITICAL-with-a-fix; unfixable
+      base-image HIGHs deliberately do not block (debian's perl carries
+      perpetual ones). The first scan already paid for itself: node-tar CVE in
+      the BFF image, fixed by deleting npm from the runtime image entirely —
+      the container only ever invokes pnpm.
 - [ ] **Semantic answer cache.** Beyond the gateway's exact-match cache, cache
       by embedding similarity for near-duplicate questions, invalidated on
       ingest. Depends on the `gateway` embedder backend above. **Where:**
       `gateway/app/services/cache` + `rag`. **Size:** M.
+- [ ] **Revisit the supply-chain quarantine (ADR-0011).** Now that Trivy gates
+      the images, reconsider reinstating a short `minimumReleaseAge` (e.g. 60
+      minutes — most npm-takeover windows die in the first hour) and/or widening
+      the Trivy gate to HIGH-with-a-fix once the base images stabilize. Both are
+      one-line changes; the point is to make the decision deliberately.
+      **Size:** S.
+- [ ] **Slim runtime images further.** Deleting npm from the BFF image both
+      killed a CVE and shrank the attack surface — the same lens applies
+      elsewhere: multi-stage the BFF (install stage + runtime stage without
+      pnpm), pin base images by digest, add a non-root USER to the node images
+      (the Python images already have one). **Size:** M.
 - [ ] **Research sessions in the console.** The orchestrator already keeps
       checkpointed history per thread (`/v1/research/history`); the console
       starts a fresh thread every time. Thread picker + follow-up questions on
