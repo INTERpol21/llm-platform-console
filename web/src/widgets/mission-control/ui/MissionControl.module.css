@@ -1,14 +1,10 @@
+/* Health on top, roadmap full-width below: with 40+ roadmap items a side
+   column turns into a mile of scrolling next to empty space — the roadmap
+   needs the whole row to spread its sections out. */
 .grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-5);
-}
-
-@media (min-width: 900px) {
-  .grid {
-    grid-template-columns: 3fr 2fr;
-    align-items: start;
-  }
 }
 
 .panel {

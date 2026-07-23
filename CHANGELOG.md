@@ -6,6 +6,14 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-07-24
+
+### Changed
+- Mission control layout: the roadmap now takes the full row below the health
+  board, and its sections spread over a responsive multi-column grid, each as
+  a bordered surface block — 40+ items are visible and separated instead of
+  crammed into a narrow side column.
+
 ## [1.2.1] - 2026-07-24
 
 ### Fixed

@@ -175,10 +175,11 @@ everything is single-process and single-replica; the platform Postgres and
 Redis are shared, but resilience state is not. Order matters: correctness
 first (a, b), then caps (c), then actual replicas (e).
 
-- [~] **(a) umbrella: durable orchestrator.** The umbrella compose never sets
-      `ORCH_DATABASE_URL`, so the orchestrator runs MemorySaver — unbounded
-      heap, history lost on restart — in the very stack that ships Postgres.
-      One env line + verify `/research/history` survives a restart. **Size:** S.
+- [x] ~~**(a) umbrella: durable orchestrator.**~~ Resolved 2026-07-24 as
+      already true: the audit claim was wrong — the umbrella compose DOES set
+      `ORCH_DATABASE_URL` (checkpoints in the `orchestrator` schema).
+      Verified live: a research thread's `/research/history` returned
+      `exists: true` after a container restart. No code change needed.
 - [ ] **(b) gateway: shared resilience state.** The circuit breaker has NO
       Redis backend at all (per-replica, diluted by N); cache/rate-limit/usage
       fall back to memory silently when the Redis ping fails (a typo'd
