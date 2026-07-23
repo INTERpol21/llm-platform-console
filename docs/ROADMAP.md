@@ -135,11 +135,12 @@ audit opened.
       documents on ingest, so switching EMBEDDINGS_BACKEND leaves old vectors
       in place (same dim — the guard cannot catch it) and mixes incompatible
       embeddings. Add a force flag or embedder-fingerprint column. **Size:** S.
-- [ ] **Console: feed Mission-control from reality.** RoadmapPanel's M1–M5
-      statuses are hardcoded in the widget; this file is the source of truth.
-      Parse ROADMAP.md (served via BFF) or the GitHub API into the panel so the
-      console stops contradicting the repo. Pairs naturally with the
-      GitHub-status widget below. **Size:** M.
+- [x] ~~**Console: feed Mission-control from reality.**~~ Done 2026-07-24
+      (console 1.1.0): RoadmapPanel now renders THIS file — sections and
+      checkboxes parsed from docs/ROADMAP.md at build time via a Vite ?raw
+      import (no endpoint, no fetch; every roadmap change ships through an
+      image rebuild anyway). The hardcoded M1-M5 board and its i18n keys are
+      gone. The GitHub-status widget below remains a natural pairing.
 
 ## Next — new capabilities (priority 2)
 

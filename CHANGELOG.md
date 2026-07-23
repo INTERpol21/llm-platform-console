@@ -6,6 +6,16 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-07-24
+
+### Changed
+- Mission control's roadmap board now renders the real plan: sections and
+  checkbox items parsed from `docs/ROADMAP.md` at build time (Vite `?raw`
+  import), with per-section progress badges. The hand-maintained M1-M5
+  milestone list — already stale — is gone, along with its i18n keys. The
+  board's language follows the roadmap file (English) by design: it is a
+  rendering of the repo document, not translated copy.
+
 ## [1.0.0] - 2026-07-21
 
 First tagged release. A React 19 console over the four-service platform, served
