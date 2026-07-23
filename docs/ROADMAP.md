@@ -80,13 +80,13 @@ audit opened.
       completions, research and embeddings share one usage/cost ledger. The
       smoke asserts the new link: with `embeddings=gateway` the gateway ledger
       must grow after a rag query.
-- [ ] **rag: real multilingual retrieval.** The audit fixed Unicode
-      tokenization, but "поиск" still won't match "поиске": no stemming or
-      fuzzy matching in the memory BM25 leg, and the Postgres leg uses the
-      `simple` FTS config. Evaluate: `russian`/language-aware FTS configs per
-      corpus, or pg_trgm similarity as the keyword leg. Add a small Russian
-      eval corpus so `make eval` guards it. **Where:** `rag-pgvector/app/db/`
-      + `evals/`. **Size:** M.
+- [x] ~~**rag: real multilingual retrieval.**~~ Done 2026-07-23 (rag 1.2.0):
+      Snowball stemming across all three legs — Postgres FTS on the `russian`
+      config (Cyrillic via russian_stem, ASCII via english_stem), the memory
+      BM25 leg and offline embedders on the identical algorithms via
+      `snowballstemmer` (stems verified equal to Postgres's). Guarded by a
+      textnorm suite pinned to Postgres output, an inflected-query pgvector
+      integration test, and a Russian eval corpus. Verified live end to end.
 - [x] ~~**rag: run the skipped pgvector tests in CI.**~~ Done 2026-07-23: a
       `pgvector/pgvector:pg16` service container backs the test job — 87 tests,
       zero skips, and the job fails loudly if the pgvector skip reason ever
