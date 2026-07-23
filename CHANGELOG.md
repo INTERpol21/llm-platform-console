@@ -6,6 +6,15 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-07-24
+
+### Fixed
+- Browsers could serve a stale console for days: Caddy sent no Cache-Control,
+  so index.html fell under heuristic caching and users kept old bundles after
+  deploys. The SPA shell (and every non-asset response) is now `no-cache`
+  (revalidated via ETag, cheap 304s); hashed `/assets/*` are
+  `public, max-age=31536000, immutable`.
+
 ## [1.2.0] - 2026-07-24
 
 ### Added

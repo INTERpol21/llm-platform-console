@@ -175,7 +175,7 @@ everything is single-process and single-replica; the platform Postgres and
 Redis are shared, but resilience state is not. Order matters: correctness
 first (a, b), then caps (c), then actual replicas (e).
 
-- [ ] **(a) umbrella: durable orchestrator.** The umbrella compose never sets
+- [~] **(a) umbrella: durable orchestrator.** The umbrella compose never sets
       `ORCH_DATABASE_URL`, so the orchestrator runs MemorySaver — unbounded
       heap, history lost on restart — in the very stack that ships Postgres.
       One env line + verify `/research/history` survives a restart. **Size:** S.
