@@ -13,26 +13,38 @@
 # six images from evicting each other's cache entries.
 services:
   gateway:
+    # bake tags by target name; compose expects the project-prefixed tag.
+    image: llm-platform-gateway:latest
     build:
       cache_from: ["type=gha,scope=img-gateway"]
       cache_to: ["type=gha,scope=img-gateway,mode=max"]
   rag:
+    # bake tags by target name; compose expects the project-prefixed tag.
+    image: llm-platform-rag:latest
     build:
       cache_from: ["type=gha,scope=img-rag"]
       cache_to: ["type=gha,scope=img-rag,mode=max"]
   mcp:
+    # bake tags by target name; compose expects the project-prefixed tag.
+    image: llm-platform-mcp:latest
     build:
       cache_from: ["type=gha,scope=img-mcp"]
       cache_to: ["type=gha,scope=img-mcp,mode=max"]
   orchestrator:
+    # bake tags by target name; compose expects the project-prefixed tag.
+    image: llm-platform-orchestrator:latest
     build:
       cache_from: ["type=gha,scope=img-orchestrator"]
       cache_to: ["type=gha,scope=img-orchestrator,mode=max"]
   bff:
+    # bake tags by target name; compose expects the project-prefixed tag.
+    image: llm-platform-bff:latest
     build:
       cache_from: ["type=gha,scope=img-bff"]
       cache_to: ["type=gha,scope=img-bff,mode=max"]
   caddy:
+    # bake tags by target name; compose expects the project-prefixed tag.
+    image: llm-platform-caddy:latest
     build:
       cache_from: ["type=gha,scope=img-caddy"]
       cache_to: ["type=gha,scope=img-caddy,mode=max"]
