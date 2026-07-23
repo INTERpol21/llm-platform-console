@@ -117,6 +117,25 @@ audit opened.
       `make verify E2E=1`) in the console repo — stack up on a configurable
       port (8080 is habitually taken locally), smoke, optional Playwright,
       guaranteed teardown via trap.
+- [x] ~~**rag: re-embed on backend switch.**~~ Done 2026-07-24 (rag 1.3.0):
+      embedders carry a vector-space fingerprint (model+dim, deliberately not
+      URL — gateway vs direct with the same model does not re-embed); the
+      store records it (pgvector: index_meta, migration 008) and startup
+      re-embeds the whole corpus on mismatch before serving traffic.
+      Pre-fingerprint stores are adopted as-is. Verified live in the umbrella
+      stack: model switch logged reembedded:3 both ways, smoke 10/10.
+- [x] ~~**Console: feed Mission-control from reality.**~~ Done 2026-07-24
+      (console 1.1.0): RoadmapPanel now renders THIS file — sections and
+      checkboxes parsed from docs/ROADMAP.md at build time via a Vite ?raw
+      import (no endpoint, no fetch; every roadmap change ships through an
+      image rebuild anyway). The hardcoded M1-M5 board and its i18n keys are
+      gone. The GitHub-status widget below remains a natural pairing.
+
+## Design track — M7 (runs separately from backend work)
+
+Decided 2026-07-24: visual redesign and console UX gaps are one dedicated
+track, kept apart from backend milestones so neither blocks the other.
+
 - [ ] **Console: calm-minimalism redesign.** A design critique of the live UI
       (2026-07-23) named the dirt: the graph-paper background fights the
       content in both themes, and monospace leaks from data into headings —
@@ -131,19 +150,59 @@ audit opened.
       (needs a small rag listing endpoint too), and mcp-tools-server is absent
       from the Mission-control health board (the BFF has no mcp probe — it can
       be down while the board is all green). **Size:** M.
-- [x] ~~**rag: re-embed on backend switch.**~~ Done 2026-07-24 (rag 1.3.0):
-      embedders carry a vector-space fingerprint (model+dim, deliberately not
-      URL — gateway vs direct with the same model does not re-embed); the
-      store records it (pgvector: index_meta, migration 008) and startup
-      re-embeds the whole corpus on mismatch before serving traffic.
-      Pre-fingerprint stores are adopted as-is. Verified live in the umbrella
-      stack: model switch logged reembedded:3 both ways, smoke 10/10.
-- [x] ~~**Console: feed Mission-control from reality.**~~ Done 2026-07-24
-      (console 1.1.0): RoadmapPanel now renders THIS file — sections and
-      checkboxes parsed from docs/ROADMAP.md at build time via a Vite ?raw
-      import (no endpoint, no fetch; every roadmap change ships through an
-      image rebuild anyway). The hardcoded M1-M5 board and its i18n keys are
-      gone. The GitHub-status widget below remains a natural pairing.
+- [ ] **Console hardening (found by the 2026-07-24 frontend audit).**
+      Ping failures are swallowed (`usePingModel` has no onError — a dead
+      model looks like "nothing happened"); numeric inputs ship raw
+      `Number(...)` to the API (top_k / priority / max_iterations can be NaN
+      or out of range); no route code-splitting or manualChunks, so recharts,
+      both locales and the full Zod contract trees load eagerly (the vite
+      chunk-size warning); `useResearchStream`, `shared/api/client.ts` and
+      the ingest/search forms have zero direct tests. **Size:** M.
+
+## Scale-out track — M8 (next major backend theme)
+
+Decided 2026-07-24 after a scaling audit of all five services. Today
+everything is single-process and single-replica; the platform Postgres and
+Redis are shared, but resilience state is not. Order matters: correctness
+first (a, b), then caps (c), then actual replicas (e).
+
+- [ ] **(a) umbrella: durable orchestrator.** The umbrella compose never sets
+      `ORCH_DATABASE_URL`, so the orchestrator runs MemorySaver — unbounded
+      heap, history lost on restart — in the very stack that ships Postgres.
+      One env line + verify `/research/history` survives a restart. **Size:** S.
+- [ ] **(b) gateway: shared resilience state.** The circuit breaker has NO
+      Redis backend at all (per-replica, diluted by N); cache/rate-limit/usage
+      fall back to memory silently when the Redis ping fails (a typo'd
+      REDIS_URL looks healthy). Add a Redis-backed breaker, make the fallback
+      loud (or fail-fast flag), move the awaited telemetry INSERT off the hot
+      path, expose the hardcoded telemetry pool (1-4) as a knob. **Size:** M.
+- [ ] **(c) platform: request caps + auth unification.** Body-size caps exist
+      only in the gateway (Content-Length, 1 MiB): rag buffers up to ~100 MB
+      of JSON before pydantic rejects it, orchestrator and the BFF have no cap
+      at all. Add the gateway-style middleware to rag + orchestrator and
+      `bodyLimit` to the BFF. Also: rag and mcp compare keys with a
+      short-circuiting `any()` while gateway/orchestrator are deliberately
+      non-short-circuiting — unify on the strict contract. **Size:** M.
+- [ ] **(d) hot-path connection reuse + pool knobs.** rag builds a fresh
+      `httpx.AsyncClient` twice per query (embed + synthesize) and the
+      orchestrator once per node call; gateway providers and the BFF already
+      pool. Share clients via app.state/lifespan. Expose rag's hardcoded
+      asyncpg pool (1-5) as env knobs like the orchestrator already does.
+      **Size:** M.
+- [ ] **(e) replicas for real.** compose `--scale` for gateway/rag behind
+      Caddy load-balancing, `WEB_CONCURRENCY`/`--workers` knob in the
+      uvicorn CMDs, BFF rate limiter to Redis (or delegate limiting to
+      Caddy), then document what N replicas actually changes. Depends on (b).
+      **Size:** L.
+- [ ] **(f) load tests (k6) on the hot paths** — moved up from Later: numbers
+      before and after (b)-(e) are the whole point. **Size:** M.
+- [ ] **(g) CI + build speed.** e2e wall-clock is ~2.5 min; the stack
+      bring-up step alone is ~49 s of 10 s-interval healthcheck polling — a
+      CI overlay with 2 s intervals cuts most of it. Cache the Trivy DB
+      (~19 s step). The BFF image is 686 MB (full workspace dev deps) —
+      `pnpm --prod` deploy or prune. Python Dockerfiles pip-install with no
+      BuildKit cache mount — add `--mount=type=cache` (or uv) so dependency
+      changes stop re-downloading every wheel. **Size:** M.
 
 ## Next — new capabilities (priority 2)
 
@@ -204,7 +263,6 @@ audit opened.
       `orchestrator` and `telemetry` tables (idempotency keys especially).
       **Size:** M.
 - [ ] **Model comparison side-by-side** + conversation export. **Size:** M.
-- [ ] **Load tests (k6)** on the hot paths. **Size:** M.
 - [ ] **CI/CD & deploy** (Helm/k8s or Fly/Render; secrets via a vault;
       dev/staging/prod). **Size:** L.
 
