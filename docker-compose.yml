@@ -93,6 +93,8 @@ services:
 
   mcp:
     build: ../mcp-tools-server
+    environment:
+      MCP_API_KEYS: ${PLATFORM_KEY:-demo-key}
     volumes:
       - mcpdata:/data
     healthcheck:
@@ -110,6 +112,7 @@ services:
       RAG_BASE_URL: http://rag:8081/v1
       RAG_API_KEY: ${PLATFORM_KEY:-demo-key}
       MCP_SERVER_URL: http://mcp:8082/mcp
+      MCP_API_KEY: ${PLATFORM_KEY:-demo-key}
       # Durable session state in its own schema, isolated from rag's tables.
       ORCH_DATABASE_URL: postgresql://${POSTGRES_USER:-platform}:${POSTGRES_PASSWORD:-platform}@postgres:5432/${POSTGRES_DB:-platform}
       ORCH_CHECKPOINT_SCHEMA: orchestrator
