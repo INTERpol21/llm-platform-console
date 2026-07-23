@@ -68,6 +68,11 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-platform}:${POSTGRES_PASSWORD:-platform}@postgres:5432/${POSTGRES_DB:-platform}
       EMBEDDING_DIM: ${EMBEDDING_DIM:-256}
       SEARCH_MODE: hybrid
+      # Vectors come through the gateway's /v1/embeddings — one platform
+      # entrypoint, one usage ledger. mock-small is the gateway's offline
+      # route; its mock embeddings are 256-d, matching EMBEDDING_DIM above.
+      EMBEDDINGS_BACKEND: gateway
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-mock-small}
       LLM_BACKEND: mock
       LLM_BASE_URL: http://gateway:8080/v1
       LLM_API_KEY: ${PLATFORM_KEY:-demo-key}

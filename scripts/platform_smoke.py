@@ -189,26 +189,29 @@ def main() -> int:
                 f"top citation={top}",
             )
 
-            # Whether synthesis crosses the network depends on the rag deployment:
-            # with LLM_BACKEND=mock (the compose default) rag answers in-process and
-            # must NOT touch the gateway; with LLM_BACKEND=openai + LLM_BASE_URL
-            # pointing at the gateway it must. Read /v1/stats and assert the link
-            # that this deployment actually claims.
+            # Whether rag traffic crosses to the gateway depends on TWO knobs,
+            # so assert the link this deployment actually claims via /v1/stats:
+            # EMBEDDINGS_BACKEND=gateway makes every query embed through the
+            # gateway (the umbrella default), and LLM_BACKEND=openai routes
+            # synthesis there too. Only when BOTH stay in-process must the
+            # gateway's usage ledger stay untouched.
             usage_after = c.get(f"{ep.gateway}/v1/usage", headers=HEADERS).text
             stats = c.get(f"{ep.rag}/v1/stats", headers=HEADERS).json()
             llm_backend = str(stats.get("llm", stats.get("llm_backend", "")))
+            emb_backend = str(stats.get("embeddings", stats.get("embeddings_backend", "")))
             grew = usage_after != usage_before
-            if "mock" in llm_backend.lower():
+            expects_gateway = "gateway" in emb_backend.lower() or "mock" not in llm_backend.lower()
+            if expects_gateway:
                 check(
-                    "rag: synthesis stays in-process (LLM_BACKEND=mock)",
-                    not grew,
-                    f"llm={llm_backend}, gateway usage unchanged as expected",
+                    "rag -> gateway: query traffic reached the gateway ledger",
+                    grew,
+                    f"embeddings={emb_backend} llm={llm_backend}, /v1/usage grew",
                 )
             else:
                 check(
-                    "rag -> gateway: synthesis went through the gateway",
-                    grew,
-                    f"llm={llm_backend}, gateway /v1/usage grew after the rag query",
+                    "rag: fully in-process (mock embed + mock LLM)",
+                    not grew,
+                    f"embeddings={emb_backend} llm={llm_backend}, usage unchanged as expected",
                 )
 
         with stage("orchestrator: unreachable"):
