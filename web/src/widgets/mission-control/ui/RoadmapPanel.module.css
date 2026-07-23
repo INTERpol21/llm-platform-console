@@ -1,35 +1,13 @@
-.list {
+.sections {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  gap: var(--space-4);
 }
 
-.item {
-  display: flex;
-  gap: var(--space-3);
-  align-items: flex-start;
-}
-
-.iconDone {
-  color: var(--color-success, #16a34a);
-}
-
-.iconActive {
-  color: var(--color-accent);
-}
-
-.iconPlanned {
-  color: var(--color-text-faint);
-}
-
-.body {
+.section {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
-  flex: 1;
+  gap: var(--space-2);
 }
 
 .head {
@@ -40,12 +18,49 @@
 }
 
 .title {
+  margin: 0;
   font-weight: 600;
   font-size: var(--text-sm);
 }
 
-.detail {
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
   margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
   font-size: var(--text-sm);
+}
+
+.item svg {
+  flex-shrink: 0;
+}
+
+.iconDone {
+  color: var(--color-success, #16a34a);
+}
+
+.iconOpen {
+  color: var(--color-text-faint);
+}
+
+.item[data-status="done"] .itemTitle {
   color: var(--color-text-muted);
+  text-decoration: line-through;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }

@@ -39,8 +39,13 @@ describe('MissionControl', () => {
       for (const badge of statuses) expect(badge).toHaveTextContent(/up|в строю/i);
     });
 
-    // The roadmap board renders all five milestones.
-    expect(screen.getByTestId('roadmap').querySelectorAll('li')).toHaveLength(5);
+    // The roadmap board renders the sections parsed from docs/ROADMAP.md:
+    // several sections, plenty of items, both done and still-open work.
+    const roadmap = screen.getByTestId('roadmap');
+    expect(roadmap.querySelectorAll('section').length).toBeGreaterThanOrEqual(3);
+    expect(roadmap.querySelectorAll('li').length).toBeGreaterThan(10);
+    expect(roadmap.querySelectorAll('li[data-status="done"]').length).toBeGreaterThan(0);
+    expect(roadmap.querySelectorAll('li[data-status="open"]').length).toBeGreaterThan(0);
   });
 
   it('marks a service down when its probe fails', async () => {

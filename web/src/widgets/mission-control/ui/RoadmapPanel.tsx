@@ -1,58 +1,42 @@
-import { CircleCheck, CircleDashed, CircleDot } from 'lucide-react';
+import { CircleCheck, CircleDashed } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import type { BadgeTone } from '../../../shared/ui/index.ts';
 import { Badge } from '../../../shared/ui/index.ts';
+import { ROADMAP_SECTIONS } from '../model/roadmap.ts';
 import styles from './RoadmapPanel.module.css';
 
-type MilestoneStatus = 'done' | 'active' | 'planned';
-
-interface Milestone {
-  id: 'm1' | 'm2' | 'm3' | 'm4' | 'm5';
-  status: MilestoneStatus;
-}
-
-/** Delivery milestones mirror the project plan; status is maintained here. */
-const MILESTONES: readonly Milestone[] = [
-  { id: 'm1', status: 'done' },
-  { id: 'm2', status: 'done' },
-  { id: 'm3', status: 'done' },
-  { id: 'm4', status: 'active' },
-  { id: 'm5', status: 'planned' },
-];
-
-const STATUS_TONE: Record<MilestoneStatus, BadgeTone> = {
-  done: 'ok',
-  active: 'accent',
-  planned: 'neutral',
-};
-
-function StatusIcon({ status }: { status: MilestoneStatus }) {
-  if (status === 'done')
-    return <CircleCheck size={16} className={styles.iconDone} aria-hidden="true" />;
-  if (status === 'active')
-    return <CircleDot size={16} className={styles.iconActive} aria-hidden="true" />;
-  return <CircleDashed size={16} className={styles.iconPlanned} aria-hidden="true" />;
-}
-
-/** Static roadmap board: the M1–M5 milestones and their current status. */
+/**
+ * The repo's actual plan: sections and checkboxes parsed from docs/ROADMAP.md
+ * at build time (see ../model/roadmap.ts), not a hand-maintained copy.
+ */
 export function RoadmapPanel() {
   const { t } = useTranslation();
   return (
-    <ol className={styles.list} data-testid="roadmap">
-      {MILESTONES.map((milestone) => (
-        <li key={milestone.id} className={styles.item}>
-          <StatusIcon status={milestone.status} />
-          <div className={styles.body}>
-            <div className={styles.head}>
-              <span className={styles.title}>{t(`mission.${milestone.id}_title`)}</span>
-              <Badge tone={STATUS_TONE[milestone.status]}>
-                {t(`mission.status_${milestone.status}`)}
-              </Badge>
-            </div>
-            <p className={styles.detail}>{t(`mission.${milestone.id}_detail`)}</p>
-          </div>
-        </li>
+    <div className={styles.sections} data-testid="roadmap">
+      {ROADMAP_SECTIONS.map((section) => (
+        <section key={section.title} className={styles.section}>
+          <header className={styles.head}>
+            <h3 className={styles.title}>{section.title}</h3>
+            <Badge tone={section.done === section.items.length ? 'ok' : 'accent'}>
+              {t('mission.sectionProgress', { done: section.done, total: section.items.length })}
+            </Badge>
+          </header>
+          <ul className={styles.list}>
+            {section.items.map((item) => (
+              <li key={item.title} className={styles.item} data-status={item.status}>
+                {item.status === 'done' ? (
+                  <CircleCheck size={16} className={styles.iconDone} aria-hidden="true" />
+                ) : (
+                  <CircleDashed size={16} className={styles.iconOpen} aria-hidden="true" />
+                )}
+                <span className={styles.itemTitle}>{item.title}</span>
+                <span className={styles.srOnly}>
+                  {t(item.status === 'done' ? 'mission.status_done' : 'mission.status_open')}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
       ))}
-    </ol>
+    </div>
   );
 }
