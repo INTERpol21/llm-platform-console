@@ -114,6 +114,24 @@ audit opened.
       `make verify E2E=1`) in the console repo — stack up on a configurable
       port (8080 is habitually taken locally), smoke, optional Playwright,
       guaranteed teardown via trap.
+- [ ] **Console: calm-minimalism redesign.** A design critique of the live UI
+      (2026-07-23) named the dirt: the graph-paper background fights the
+      content in both themes, and monospace leaks from data into headings —
+      "hacker dashboard" instead of an operator console. Direction chosen:
+      Linear/Geist-style calm minimalism — no background grid, surface layers
+      instead of border-boxes, mono only for data (numbers, model ids, trace),
+      a 32/16 spacing scale, one accent, one badge style. All in tokens.css +
+      module CSS; axe/e2e gates already guard contrast. **Size:** M.
+- [ ] **Console: expose what the backends already do.** Found by walking the
+      deployed UI: no file upload in Knowledge (the rag `/v1/ingest/file`
+      endpoint — md/txt/pdf/docx — has no UI), no document list or delete
+      (needs a small rag listing endpoint too), and mcp-tools-server is absent
+      from the Mission-control health board (the BFF has no mcp probe — it can
+      be down while the board is all green). **Size:** M.
+- [ ] **rag: re-embed on backend switch.** Content-hash dedup skips unchanged
+      documents on ingest, so switching EMBEDDINGS_BACKEND leaves old vectors
+      in place (same dim — the guard cannot catch it) and mixes incompatible
+      embeddings. Add a force flag or embedder-fingerprint column. **Size:** S.
 - [ ] **Console: feed Mission-control from reality.** RoadmapPanel's M1–M5
       statuses are hardcoded in the widget; this file is the source of truth.
       Parse ROADMAP.md (served via BFF) or the GitHub API into the panel so the
