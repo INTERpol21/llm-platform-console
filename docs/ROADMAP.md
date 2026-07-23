@@ -1,5 +1,10 @@
 # Roadmap
 
+> Checkbox convention: `- [ ]` planned, `- [~]` **in progress right now**,
+> `- [x]` done (struck through, with date and release). The Mission-control
+> panel renders this file live from `main`, so status edits here show up in
+> the console within a minute of merging.
+
 What's done, what's next, and why — for the whole platform (four backends + this
 console). Companion to the [ADRs](adr/README.md): ADRs record decisions already
 made; this file records work not yet done. Effort tags: **S** ≈ hours, **M** ≈ a
@@ -150,6 +155,10 @@ track, kept apart from backend milestones so neither blocks the other.
       (needs a small rag listing endpoint too), and mcp-tools-server is absent
       from the Mission-control health board (the BFF has no mcp probe — it can
       be down while the board is all green). **Size:** M.
+- [x] ~~**Live roadmap in Mission control.**~~ Done 2026-07-24 (console
+      1.2.0): the panel fetches this file from main via the BFF
+      (`/api/roadmap`, 60 s cache) and refreshes every minute; `- [~]` items
+      render as "In progress". Plan edits are visible online, no rebuild.
 - [ ] **Console hardening (found by the 2026-07-24 frontend audit).**
       Ping failures are swallowed (`usePingModel` has no onError — a dead
       model looks like "nothing happened"); numeric inputs ship raw

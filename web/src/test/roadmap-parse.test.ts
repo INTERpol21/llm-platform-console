@@ -71,3 +71,13 @@ describe('the committed docs/ROADMAP.md', () => {
     expect(items.some((i) => i.status === 'open')).toBe(true);
   });
 });
+
+describe('in-progress marker', () => {
+  it('parses `- [~]` as active and counts it as not done', () => {
+    const sections = parseRoadmap(
+      '## Now\n\n- [~] **Doing this.** right now\n- [x] ~~**Shipped.**~~ Done\n- [ ] **Queued.** later\n',
+    );
+    expect(sections[0]?.items.map((i) => i.status)).toEqual(['active', 'done', 'open']);
+    expect(sections[0]?.done).toBe(1);
+  });
+});

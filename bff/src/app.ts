@@ -10,6 +10,7 @@ import { Hono } from 'hono';
 import { type Config, config as defaultConfig } from './config.ts';
 import { createProxy } from './proxy.ts';
 import { RateLimiter } from './rate-limit.ts';
+import { createRoadmapHandler } from './roadmap.ts';
 
 /** Best-effort client identity for rate-limit bucketing. */
 function clientKey(c: Context): string {
@@ -46,6 +47,9 @@ export function createApp(config: Config = defaultConfig): Hono {
     }
     await next();
   });
+
+  // Live delivery roadmap for the Mission-control panel (behind the limiter).
+  app.get('/api/roadmap', createRoadmapHandler(config.roadmapUrl));
 
   app.all(
     '/api/gateway/*',

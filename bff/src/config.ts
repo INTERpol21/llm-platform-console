@@ -22,6 +22,13 @@ export interface Config {
   readonly port: number;
   /** Per-client request budget per minute for the /api/* rate limiter. */
   readonly rateLimitPerMinute: number;
+  /**
+   * Where the live ROADMAP.md lives (raw markdown). The SPA bakes a copy in
+   * at build time as an offline fallback; this URL keeps the deployed panel
+   * in sync with main without an image rebuild. Empty string disables the
+   * endpoint (it then 404s and the SPA stays on the baked copy).
+   */
+  readonly roadmapUrl: string;
 }
 
 type Env = Record<string, string | undefined>;
@@ -54,6 +61,11 @@ export function loadConfig(env: Env = process.env): Config {
     },
     port: int(env, 'BFF_PORT', 8787),
     rateLimitPerMinute: int(env, 'BFF_RATE_LIMIT', 240),
+    // Deliberately not str(): an explicit ROADMAP_URL='' must disable, not
+    // fall back to the default.
+    roadmapUrl:
+      env.ROADMAP_URL ??
+      'https://raw.githubusercontent.com/INTERpol21/llm-platform-console/main/docs/ROADMAP.md',
   };
 }
 

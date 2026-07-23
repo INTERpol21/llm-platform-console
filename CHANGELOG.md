@@ -6,6 +6,17 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-07-24
+
+### Added
+- Live delivery roadmap: the Mission-control panel now fetches ROADMAP.md
+  from the repo's main branch through a new BFF endpoint (`GET /api/roadmap`,
+  60 s cache, `ROADMAP_URL` env; stale copy served through upstream blips)
+  and re-checks every minute — merged plan changes appear without an image
+  rebuild. The build-time copy remains the offline fallback.
+- In-progress marker: `- [~]` checkbox items render as "In progress" with an
+  accent badge, so the panel shows what is being worked on right now.
+
 ## [1.1.0] - 2026-07-24
 
 ### Changed

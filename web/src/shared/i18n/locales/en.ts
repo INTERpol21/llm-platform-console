@@ -189,6 +189,7 @@ export const en = {
     status_down: 'Down',
     status_checking: 'Checking',
     status_done: 'Done',
+    status_active: 'In progress',
     status_open: 'Open',
     sectionProgress: '{{done}}/{{total}} done',
     service_gateway: 'llm-gateway',

@@ -3,7 +3,9 @@
 // Rebuilding the image (which every roadmap change goes through) refreshes it.
 import roadmapSource from '../../../../../docs/ROADMAP.md?raw';
 
-export type RoadmapItemStatus = 'done' | 'open';
+// '~' in the checkbox marks work in progress: `- [~] **item.**` — our own
+// convention on top of GitHub tasklists, so the panel can show "doing now".
+export type RoadmapItemStatus = 'done' | 'active' | 'open';
 
 export interface RoadmapItem {
   title: string;
@@ -17,7 +19,7 @@ export interface RoadmapSection {
 }
 
 const HEADING = /^## (.+)$/;
-const CHECKBOX = /^- \[([ x])\] (.+)$/;
+const CHECKBOX = /^- \[([ x~])\] (.+)$/;
 const BOLD_TITLE = /\*\*(.+?)\*\*/;
 
 /**
@@ -52,7 +54,8 @@ export function parseRoadmap(markdown: string): RoadmapSection[] {
     }
     const checkbox = CHECKBOX.exec(line);
     if (!checkbox || !current) continue;
-    const status: RoadmapItemStatus = checkbox[1] === 'x' ? 'done' : 'open';
+    const status: RoadmapItemStatus =
+      checkbox[1] === 'x' ? 'done' : checkbox[1] === '~' ? 'active' : 'open';
     current.items.push({ title: itemTitle(checkbox[2] ?? ''), status });
     if (status === 'done') current.done += 1;
     if (current.items.length === 1) sections.push(current);
