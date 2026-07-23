@@ -1,13 +1,20 @@
+/* Sections spread over the full panel width and wrap responsively; each is
+   its own bordered block so the tracks read as separate units at a glance. */
 .sections {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   gap: var(--space-4);
+  align-items: start;
 }
 
 .section {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
 }
 
 .head {
