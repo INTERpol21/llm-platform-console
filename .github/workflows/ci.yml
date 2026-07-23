@@ -86,11 +86,14 @@ jobs:
           # the subshell records its own exit code instead. The base-image pull
           # (postgres/redis, ~25s) runs alongside the build: `up` used to pull
           # them serially after everything else was ready.
+          # Explicit bake instead of COMPOSE_BAKE: the compose delegate never
+          # engaged on the runner (0 cache imports in the logs), while bake
+          # reads the same two files and always goes through buildx.
           (
             set -e
             docker compose pull --quiet postgres redis &
             PULL=$!
-            COMPOSE_BAKE=true docker compose -f docker-compose.yml -f docker-compose.ci.yml build &
+            docker buildx bake -f docker-compose.yml -f docker-compose.ci.yml --load &
             BUILD=$!
             wait "$PULL"
             wait "$BUILD"
@@ -116,7 +119,9 @@ jobs:
           if [ "$(cat /tmp/stack-build.exit)" != "0" ]; then
             echo "::error::image build failed"; tail -100 /tmp/stack-build.log; exit 1
           fi
-          tail -5 /tmp/stack-build.log
+          # Cache effectiveness at a glance: CACHED layer count + gha cache I/O.
+          grep -cE "CACHED" /tmp/stack-build.log | xargs echo "cached layers:"
+          grep -E "importing cache|exporting cache|ERROR" /tmp/stack-build.log | tail -6 || true
           docker compose up -d --wait --no-build
       # Runs before the browser suite: it is the only thing that exercises
       # service-to-service wiring. Every backend's unit suite mocks its
