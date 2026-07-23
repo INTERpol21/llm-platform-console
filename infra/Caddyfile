@@ -18,6 +18,15 @@
 		file_server
 	}
 
+	# Hashed assets are immutable by construction (content hash in the name);
+	# everything else — above all the SPA's index.html — must revalidate on
+	# every load, or browsers heuristically cache the shell for days and users
+	# keep running week-old bundles (ETag makes revalidation a cheap 304).
+	@hashedAssets path /assets/*
+	header @hashedAssets Cache-Control "public, max-age=31536000, immutable"
+	@revalidate not path /assets/*
+	header @revalidate Cache-Control "no-cache"
+
 	# Baseline security headers. CSP kept strict but self-hostable (inline styles
 	# allowed for CSS-in-head; adjust if you add third-party origins).
 	header {
