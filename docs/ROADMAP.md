@@ -97,10 +97,12 @@ audit opened.
       `text-embedding-3-small` with a mock fallback ships in models.yaml);
       /v1/chat/completions rejects embedding aliases with a plain-words 404.
       The mock demo path is untouched; verified live and by 3 new tests.
-- [ ] **orchestrator: parallel independent plan steps.** Steps run sequentially;
-      `asyncio.gather` over independent ones cuts research latency on
-      multi-step plans. **Where:** the step loop in
-      `agent-orchestrator/app/services/graph`. **Size:** M.
+- [x] ~~**orchestrator: parallel independent plan steps.**~~ Done 2026-07-23
+      (orchestrator 1.1.0): execute fans all remaining plan steps out with
+      asyncio.gather — safe because reflect only appends follow-ups after the
+      node; results collect in plan order so traces and citation numbering
+      stay deterministic; per-step degradation survives the fan-out. Guarded
+      by a rendezvous test that deadlocks under sequential execution.
 - [ ] **mcp: bearer auth on streamable-http.** The tools are reachable by
       anyone who can hit the port (deliberate for the offline demo, now a
       recorded risk). Gate behind the same `demo-key` layer as the other
