@@ -75,12 +75,11 @@ The platform works end-to-end. Before growing it, make what exists boringly
 solid: close the halves, wire the skipped tests, and finish the stories the
 audit opened.
 
-- [ ] **rag: `gateway` embedder backend.** The other half of `/v1/embeddings`:
-      let rag fetch vectors through the gateway (`EMBEDDINGS_BACKEND=gateway`)
-      instead of embedding in-process, so the whole platform sits behind one
-      entrypoint with one usage/cost ledger. **Where:**
-      `rag-pgvector/app/services/embeddings.py` (an `OpenAIEmbedder` pointed at
-      the gateway is 90% of it) + compose env. **Size:** S.
+- [x] ~~**rag: `gateway` embedder backend.**~~ Done 2026-07-23 (rag 1.1.0): the
+      umbrella stack embeds through the gateway's `/v1/embeddings`, so
+      completions, research and embeddings share one usage/cost ledger. The
+      smoke asserts the new link: with `embeddings=gateway` the gateway ledger
+      must grow after a rag query.
 - [ ] **rag: real multilingual retrieval.** The audit fixed Unicode
       tokenization, but "поиск" still won't match "поиске": no stemming or
       fuzzy matching in the memory BM25 leg, and the Postgres leg uses the
@@ -88,11 +87,10 @@ audit opened.
       corpus, or pg_trgm similarity as the keyword leg. Add a small Russian
       eval corpus so `make eval` guards it. **Where:** `rag-pgvector/app/db/`
       + `evals/`. **Size:** M.
-- [ ] **rag: run the 9 skipped pgvector tests in CI.** The integration tests
-      for the real store never run anywhere — CI has no Postgres. Add a
-      `pgvector/pgvector:pg16` service container to the test job and set
-      `DATABASE_URL`. **Why:** the store is the least-tested layer with the
-      most SQL in it. **Size:** S.
+- [x] ~~**rag: run the skipped pgvector tests in CI.**~~ Done 2026-07-23: a
+      `pgvector/pgvector:pg16` service container backs the test job — 87 tests,
+      zero skips, and the job fails loudly if the pgvector skip reason ever
+      reappears.
 - [ ] **gateway: finish the route `kind` story.** `/v1/embeddings` resolves
       aliases with `kind='chat'`, so an alias declared `kind: embedding` is
       rejected by the very endpoint it is for (documented in CLAUDE.md).
