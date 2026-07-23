@@ -91,13 +91,12 @@ audit opened.
       `pgvector/pgvector:pg16` service container backs the test job — 87 tests,
       zero skips, and the job fails loudly if the pgvector skip reason ever
       reappears.
-- [ ] **gateway: finish the route `kind` story.** `/v1/embeddings` resolves
-      aliases with `kind='chat'`, so an alias declared `kind: embedding` is
-      rejected by the very endpoint it is for (documented in CLAUDE.md).
-      Decide the semantics (accept both kinds on /v1/embeddings, or add
-      embedding aliases + strict kind), wire `kind` through
-      `execute_embeddings`, and cover it with tests — without breaking the
-      mock-model demo path the smoke relies on. **Size:** M.
+- [x] ~~**gateway: finish the route `kind` story.**~~ Done 2026-07-23
+      (gateway 1.1.0). Policy: /v1/embeddings serves both kinds
+      (multi-capability chat aliases + dedicated `kind: embedding` aliases —
+      `text-embedding-3-small` with a mock fallback ships in models.yaml);
+      /v1/chat/completions rejects embedding aliases with a plain-words 404.
+      The mock demo path is untouched; verified live and by 3 new tests.
 - [ ] **orchestrator: parallel independent plan steps.** Steps run sequentially;
       `asyncio.gather` over independent ones cuts research latency on
       multi-step plans. **Where:** the step loop in
