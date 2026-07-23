@@ -93,7 +93,9 @@ jobs:
             set -e
             docker compose pull --quiet postgres redis &
             PULL=$!
-            docker buildx bake -f docker-compose.yml -f docker-compose.ci.yml --load &
+            # --allow fs.read=..: the backend build contexts are sibling
+            # directories, which bake refuses to read without an entitlement.
+            docker buildx bake --allow fs.read=.. -f docker-compose.yml -f docker-compose.ci.yml --load &
             BUILD=$!
             wait "$PULL"
             wait "$BUILD"
