@@ -6,6 +6,14 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-07-24
+
+### Fixed
+- WCAG AA regression from 1.3.0: the ok badge ("n/n done") composited over
+  the new surface-2 section blocks at 4.1 contrast. Light-theme
+  `--color-ok` darkened #16794a -> #146c42 (4.88 on the worst composite);
+  the axe e2e gate that caught it stays the enforcement.
+
 ## [1.3.0] - 2026-07-24
 
 ### Changed

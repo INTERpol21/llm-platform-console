@@ -53,7 +53,10 @@
   --color-accent-soft: rgba(29, 78, 216, 0.1);
   --color-on-accent: #ffffff;
 
-  --color-ok: #16794a;
+  /* Darkened from #16794a: the ok badge's 12% soft background composites
+     over surface-2 (roadmap section blocks) to #d4e3e2, where the old value
+     measured 4.1 — under WCAG AA. This clears 4.88 there and 5.39 on white. */
+  --color-ok: #146c42;
   --color-ok-soft: rgba(22, 121, 74, 0.12);
   --color-warn: #a15c07;
   --color-warn-soft: rgba(161, 92, 7, 0.12);
