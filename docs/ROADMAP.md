@@ -274,7 +274,7 @@ is the security prerequisite: no public ingest without body caps.
       perpetual ones). The first scan already paid for itself: node-tar CVE in
       the BFF image, fixed by deleting npm from the runtime image entirely —
       the container only ever invokes pnpm.
-- [ ] **Semantic answer cache.** Beyond the gateway's exact-match cache, cache
+- [~] **Semantic answer cache.** Beyond the gateway's exact-match cache, cache
       by embedding similarity for near-duplicate questions, invalidated on
       ingest. Depends on the `gateway` embedder backend above. **Where:**
       `gateway/app/services/cache` + `rag`. **Size:** M.
