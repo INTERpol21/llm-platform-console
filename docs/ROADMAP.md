@@ -180,7 +180,7 @@ first (a, b), then caps (c), then actual replicas (e).
       `ORCH_DATABASE_URL` (checkpoints in the `orchestrator` schema).
       Verified live: a research thread's `/research/history` returned
       `exists: true` after a container restart. No code change needed.
-- [ ] **(b) gateway: shared resilience state.** The circuit breaker has NO
+- [~] **(b) gateway: shared resilience state.** The circuit breaker has NO
       Redis backend at all (per-replica, diluted by N); cache/rate-limit/usage
       fall back to memory silently when the Redis ping fails (a typo'd
       REDIS_URL looks healthy). Add a Redis-backed breaker, make the fallback
