@@ -166,7 +166,9 @@ track, kept apart from backend milestones so neither blocks the other.
       or out of range); no route code-splitting or manualChunks, so recharts,
       both locales and the full Zod contract trees load eagerly (the vite
       chunk-size warning); `useResearchStream`, `shared/api/client.ts` and
-      the ingest/search forms have zero direct tests. **Size:** M.
+      the ingest/search forms have zero direct tests. Also: damp the
+      live/baked roadmap flip-flop in the Mission-control panel (moved here
+      from M8(h) — frontend concern). **Size:** M.
 
 ## Scale-out track — M8 (next major backend theme)
 
@@ -202,14 +204,13 @@ numbers and replica stories only mean something against something reachable.
       traffic and smoke 10/10 intact. Note: the header-based caps are
       advisory against lying clients — the enforced bound remains the schema
       limits (BFF's stream counter is the exception).
-- [ ] **(h) hardening backlog from the 2026-07-24 adversarial audit** of the
-      freshly shipped mechanisms (fix-now items already landed as gateway
-      1.2.1, rag 1.4.1, orchestrator 1.3.1). Remaining, in rough order:
-      BFF /api/roadmap — single-flight for the cold-cache stampede, a size cap
-      + redirect policy on the outbound fetch, and moving it off the shared
-      per-IP token budget; telemetry flush deadline on shutdown (256 stuck
-      writes x pool timeout can stall stop); live/baked roadmap flip-flop
-      damping in the panel. **Size:** S each.
+- [x] ~~**(h) hardening backlog from the 2026-07-24 adversarial audit.**~~
+      Done 2026-07-24 (gateway 1.2.2, console 1.4.2): /api/roadmap got
+      single-flight + a 1 MiB body cap and moved before the rate limiter;
+      telemetry shutdown flush is deadline-bounded (5 s, stragglers
+      cancelled). The one frontend leftover — live/baked panel flip-flop
+      damping — moved into the M7 console-hardening item. Backend side of
+      the audit backlog is closed.
 - [x] ~~**(d) hot-path connection reuse + pool knobs.**~~ Done 2026-07-24
       (rag 1.5.0, orchestrator 1.4.0): OpenAIEmbedder/OpenAIChatLLM and
       GatewayLLM/RagClient each hold one shared keep-alive httpx client per
