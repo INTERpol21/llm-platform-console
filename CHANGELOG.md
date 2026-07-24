@@ -6,6 +6,14 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- Docs roadmap review: `docs/ROADMAP.md` now has Current focus (M9 public
+  demo), a Project map (ownership + working/missing linkages), M7 split into
+  a/b/c by ROI, M9 threat-model/seed/smoke/pins/verify gates, and semantic
+  cache v1 marked done (gateway 1.3.0) with explicit follow-ups.
+  `docs/HISTORY.ru.md` version table synced to tagged releases; M10 priority
+  aligned with M9. `docs/PLATFORM_OVERVIEW.md` gained the same ownership map.
+
 ## [1.4.2] - 2026-07-24
 
 ### Fixed
