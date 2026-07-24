@@ -320,16 +320,20 @@ is the security prerequisite: no public ingest without body caps.
       rate limits are enough on a cheap VM; optionally read-only Knowledge +
       disable file ingest on the stand; separate `PUBLIC_DEMO_KEY` from local
       `demo-key`. README must say not-for-production. **Size:** M.
-- [~] **Seed + reset as code.** Compose init or `./dropbox` seed corpus +
-      3–5 example research questions in UI/README; `make demo-reset` (or cron)
-      so the stand does not rot after public writes. **Size:** S.
+- [x] ~~**Seed + reset as code.**~~ Done 2026-07-24 (console main): `demo/seed/`
+      — 6 bilingual notes about the platform itself; `make demo-seed` copies
+      them into ./dropbox (folder connector ingests in ~5 s), `make demo-reset`
+      truncates the rag tables, flushes Redis and re-seeds. Verified live:
+      reset -> 7 documents, a Russian question retrieves hybrid-search with
+      citations.
 - [ ] **Smoke-against-public.** After deploy: `platform_smoke.py` (or a
       trimmed subset) against the public origin — CI schedule or manual job.
       **Size:** S.
-- [~] **README showcase.** Live URL, three screenshots (Research SSE,
-      Knowledge hit, Mission-control roadmap), platform diagram, 2-minute
-      "what to click" tour; badges already exist; link the four backend repos.
-      **Size:** S.
+- [x] ~~**README showcase.**~~ Done 2026-07-24 except the live URL (blocked
+      on deploy — placeholder says "coming soon"): 2-minute what-to-click
+      tour, five-repo map, not-for-production/demo-key disclaimer; all four
+      backend READMEs now point at llm-platform-console as the umbrella hub.
+      Screenshots land together with the live URL.
 - [ ] **GitHub profile pins.** Pin 3–4 repos: console (face), mcp, rag,
       gateway or orchestrator — so the D-11 package is visible without hunting.
       **Size:** S.
@@ -342,14 +346,15 @@ is the security prerequisite: no public ingest without body caps.
 
 Not features — gates. Fail any of these and the stand hurts the portfolio.
 
-- [ ] **Mock first-click impresses** — Knowledge has hits; Research returns a
-      cited mock answer with a visible SSE trace (not an empty shell).
-      *Docs pass 2026-07-24:* `dropbox/` has only `quantum-notes.md` (one short
-      RU note) + `.gitkeep` — not enough for an impressive first click; needs
-      the seed+reset item above.
-- [ ] **Public ingest abuse bound** — body caps (BFF 12 MiB / rag 10 MiB) +
-      rate limits hold under a naive flood; decide read-only if not.
-      *Caps exist in code (M8c); live flood test still outstanding.*
+- [x] ~~**Mock first-click impresses**~~ — *Verified live 2026-07-24:* after
+      `make demo-reset` Knowledge holds the 7-note seeded corpus; a Russian
+      query returns the hybrid-search note with [n] citations. Re-verify once
+      the stand is public.
+- [x] ~~**Public ingest abuse bound**~~ — *Flood-tested live 2026-07-24:*
+      30 consecutive 13 MiB ingests -> all 413 (nothing buffered); 350-request
+      burst -> exactly 241x200 + 109x429 with Retry-After (the 240/min token
+      bucket working to spec); every service healthy afterwards. Re-run
+      against the public origin after deploy.
 - [ ] **Five READMEs agree** on "run the umbrella from console" and point at
       the live URL once it exists.
       *Docs pass 2026-07-24:* backends document their own `docker compose`;
@@ -364,10 +369,12 @@ Not features — gates. Fail any of these and the stand hurts the portfolio.
       work (orchestrator `/v1/research/history` exists; console always fresh).
       *Confirmed 2026-07-24:* BFF proxies history; web UI has `threadId` on the
       stream client but no history fetch / thread picker — gap is real.
-- [ ] **Semantic cache false-positive on `mock-embedding`** — before enabling
-      `SEMANTIC_CACHE_ENABLED` on the public stand, spot-check paraphrase
-      near-misses at threshold 0.97 (unit suite already covers the cache
-      mechanics; this is a demo-quality check).
+- [x] ~~**Semantic cache false-positive on `mock-embedding`**~~ — *Measured
+      2026-07-24:* trigram vectors score antonym swaps dangerously high
+      ("включи X" ~ "выключи X" = 0.904), so 0.90 could serve the OPPOSITE
+      answer; true near-verbatim paraphrases score >= 0.96. The umbrella now
+      runs threshold 0.95 — verified live: antonym misses, paraphrase hits at
+      0.988. A real semantic-paraphrase demo needs a real embedding model.
 
 ## Next — new capabilities (priority 2; after M9 skeleton)
 
