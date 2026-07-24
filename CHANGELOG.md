@@ -6,6 +6,15 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
+### Added
+- M9 prep: `demo/seed/` curated corpus (6 bilingual notes about the platform
+  itself) + `make demo-seed` / `make demo-reset` (truncate rag tables, flush
+  Redis, re-seed via the folder connector); README showcase (2-minute tour,
+  five-repo map, not-for-production disclaimer, live-URL placeholder).
+  Semantic-cache threshold raised to 0.95 in the umbrella after the M9 gate
+  check: mock trigram embeddings score antonym swaps ("включи"~"выключи") at
+  0.904 — 0.90 could serve the opposite answer.
+
 ### Changed
 - Docs roadmap review: `docs/ROADMAP.md` now has Current focus (M9 public
   demo), a Project map (ownership + working/missing linkages), M7 split into

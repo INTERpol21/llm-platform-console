@@ -320,13 +320,13 @@ is the security prerequisite: no public ingest without body caps.
       rate limits are enough on a cheap VM; optionally read-only Knowledge +
       disable file ingest on the stand; separate `PUBLIC_DEMO_KEY` from local
       `demo-key`. README must say not-for-production. **Size:** M.
-- [ ] **Seed + reset as code.** Compose init or `./dropbox` seed corpus +
+- [~] **Seed + reset as code.** Compose init or `./dropbox` seed corpus +
       3–5 example research questions in UI/README; `make demo-reset` (or cron)
       so the stand does not rot after public writes. **Size:** S.
 - [ ] **Smoke-against-public.** After deploy: `platform_smoke.py` (or a
       trimmed subset) against the public origin — CI schedule or manual job.
       **Size:** S.
-- [ ] **README showcase.** Live URL, three screenshots (Research SSE,
+- [~] **README showcase.** Live URL, three screenshots (Research SSE,
       Knowledge hit, Mission-control roadmap), platform diagram, 2-minute
       "what to click" tour; badges already exist; link the four backend repos.
       **Size:** S.
