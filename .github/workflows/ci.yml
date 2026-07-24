@@ -124,7 +124,10 @@ jobs:
           # Cache effectiveness at a glance: CACHED layer count + gha cache I/O.
           grep -cE "CACHED" /tmp/stack-build.log | xargs echo "cached layers:"
           grep -E "importing cache|exporting cache|ERROR" /tmp/stack-build.log | tail -6 || true
-          docker compose up -d --wait --no-build
+          # BOTH files: the ci overlay carries the image: names bake produced
+          # AND the 2 s healthcheck cadence — without it `up` polls at the
+          # production 10 s interval and bring-up is ~50 s of waiting.
+          docker compose -f docker-compose.yml -f docker-compose.ci.yml up -d --wait --no-build
       # Runs before the browser suite: it is the only thing that exercises
       # service-to-service wiring. Every backend's unit suite mocks its
       # neighbours, so a missing /v1 prefix in the orchestrator's RAG client once

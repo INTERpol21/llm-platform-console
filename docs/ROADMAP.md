@@ -224,13 +224,13 @@ numbers and replica stories only mean something against something reachable.
       **Size:** L.
 - [ ] **(f) load tests (k6) on the hot paths** — moved up from Later: numbers
       before and after (b)-(e) are the whole point. **Size:** M.
-- [~] **(g) CI + build speed.** e2e wall-clock is ~2.5 min; the stack
-      bring-up step alone is ~49 s of 10 s-interval healthcheck polling — a
-      CI overlay with 2 s intervals cuts most of it. Cache the Trivy DB
-      (~19 s step). The BFF image is 686 MB (full workspace dev deps) —
-      `pnpm --prod` deploy or prune. Python Dockerfiles pip-install with no
-      BuildKit cache mount — add `--mount=type=cache` (or uv) so dependency
-      changes stop re-downloading every wheel. **Size:** M.
+- [x] ~~**(g) CI + build speed.**~~ Done 2026-07-24 (console 1.4.1 + a
+      Dockerfile chore in all four backends): CI healthchecks poll every 2 s
+      via the compose overlay (and the e2e `up` now actually APPLIES that
+      overlay — it silently didn't); Trivy DB cached between runs; BFF image
+      686 -> 475 MB (`--prod --filter`, tsx moved to runtime deps; the rest
+      is the node:26-slim base); pip BuildKit cache mounts in every backend
+      Dockerfile. First post-merge run pays cold caches once.
 
 ## Public demo track — M9 (Phase 2: make the platform visible)
 
