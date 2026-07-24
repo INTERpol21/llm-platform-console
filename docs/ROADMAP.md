@@ -175,6 +175,12 @@ everything is single-process and single-replica; the platform Postgres and
 Redis are shared, but resilience state is not. Order matters: correctness
 first (a, b), then caps (c), then actual replicas (e).
 
+Plan of record (2026-07-24, three phases): **Phase 1** = (c), (d), (g) —
+hardening that is also a prerequisite for a public demo; **Phase 2** = the
+Public demo track below; **Phase 3** = the Design track above. (e) replicas
+and (f) k6 are deliberately deferred until the public stand exists — load
+numbers and replica stories only mean something against something reachable.
+
 - [x] ~~**(a) umbrella: durable orchestrator.**~~ Resolved 2026-07-24 as
       already true: the audit claim was wrong — the umbrella compose DOES set
       `ORCH_DATABASE_URL` (checkpoints in the `orchestrator` schema).
@@ -187,7 +193,7 @@ first (a, b), then caps (c), then actual replicas (e).
       DEGRADED logs instead of the old silent warning; telemetry INSERT moved
       off the hot path (bounded fire-and-forget, flushed on shutdown);
       telemetry pool exposed as TELEMETRY_POOL_MIN/MAX_SIZE.
-- [ ] **(c) platform: request caps + auth unification.** Body-size caps exist
+- [~] **(c) platform: request caps + auth unification.** Body-size caps exist
       only in the gateway (Content-Length, 1 MiB): rag buffers up to ~100 MB
       of JSON before pydantic rejects it, orchestrator and the BFF have no cap
       at all. Add the gateway-style middleware to rag + orchestrator and
@@ -214,6 +220,22 @@ first (a, b), then caps (c), then actual replicas (e).
       `pnpm --prod` deploy or prune. Python Dockerfiles pip-install with no
       BuildKit cache mount — add `--mount=type=cache` (or uv) so dependency
       changes stop re-downloading every wheel. **Size:** M.
+
+## Public demo track — M9 (Phase 2: make the platform visible)
+
+Decided 2026-07-24: the portfolio's biggest gap is that nobody can SEE it —
+the whole platform lives in a local compose. The stack runs fully offline on
+mock models, so a public stand costs no API keys. Phase 1 hardening (M8 c/d)
+is the security prerequisite: no public ingest without body caps.
+
+- [ ] **Deploy the umbrella stack publicly** (promoted from Later). One small
+      VM or Fly/Render, mock mode, the existing Caddy as the front door;
+      scheduled demo-data reset; rate limits already exist. **Size:** L.
+- [ ] **README showcase.** Live link, screenshots, platform diagram, a
+      2-minute "what to click" tour; badges already exist. **Size:** S.
+- [ ] **Demo hygiene.** Seeded corpus and example research questions so the
+      first click lands on something impressive, not an empty Knowledge tab.
+      **Size:** S.
 
 ## Next — new capabilities (priority 2)
 
@@ -274,8 +296,6 @@ first (a, b), then caps (c), then actual replicas (e).
       `orchestrator` and `telemetry` tables (idempotency keys especially).
       **Size:** M.
 - [ ] **Model comparison side-by-side** + conversation export. **Size:** M.
-- [ ] **CI/CD & deploy** (Helm/k8s or Fly/Render; secrets via a vault;
-      dev/staging/prod). **Size:** L.
 
 ## Known constraints (environment, not code)
 
