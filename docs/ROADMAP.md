@@ -180,12 +180,13 @@ first (a, b), then caps (c), then actual replicas (e).
       `ORCH_DATABASE_URL` (checkpoints in the `orchestrator` schema).
       Verified live: a research thread's `/research/history` returned
       `exists: true` after a container restart. No code change needed.
-- [~] **(b) gateway: shared resilience state.** The circuit breaker has NO
-      Redis backend at all (per-replica, diluted by N); cache/rate-limit/usage
-      fall back to memory silently when the Redis ping fails (a typo'd
-      REDIS_URL looks healthy). Add a Redis-backed breaker, make the fallback
-      loud (or fail-fast flag), move the awaited telemetry INSERT off the hot
-      path, expose the hardcoded telemetry pool (1-4) as a knob. **Size:** M.
+- [x] ~~**(b) gateway: shared resilience state.**~~ Done 2026-07-24 (gateway
+      1.2.0): Redis-backed circuit breakers — TTL trip/cooldown, exactly one
+      HALF_OPEN probe fleet-wide via SET NX, fail-open when Redis is down;
+      REDIS_REQUIRED fail-fast (the umbrella sets it) and ERROR-level
+      DEGRADED logs instead of the old silent warning; telemetry INSERT moved
+      off the hot path (bounded fire-and-forget, flushed on shutdown);
+      telemetry pool exposed as TELEMETRY_POOL_MIN/MAX_SIZE.
 - [ ] **(c) platform: request caps + auth unification.** Body-size caps exist
       only in the gateway (Content-Length, 1 MiB): rag buffers up to ~100 MB
       of JSON before pydantic rejects it, orchestrator and the BFF have no cap

@@ -46,6 +46,9 @@ services:
     build: ../llm-gateway
     environment:
       GATEWAY_API_KEYS: ${PLATFORM_KEY:-demo-key}
+      # The stack ships Redis: silent per-process degradation would defeat the
+      # shared cache/limits/usage/breaker state, so a dead Redis fails startup.
+      REDIS_REQUIRED: "true"
       # Without this the console's whole Telemetry section reads "disabled" —
       # in the very stack that ships the Postgres it needs.
       TELEMETRY_DATABASE_URL: postgresql://${POSTGRES_USER:-platform}:${POSTGRES_PASSWORD:-platform}@postgres:5432/${POSTGRES_DB:-platform}
