@@ -6,6 +6,17 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
+## [1.4.1] - 2026-07-24
+
+### Changed
+- CI e2e sped up: healthchecks poll every 2 s in CI (a compose overlay; the
+  10 s production cadence made stack bring-up ~50 s of pure waiting) and the
+  Trivy DB is cached between runs (~15 s saved).
+- BFF runtime image slimmed 686 MB -> 475 MB: `pnpm install --prod --filter
+  @console/bff...` ships only the runtime tree (tsx moved to dependencies —
+  it IS the runtime); the unfiltered install used to bake every workspace
+  project's dev toolchain into the image.
+
 ## [1.4.0] - 2026-07-24
 
 ### Added

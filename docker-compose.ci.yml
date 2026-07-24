@@ -11,32 +11,51 @@
 # mode=max caches intermediate layers too, so a requirements/lockfile-unchanged
 # rebuild skips the expensive pip/pnpm install layers entirely. Scopes keep the
 # six images from evicting each other's cache entries.
+# CI-only healthcheck cadence: the dependency chain (postgres -> gateway ->
+# rag -> orchestrator -> bff -> caddy) is polled, so the 10 s production
+# interval turns stack bring-up into ~50 s of pure waiting. 2 s polling with
+# a higher retry budget keeps the same failure ceiling.
+x-ci-health: &ci-health
+  interval: 2s
+  start_period: 3s
+  retries: 45
+
 services:
   gateway:
+    healthcheck:
+      <<: *ci-health
     # bake tags by target name; compose expects the project-prefixed tag.
     image: llm-platform-gateway:latest
     build:
       cache_from: ["type=gha,scope=img-gateway"]
       cache_to: ["type=gha,scope=img-gateway,mode=max"]
   rag:
+    healthcheck:
+      <<: *ci-health
     # bake tags by target name; compose expects the project-prefixed tag.
     image: llm-platform-rag:latest
     build:
       cache_from: ["type=gha,scope=img-rag"]
       cache_to: ["type=gha,scope=img-rag,mode=max"]
   mcp:
+    healthcheck:
+      <<: *ci-health
     # bake tags by target name; compose expects the project-prefixed tag.
     image: llm-platform-mcp:latest
     build:
       cache_from: ["type=gha,scope=img-mcp"]
       cache_to: ["type=gha,scope=img-mcp,mode=max"]
   orchestrator:
+    healthcheck:
+      <<: *ci-health
     # bake tags by target name; compose expects the project-prefixed tag.
     image: llm-platform-orchestrator:latest
     build:
       cache_from: ["type=gha,scope=img-orchestrator"]
       cache_to: ["type=gha,scope=img-orchestrator,mode=max"]
   bff:
+    healthcheck:
+      <<: *ci-health
     # bake tags by target name; compose expects the project-prefixed tag.
     image: llm-platform-bff:latest
     build:
@@ -48,3 +67,11 @@ services:
     build:
       cache_from: ["type=gha,scope=img-caddy"]
       cache_to: ["type=gha,scope=img-caddy,mode=max"]
+
+  postgres:
+    healthcheck:
+      <<: *ci-health
+
+  redis:
+    healthcheck:
+      <<: *ci-health

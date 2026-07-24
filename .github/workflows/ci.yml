@@ -146,6 +146,15 @@ jobs:
       # patch) must not hold CI hostage — package-level CVEs are already watched
       # by pip-audit and Dependabot. Partly repays the supply-chain window
       # opened by disabling minimumReleaseAge (ADR-0011).
+      # The DB download was ~15 s of every run; roll the cache forward
+      # (unique save key, latest restore) because trivy self-updates it.
+      - name: Trivy DB cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/trivy
+          key: trivy-db-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: trivy-db-${{ runner.os }}-
+
       - name: Image CVE gate (Trivy)
         run: |
           for img in gateway rag mcp orchestrator bff caddy; do
