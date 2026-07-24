@@ -8,10 +8,66 @@
 What's done, what's next, and why — for the whole platform (four backends + this
 console). Companion to the [ADRs](adr/README.md): ADRs record decisions already
 made; this file records work not yet done. Effort tags: **S** ≈ hours, **M** ≈ a
-day, **L** ≈ multiple days.
+day, **L** ≈ multiple days. Architecture map: [PLATFORM_OVERVIEW.md](PLATFORM_OVERVIEW.md)
+and the **Project map** section below. Russian memory of the same story:
+[HISTORY.ru.md](HISTORY.ru.md).
 
 Done items stay in place, struck through — the history of what it took is part
 of the story this repo tells.
+
+**Current focus (2026-07-24): M9 — Public demo.** Phase 1 hardening is closed;
+the portfolio's biggest gap is that nobody can *see* the stack. Semantic-cache
+v1 (gateway-only) shipped as gateway 1.3.0 and is paused for follow-ups.
+Design (M7) and replicas/k6 (M8 e/f) wait until a public stand exists — or, for
+M7a/M7b, run in parallel once seed data makes Knowledge clickable.
+
+## Project map — who owns what, how it wires
+
+Five repos under `github.com/INTERpol21`. One umbrella compose in
+`llm-platform-console` brings them up. Browser never holds API keys.
+
+| Repo | Owns | Listens | Calls | Shared state |
+|---|---|---|---|---|
+| **llm-gateway** | Completions, embeddings, model catalog/ping, YAML routing, exact + semantic cache, Redis circuit breakers, usage/cost ledger (`model_runs`) | `:8080` `/v1/*` | Upstream providers (OpenAI, Anthropic, Ollama, CN, mock) | Redis (cache, breakers); Postgres `telemetry` schema |
+| **rag-pgvector** | Ingest (JSON + file + folder watch), hybrid retrieval (vector + BM25/FTS + RRF), rerank, citations, evals/promptfoo | `:8081` `/v1/*` | gateway `/v1/embeddings` + chat for synthesis | Postgres `rag` schema + pgvector |
+| **mcp-tools-server** | MCP tools/resources (search stub, read-only SQL, path sandbox); bearer on streamable-http | `:8082` `/mcp` | — (leaf) | Local sqlite demo DB; no platform Postgres |
+| **agent-orchestrator** | LangGraph research (plan → execute → reflect → synthesize), SSE stream, thread history | `:8083` `/v1/*` | gateway (chat), rag (`/v1/query`), mcp (tools) | Postgres `orchestrator` schema (checkpointer) |
+| **llm-platform-console** | React SPA (6 sections), Hono BFF (key injection, rate-limit, body caps, SSE passthrough, live roadmap), Caddy single-origin, umbrella compose, `platform_smoke.py` | Caddy `:8080` → web + BFF `:8787` | gateway, rag, orchestrator via BFF; **not** mcp today (gap → M7a) | — |
+
+```mermaid
+flowchart LR
+  Browser --> Caddy
+  Caddy --> Web[console_web]
+  Caddy --> BFF[Hono_BFF]
+  BFF --> GW[llm_gateway]
+  BFF --> RAG[rag_pgvector]
+  BFF --> AO[agent_orchestrator]
+  AO --> GW
+  AO --> RAG
+  AO --> MCP[mcp_tools_server]
+  RAG --> GW
+  GW --> Redis
+  GW --> PgTelemetry[(Postgres_telemetry)]
+  RAG --> PgRag[(Postgres_rag_pgvector)]
+  AO --> PgOrch[(Postgres_orchestrator)]
+```
+
+**Working linkages** (asserted by `scripts/platform_smoke.py` 10/10):
+
+1. Browser → Caddy → BFF → gateway completion + cache headers
+2. BFF → rag ingest + query; rag → gateway embeddings; synthesis cost appears in gateway `/v1/usage`
+3. Orchestrator → rag retrieval + gateway chat + MCP tools; SSE research end-to-end through BFF
+4. Mission-control → BFF `/api/roadmap` → this file on `main`
+
+**Known broken / missing linkages** (tracked below):
+
+- Mission-control health board does **not** probe mcp → board can be green with MCP down
+- Knowledge UI has no upload / list / delete (rag has `/v1/ingest/file`; no list/delete API yet)
+- Console always opens a fresh research thread (orchestrator history API exists unused)
+- Semantic cache is in-process per gateway replica; not shared via Redis; not invalidated on rag ingest
+
+**Doc sync rule:** closing a ROADMAP checkbox with a release → update the version
+table in [HISTORY.ru.md](HISTORY.ru.md) the same day.
 
 ## Status snapshot (delivered)
 
@@ -19,11 +75,12 @@ of the story this repo tells.
   structured JSON logs + `X-Request-ID`, non-root Docker + HEALTHCHECK, security
   CI (pip-audit, bandit, CodeQL, Dependabot).
 - **Features:** gateway model catalog + ping + Chinese/Ollama providers +
-  `/v1/embeddings`; orchestrator SSE research + Postgres/Memory checkpointer +
-  history + model passthrough; rag DB opts (indexes, HNSW, dim-guard, batch
-  upsert) + local-first source tags + file ingest (md/txt/pdf/docx); rich
-  telemetry (Postgres `model_runs`/`research_runs`); hardening (idempotency,
-  cursor pagination, circuit breaker, per-hop timeouts).
+  `/v1/embeddings` + semantic answer cache (opt-in); orchestrator SSE research +
+  Postgres/Memory checkpointer + history + model passthrough; rag DB opts
+  (indexes, HNSW, dim-guard, batch upsert) + local-first source tags + file
+  ingest (md/txt/pdf/docx) + folder connector; rich telemetry (Postgres
+  `model_runs`/`research_runs`); hardening (idempotency, cursor pagination,
+  circuit breaker, per-hop timeouts).
 - **Security:** untrusted-context fencing + defang (LLM01/08); a promptfoo
   OWASP-LLM gate on the RAG synthesis boundary (`rag/evals/promptfoo`).
 - **Console (M4):** six sections (Research, Models, Usage, Knowledge, Telemetry,
@@ -74,7 +131,7 @@ of the story this repo tells.
       completions routing/fallbacks/breakers/cost accounting. The rag half
       moved to *Consolidate* below.
 
-## Now — consolidate what exists (priority 1)
+## ~~Now — consolidate what exists (priority 1)~~ Closed out
 
 The platform works end-to-end. Before growing it, make what exists boringly
 solid: close the halves, wire the skipped tests, and finish the stories the
@@ -136,29 +193,32 @@ audit opened.
       image rebuild anyway). The hardcoded M1-M5 board and its i18n keys are
       gone. The GitHub-status widget below remains a natural pairing.
 
-## Design track — M7 (runs separately from backend work)
+## Design track — M7 (Phase 3; split by ROI)
 
 Decided 2026-07-24: visual redesign and console UX gaps are one dedicated
 track, kept apart from backend milestones so neither blocks the other.
+**Order inside the track:** M7a (expose) → M7b (hardening) → M7c (redesign).
+Do not polish an empty Knowledge tab before upload/list work.
 
-- [ ] **Console: calm-minimalism redesign.** A design critique of the live UI
-      (2026-07-23) named the dirt: the graph-paper background fights the
-      content in both themes, and monospace leaks from data into headings —
-      "hacker dashboard" instead of an operator console. Direction chosen:
-      Linear/Geist-style calm minimalism — no background grid, surface layers
-      instead of border-boxes, mono only for data (numbers, model ids, trace),
-      a 32/16 spacing scale, one accent, one badge style. All in tokens.css +
-      module CSS; axe/e2e gates already guard contrast. **Size:** M.
-- [ ] **Console: expose what the backends already do.** Found by walking the
-      deployed UI: no file upload in Knowledge (the rag `/v1/ingest/file`
-      endpoint — md/txt/pdf/docx — has no UI), no document list or delete
-      (needs a small rag listing endpoint too), and mcp-tools-server is absent
-      from the Mission-control health board (the BFF has no mcp probe — it can
-      be down while the board is all green). **Size:** M.
+### M7a — Expose what the backends already do (high ROI)
+
+- [ ] **rag: `GET /v1/documents` + `DELETE /v1/documents/{id}`.** Blocker for
+      Knowledge list/delete UI; folder connector deliberately does not propagate
+      deletions until a delete surface exists on the store. **Size:** S.
+- [ ] **BFF: MCP health probe.** Wire mcp-tools-server into the Mission-control
+      health board (`/api/mcp/healthz` or an aggregated probe). Today the board
+      can be all-green while MCP is down — orchestrator tools then degrade
+      quietly. **Size:** S.
+- [ ] **Console: Knowledge upload + document list/delete.** UI over existing
+      `/v1/ingest/file` (md/txt/pdf/docx) and the new list/delete endpoints.
+      **Size:** M.
 - [x] ~~**Live roadmap in Mission control.**~~ Done 2026-07-24 (console
       1.2.0): the panel fetches this file from main via the BFF
       (`/api/roadmap`, 60 s cache) and refreshes every minute; `- [~]` items
       render as "In progress". Plan edits are visible online, no rebuild.
+
+### M7b — Console hardening (with / before public stand)
+
 - [ ] **Console hardening (found by the 2026-07-24 frontend audit).**
       Ping failures are swallowed (`usePingModel` has no onError — a dead
       model looks like "nothing happened"); numeric inputs ship raw
@@ -170,6 +230,17 @@ track, kept apart from backend milestones so neither blocks the other.
       live/baked roadmap flip-flop in the Mission-control panel (moved here
       from M8(h) — frontend concern). **Size:** M.
 
+### M7c — Calm-minimalism redesign (after demo is clickable)
+
+- [ ] **Console: calm-minimalism redesign.** A design critique of the live UI
+      (2026-07-23) named the dirt: the graph-paper background fights the
+      content in both themes, and monospace leaks from data into headings —
+      "hacker dashboard" instead of an operator console. Direction chosen:
+      Linear/Geist-style calm minimalism — no background grid, surface layers
+      instead of border-boxes, mono only for data (numbers, model ids, trace),
+      a 32/16 spacing scale, one accent, one badge style. All in tokens.css +
+      module CSS; axe/e2e gates already guard contrast. **Size:** M.
+
 ## Scale-out track — M8 (next major backend theme)
 
 Decided 2026-07-24 after a scaling audit of all five services. Today
@@ -177,11 +248,12 @@ everything is single-process and single-replica; the platform Postgres and
 Redis are shared, but resilience state is not. Order matters: correctness
 first (a, b), then caps (c), then actual replicas (e).
 
-Plan of record (2026-07-24, three phases): **Phase 1** = (c), (d), (g) —
-hardening that is also a prerequisite for a public demo; **Phase 2** = the
-Public demo track below; **Phase 3** = the Design track above. (e) replicas
-and (f) k6 are deliberately deferred until the public stand exists — load
-numbers and replica stories only mean something against something reachable.
+Plan of record (2026-07-24, three phases): **Phase 1** = (c), (d), (g), (h) —
+hardening that is also a prerequisite for a public demo (**closed**);
+**Phase 2** = the Public demo track below; **Phase 3** = Design track M7
+(a→b→c). (e) replicas and (f) k6 are deliberately deferred until the public
+stand exists — load numbers and replica stories only mean something against
+something reachable.
 
 - [x] ~~**(a) umbrella: durable orchestrator.**~~ Resolved 2026-07-24 as
       already true: the audit claim was wrong — the umbrella compose DOES set
@@ -209,7 +281,7 @@ numbers and replica stories only mean something against something reachable.
       single-flight + a 1 MiB body cap and moved before the rate limiter;
       telemetry shutdown flush is deadline-bounded (5 s, stragglers
       cancelled). The one frontend leftover — live/baked panel flip-flop
-      damping — moved into the M7 console-hardening item. Backend side of
+      damping — moved into the M7b console-hardening item. Backend side of
       the audit backlog is closed.
 - [x] ~~**(d) hot-path connection reuse + pool knobs.**~~ Done 2026-07-24
       (rag 1.5.0, orchestrator 1.4.0): OpenAIEmbedder/OpenAIChatLLM and
@@ -222,7 +294,7 @@ numbers and replica stories only mean something against something reachable.
       Caddy load-balancing, `WEB_CONCURRENCY`/`--workers` knob in the
       uvicorn CMDs, BFF rate limiter to Redis (or delegate limiting to
       Caddy), then document what N replicas actually changes. Depends on (b).
-      **Size:** L.
+      Also the natural home for a Redis-shared semantic cache. **Size:** L.
 - [ ] **(f) load tests (k6) on the hot paths** — moved up from Later: numbers
       before and after (b)-(e) are the whole point. **Size:** M.
 - [x] ~~**(g) CI + build speed.**~~ Done 2026-07-24 (console 1.4.1 + a
@@ -233,7 +305,7 @@ numbers and replica stories only mean something against something reachable.
       is the node:26-slim base); pip BuildKit cache mounts in every backend
       Dockerfile. First post-merge run pays cold caches once.
 
-## Public demo track — M9 (Phase 2: make the platform visible)
+## Public demo track — M9 (Phase 2: CURRENT FOCUS — make the platform visible)
 
 Decided 2026-07-24: the portfolio's biggest gap is that nobody can SEE it —
 the whole platform lives in a local compose. The stack runs fully offline on
@@ -243,13 +315,61 @@ is the security prerequisite: no public ingest without body caps.
 - [ ] **Deploy the umbrella stack publicly** (promoted from Later). One small
       VM or Fly/Render, mock mode, the existing Caddy as the front door;
       scheduled demo-data reset; rate limits already exist. **Size:** L.
-- [ ] **README showcase.** Live link, screenshots, platform diagram, a
-      2-minute "what to click" tour; badges already exist. **Size:** S.
-- [ ] **Demo hygiene.** Seeded corpus and example research questions so the
-      first click lands on something impressive, not an empty Knowledge tab.
+- [ ] **Public threat model / demo lock-down.** Document and enforce what is
+      open behind `demo-key`: ingest write? folder watch? Confirm BFF per-IP
+      rate limits are enough on a cheap VM; optionally read-only Knowledge +
+      disable file ingest on the stand; separate `PUBLIC_DEMO_KEY` from local
+      `demo-key`. README must say not-for-production. **Size:** M.
+- [ ] **Seed + reset as code.** Compose init or `./dropbox` seed corpus +
+      3–5 example research questions in UI/README; `make demo-reset` (or cron)
+      so the stand does not rot after public writes. **Size:** S.
+- [ ] **Smoke-against-public.** After deploy: `platform_smoke.py` (or a
+      trimmed subset) against the public origin — CI schedule or manual job.
       **Size:** S.
+- [ ] **README showcase.** Live URL, three screenshots (Research SSE,
+      Knowledge hit, Mission-control roadmap), platform diagram, 2-minute
+      "what to click" tour; badges already exist; link the four backend repos.
+      **Size:** S.
+- [ ] **GitHub profile pins.** Pin 3–4 repos: console (face), mcp, rag,
+      gateway or orchestrator — so the D-11 package is visible without hunting.
+      **Size:** S.
+- [ ] **Demo hygiene (first-click quality).** Seeded corpus and example
+      research questions so the first click lands on something impressive, not
+      an empty Knowledge tab. Overlaps seed+reset; keep as the acceptance
+      criterion for the public stand. **Size:** S.
 
-## Next — new capabilities (priority 2)
+### M9 — verify before / right after going public
+
+Not features — gates. Fail any of these and the stand hurts the portfolio.
+
+- [ ] **Mock first-click impresses** — Knowledge has hits; Research returns a
+      cited mock answer with a visible SSE trace (not an empty shell).
+      *Docs pass 2026-07-24:* `dropbox/` has only `quantum-notes.md` (one short
+      RU note) + `.gitkeep` — not enough for an impressive first click; needs
+      the seed+reset item above.
+- [ ] **Public ingest abuse bound** — body caps (BFF 12 MiB / rag 10 MiB) +
+      rate limits hold under a naive flood; decide read-only if not.
+      *Caps exist in code (M8c); live flood test still outstanding.*
+- [ ] **Five READMEs agree** on "run the umbrella from console" and point at
+      the live URL once it exists.
+      *Docs pass 2026-07-24:* backends document their own `docker compose`;
+      only orchestrator names the four-service platform; none point at
+      `llm-platform-console` as the umbrella hub. Console README has no
+      live-URL/showcase section yet (blocked on deploy).
+- [ ] **CI green on `main`** for all five repos (e2e + Trivy where applicable).
+- [ ] **Licenses + demo-key disclaimer** visible in console README.
+      *Docs pass 2026-07-24:* `LICENSE` file exists; console README has no
+      "not for production" / demo-key warning text — add with showcase.
+- [ ] **Confirm research-history gap** before scheduling "Research sessions"
+      work (orchestrator `/v1/research/history` exists; console always fresh).
+      *Confirmed 2026-07-24:* BFF proxies history; web UI has `threadId` on the
+      stream client but no history fetch / thread picker — gap is real.
+- [ ] **Semantic cache false-positive on `mock-embedding`** — before enabling
+      `SEMANTIC_CACHE_ENABLED` on the public stand, spot-check paraphrase
+      near-misses at threshold 0.97 (unit suite already covers the cache
+      mechanics; this is a demo-quality check).
+
+## Next — new capabilities (priority 2; after M9 skeleton)
 
 - [x] ~~**Folder connector (local-first).**~~ Done 2026-07-24 (rag 1.6.0 +
       umbrella `./dropbox` mount): a background task polls INGEST_WATCH_DIR
@@ -257,7 +377,21 @@ is the security prerequisite: no public ingest without body caps.
       path); content-hash dedup makes rescans free, bad files are logged and
       skipped, the loop survives store outages. Verified live: a file dropped
       into ./dropbox was searchable in ~10 s. Deletions deliberately not
-      propagated (no delete surface on the store yet).
+      propagated (no delete surface on the store yet — see M7a).
+- [x] ~~**Semantic answer cache (gateway v1).**~~ Done 2026-07-24 (gateway
+      1.3.0): opt-in `SEMANTIC_CACHE_ENABLED`; embeds via the gateway's own
+      embedding pipeline (default `mock-embedding`); hit when cosine ≥
+      `SEMANTIC_CACHE_THRESHOLD` (0.97); non-streaming + `temperature=0` only;
+      partition by (model, cache scope, max_tokens); bounded in-process FIFO;
+      `X-Cache: semantic` + `X-Semantic-Score`. Embedding failure skips the
+      cache — never fails a completion. **Out of scope for v1 (follow-ups
+      below):** ingest invalidation, rag-side cache, Redis-shared across
+      replicas.
+- [ ] **Semantic cache follow-ups.** (a) ADR documenting threshold / temp=0 /
+      partition invariants; (b) invalidate-or-bust policy on rag ingest
+      (explicitly deferred — wrong answers are worse than a miss); (c)
+      Redis-shared variant with M8(e). Verify false-positive behaviour on
+      `mock-embedding` before enabling on the public stand. **Size:** M.
 - [ ] **Event-bus + live console updates.** A lightweight in-process event bus
       (ingest progress, new research run, model ping/status) surfaced to the
       console as an SSE feed through the BFF, so Mission-control and Knowledge
@@ -274,10 +408,6 @@ is the security prerequisite: no public ingest without body caps.
       perpetual ones). The first scan already paid for itself: node-tar CVE in
       the BFF image, fixed by deleting npm from the runtime image entirely —
       the container only ever invokes pnpm.
-- [ ] **Semantic answer cache.** Beyond the gateway's exact-match cache, cache
-      by embedding similarity for near-duplicate questions, invalidated on
-      ingest. Depends on the `gateway` embedder backend above. **Where:**
-      `gateway/app/services/cache` + `rag`. **Size:** M.
 - [ ] **Revisit the supply-chain quarantine (ADR-0011).** Now that Trivy gates
       the images, reconsider reinstating a short `minimumReleaseAge` (e.g. 60
       minutes — most npm-takeover windows die in the first hour) and/or widening
@@ -293,6 +423,19 @@ is the security prerequisite: no public ingest without body caps.
       checkpointed history per thread (`/v1/research/history`); the console
       starts a fresh thread every time. Thread picker + follow-up questions on
       an existing thread turns the demo into a usable research tool. **Size:** M.
+
+## Portfolio / narrative
+
+- [ ] **Resume ↔ stand link.** Branch 05 / Master: live URL + "one compose up";
+      refresh bullets for gateway embeddings, Redis breakers, folder connector,
+      semantic cache. **Size:** S.
+- [ ] **Eval numbers in rag README.** Publish hit-rate / promptfoo gate results
+      (market signal for LLM evals). Numbers already exist in-repo. **Size:** S.
+- [ ] **Sync HISTORY.ru.md versions** after every milestone release (process,
+      not a feature). **Size:** S.
+- [ ] **Workspace pointer.** Cursor stub at `Резюме/AI_Portfolio` should README-
+      point at `Desktop/DEVELOP.nosync/AI_Portfolio` so agents do not explore an
+      empty tree. **Size:** S.
 
 ## Later — post-MVP
 
