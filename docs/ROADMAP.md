@@ -251,12 +251,13 @@ is the security prerequisite: no public ingest without body caps.
 
 ## Next — new capabilities (priority 2)
 
-- [~] **Folder connector (local-first).** Watch a local folder/volume,
-      incrementally sync by content-hash/mtime (dedup already exists),
-      auto-index new/changed files, and remove a file's chunks on delete
-      (cascade). **Why:** the local-first story is only half-done without
-      ingest-from-disk. **Where:** `rag-pgvector/app/services` (a watcher +
-      `ingest_documents` reuse) + a compose mount. **Size:** M.
+- [x] ~~**Folder connector (local-first).**~~ Done 2026-07-24 (rag 1.6.0 +
+      umbrella `./dropbox` mount): a background task polls INGEST_WATCH_DIR
+      and auto-ingests md/txt/pdf/docx (subfolders included, id = relative
+      path); content-hash dedup makes rescans free, bad files are logged and
+      skipped, the loop survives store outages. Verified live: a file dropped
+      into ./dropbox was searchable in ~10 s. Deletions deliberately not
+      propagated (no delete surface on the store yet).
 - [ ] **Event-bus + live console updates.** A lightweight in-process event bus
       (ingest progress, new research run, model ping/status) surfaced to the
       console as an SSE feed through the BFF, so Mission-control and Knowledge
