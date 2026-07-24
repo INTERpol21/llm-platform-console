@@ -193,13 +193,23 @@ numbers and replica stories only mean something against something reachable.
       DEGRADED logs instead of the old silent warning; telemetry INSERT moved
       off the hot path (bounded fire-and-forget, flushed on shutdown);
       telemetry pool exposed as TELEMETRY_POOL_MIN/MAX_SIZE.
-- [~] **(c) platform: request caps + auth unification.** Body-size caps exist
-      only in the gateway (Content-Length, 1 MiB): rag buffers up to ~100 MB
-      of JSON before pydantic rejects it, orchestrator and the BFF have no cap
-      at all. Add the gateway-style middleware to rag + orchestrator and
-      `bodyLimit` to the BFF. Also: rag and mcp compare keys with a
-      short-circuiting `any()` while gateway/orchestrator are deliberately
-      non-short-circuiting — unify on the strict contract. **Size:** M.
+- [x] ~~**(c) platform: request caps + auth unification.**~~ Done 2026-07-24
+      (rag 1.4.0, orchestrator 1.3.0, mcp 1.1.1, console 1.4.0): Content-Length
+      413 gates in rag (10 MiB) and the orchestrator (1 MiB), hono bodyLimit
+      in the BFF (12 MiB, also counts chunked streams); rag and mcp key
+      comparison made non-short-circuiting — the whole platform now keeps the
+      strict timing-safe contract. Verified live: 413s at every layer, normal
+      traffic and smoke 10/10 intact. Note: the header-based caps are
+      advisory against lying clients — the enforced bound remains the schema
+      limits (BFF's stream counter is the exception).
+- [ ] **(h) hardening backlog from the 2026-07-24 adversarial audit** of the
+      freshly shipped mechanisms (fix-now items already landed as gateway
+      1.2.1, rag 1.4.1, orchestrator 1.3.1). Remaining, in rough order:
+      BFF /api/roadmap — single-flight for the cold-cache stampede, a size cap
+      + redirect policy on the outbound fetch, and moving it off the shared
+      per-IP token budget; telemetry flush deadline on shutdown (256 stuck
+      writes x pool timeout can stall stop); live/baked roadmap flip-flop
+      damping in the panel. **Size:** S each.
 - [ ] **(d) hot-path connection reuse + pool knobs.** rag builds a fresh
       `httpx.AsyncClient` twice per query (embed + synthesize) and the
       orchestrator once per node call; gateway providers and the BFF already
