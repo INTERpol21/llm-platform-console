@@ -72,3 +72,36 @@ describe('GET /api/roadmap', () => {
     expect(res.status).toBe(503);
   });
 });
+
+describe('hardening', () => {
+  it('collapses concurrent cold-cache requests into one upstream fetch', async () => {
+    let calls = 0;
+    let release: (v: Response) => void = () => {};
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => {
+        calls += 1;
+        return new Promise<Response>((resolve) => {
+          release = resolve;
+        });
+      }),
+    );
+    const app = appWith('https://example.test/ROADMAP.md');
+    const first = app.request('/api/roadmap');
+    const second = app.request('/api/roadmap');
+    const third = app.request('/api/roadmap');
+    release(new Response(MD, { status: 200 }));
+    const results = await Promise.all([first, second, third]);
+    expect(results.map((r) => r.status)).toEqual([200, 200, 200]);
+    expect(calls).toBe(1); // no stampede
+  });
+
+  it('rejects an oversized upstream body instead of buffering it', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => Promise.resolve(new Response('x'.repeat(1024 * 1024 + 10), { status: 200 }))),
+    );
+    const res = await appWith('https://example.test/ROADMAP.md').request('/api/roadmap');
+    expect(res.status).toBe(503); // no cache to fall back to -> unavailable
+  });
+});

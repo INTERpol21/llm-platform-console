@@ -6,6 +6,16 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
+## [1.4.2] - 2026-07-24
+
+### Fixed
+- `/api/roadmap` hardened: concurrent cold-cache requests share ONE upstream
+  fetch (no stampede), the fetched body is capped at 1 MiB (ROADMAP_URL is
+  operator-configurable — a misconfigured upstream must not buffer arbitrary
+  data), and the endpoint moved before the rate limiter like `/api/health` —
+  a wall of dashboard tabs polling a cached file must not eat the per-IP
+  budget real API calls use.
+
 ## [1.4.1] - 2026-07-24
 
 ### Changed
