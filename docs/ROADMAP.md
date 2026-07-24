@@ -224,7 +224,7 @@ numbers and replica stories only mean something against something reachable.
       **Size:** L.
 - [ ] **(f) load tests (k6) on the hot paths** — moved up from Later: numbers
       before and after (b)-(e) are the whole point. **Size:** M.
-- [ ] **(g) CI + build speed.** e2e wall-clock is ~2.5 min; the stack
+- [~] **(g) CI + build speed.** e2e wall-clock is ~2.5 min; the stack
       bring-up step alone is ~49 s of 10 s-interval healthcheck polling — a
       CI overlay with 2 s intervals cuts most of it. Cache the Trivy DB
       (~19 s step). The BFF image is 686 MB (full workspace dev deps) —
