@@ -27,3 +27,24 @@ verify-up:
 
 verify-down:
 	$(COMPOSE_VERIFY) down
+
+# --- Demo data ---------------------------------------------------------------
+# demo-seed copies the curated corpus into ./dropbox; the rag folder connector
+# ingests it within ~5 s (content-hash dedup makes re-seeding free).
+# demo-reset wipes what public visitors wrote and re-seeds: truncates the rag
+# tables (documents/chunks — NOT the orchestrator/telemetry schemas), flushes
+# Redis (exact + usage + breaker state) and re-copies the seed. Run it on a
+# schedule on the public stand so the demo does not rot.
+
+.PHONY: demo-seed demo-reset
+
+demo-seed:
+	cp demo/seed/*.md dropbox/
+	@echo "demo-seed: corpus copied; the folder connector picks it up within ~5s"
+
+demo-reset:
+	docker compose exec -T postgres psql -U $${POSTGRES_USER:-platform} -d $${POSTGRES_DB:-platform} \
+	  -c "TRUNCATE chunks, documents"
+	docker compose exec -T redis redis-cli FLUSHALL >/dev/null
+	$(MAKE) demo-seed
+	@echo "demo-reset: rag tables truncated, redis flushed, corpus re-seeded"
