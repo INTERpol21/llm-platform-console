@@ -42,6 +42,7 @@ function makeConfig(overrides: Partial<Config> = {}): Config {
     orch: { url: 'http://orch.test', key: 'orch-secret' },
     port: 8787,
     rateLimitPerMinute: 240,
+    maxBodyBytes: 12 * 1024 * 1024,
     roadmapUrl: '', // proxy tests: live-roadmap source off
     ...overrides,
   };
