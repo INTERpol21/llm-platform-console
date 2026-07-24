@@ -12,3 +12,7 @@ coverage/
 web/src/shared/api/generated/
 playwright-report/
 test-results/
+
+# Folder-connector drop zone: user files stay local, only .gitkeep is tracked.
+dropbox/*
+!dropbox/.gitkeep
