@@ -38,6 +38,11 @@ export function createApp(config: Config = defaultConfig): Hono {
   // free and never proxy to a backend.
   app.get('/api/health', (c) => c.json({ status: 'ok' }));
 
+  // Live delivery roadmap for the Mission-control panel. Also pre-limiter:
+  // it is served from a 60 s in-process cache, and a wall of dashboard tabs
+  // polling it every minute must not eat the per-IP budget real API calls use.
+  app.get('/api/roadmap', createRoadmapHandler(config.roadmapUrl));
+
   // Body cap before anything buffers or proxies: checks Content-Length up
   // front and counts streamed bytes, so it also covers chunked uploads the
   // backends' header-based caps cannot see.
@@ -59,9 +64,6 @@ export function createApp(config: Config = defaultConfig): Hono {
     }
     await next();
   });
-
-  // Live delivery roadmap for the Mission-control panel (behind the limiter).
-  app.get('/api/roadmap', createRoadmapHandler(config.roadmapUrl));
 
   app.all(
     '/api/gateway/*',
