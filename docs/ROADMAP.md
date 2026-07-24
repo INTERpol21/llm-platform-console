@@ -251,7 +251,7 @@ is the security prerequisite: no public ingest without body caps.
 
 ## Next — new capabilities (priority 2)
 
-- [ ] **Folder connector (local-first).** Watch a local folder/volume,
+- [~] **Folder connector (local-first).** Watch a local folder/volume,
       incrementally sync by content-hash/mtime (dedup already exists),
       auto-index new/changed files, and remove a file's chunks on delete
       (cascade). **Why:** the local-first story is only half-done without
