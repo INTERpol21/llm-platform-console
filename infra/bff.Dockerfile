@@ -20,8 +20,11 @@ COPY bff/package.json ./bff/
 # start-up dependency check is pure overhead here — and it re-reads the lockfile
 # at *runtime*, which can crash-loop the container on a policy it cannot fix.
 # (strictDepBuilds lives in pnpm-workspace.yaml so CI and the image agree.)
+# --prod --filter: only the BFF's runtime tree (hono, node-server, tsx).
+# The unfiltered install used to pull every workspace project's dev deps —
+# biome, typescript, vitest, playwright — into a 686 MB runtime image.
 RUN pnpm config set verifyDepsBeforeRun false \
-  && pnpm install --frozen-lockfile
+  && pnpm install --frozen-lockfile --prod --filter @console/bff...
 COPY bff ./bff
 
 EXPOSE 8787

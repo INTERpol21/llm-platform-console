@@ -1,6 +1,6 @@
 {
   "name": "llm-platform-console",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "private": true,
   "description": "Web console over the LLM platform (gateway, rag-pgvector, mcp-tools-server, agent-orchestrator).",
   "type": "module",
