@@ -7,6 +7,7 @@
 import { getConnInfo } from '@hono/node-server/conninfo';
 import type { Context } from 'hono';
 import { Hono } from 'hono';
+import { bodyLimit } from 'hono/body-limit';
 import { type Config, config as defaultConfig } from './config.ts';
 import { createProxy } from './proxy.ts';
 import { RateLimiter } from './rate-limit.ts';
@@ -36,6 +37,17 @@ export function createApp(config: Config = defaultConfig): Hono {
   // BFF-local liveness — registered before the limiter so health checks are
   // free and never proxy to a backend.
   app.get('/api/health', (c) => c.json({ status: 'ok' }));
+
+  // Body cap before anything buffers or proxies: checks Content-Length up
+  // front and counts streamed bytes, so it also covers chunked uploads the
+  // backends' header-based caps cannot see.
+  app.use(
+    '/api/*',
+    bodyLimit({
+      maxSize: config.maxBodyBytes,
+      onError: (c) => c.json({ error: 'payload_too_large' }, 413),
+    }),
+  );
 
   // Token-bucket rate limit across all proxied /api/* traffic.
   app.use('/api/*', async (c, next) => {

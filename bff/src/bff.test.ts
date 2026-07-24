@@ -238,3 +238,30 @@ describe('BFF-local health', () => {
     expect(captured).toHaveLength(0);
   });
 });
+
+describe('body cap', () => {
+  it('413s an oversized declared body without touching the upstream', async () => {
+    stubFetch();
+    responder = () => new Response('{}', { status: 200 });
+    const app = createApp(makeConfig({ maxBodyBytes: 1024 }));
+    const res = await app.request('/api/rag/v1/ingest', {
+      method: 'POST',
+      headers: { 'content-length': String(10 * 1024 * 1024), 'content-type': 'application/json' },
+      body: 'x',
+    });
+    expect(res.status).toBe(413);
+    expect(captured).toEqual([]); // the upstream fetch never happened
+  });
+
+  it('passes a normal-sized body through', async () => {
+    stubFetch();
+    responder = () => new Response('{}', { status: 200 });
+    const app = createApp(makeConfig({ maxBodyBytes: 1024 * 1024 }));
+    const res = await app.request('/api/rag/v1/ingest', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ documents: [] }),
+    });
+    expect(res.status).toBe(200);
+  });
+});
