@@ -210,12 +210,13 @@ numbers and replica stories only mean something against something reachable.
       per-IP token budget; telemetry flush deadline on shutdown (256 stuck
       writes x pool timeout can stall stop); live/baked roadmap flip-flop
       damping in the panel. **Size:** S each.
-- [~] **(d) hot-path connection reuse + pool knobs.** rag builds a fresh
-      `httpx.AsyncClient` twice per query (embed + synthesize) and the
-      orchestrator once per node call; gateway providers and the BFF already
-      pool. Share clients via app.state/lifespan. Expose rag's hardcoded
-      asyncpg pool (1-5) as env knobs like the orchestrator already does.
-      **Size:** M.
+- [x] ~~**(d) hot-path connection reuse + pool knobs.**~~ Done 2026-07-24
+      (rag 1.5.0, orchestrator 1.4.0): OpenAIEmbedder/OpenAIChatLLM and
+      GatewayLLM/RagClient each hold one shared keep-alive httpx client per
+      instance, closed by the lifespans (rag's /v1/query used to open two
+      throwaway pools per request). rag's embedder also gained the missing
+      trust_env=False. rag asyncpg pool exposed as DB_POOL_MIN/MAX_SIZE.
+      MCP stays session-per-call by design (the handshake IS the session).
 - [ ] **(e) replicas for real.** compose `--scale` for gateway/rag behind
       Caddy load-balancing, `WEB_CONCURRENCY`/`--workers` knob in the
       uvicorn CMDs, BFF rate limiter to Redis (or delegate limiting to
