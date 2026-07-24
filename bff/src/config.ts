@@ -23,6 +23,12 @@ export interface Config {
   /** Per-client request budget per minute for the /api/* rate limiter. */
   readonly rateLimitPerMinute: number;
   /**
+   * Request-body cap for all proxied /api/* traffic, in bytes. Slightly above
+   * rag's 10 MiB MAX_REQUEST_BYTES so the BFF never rejects a legitimate
+   * ingest the backend would accept — the backends stay authoritative.
+   */
+  readonly maxBodyBytes: number;
+  /**
    * Where the live ROADMAP.md lives (raw markdown). The SPA bakes a copy in
    * at build time as an offline fallback; this URL keeps the deployed panel
    * in sync with main without an image rebuild. Empty string disables the
@@ -61,6 +67,7 @@ export function loadConfig(env: Env = process.env): Config {
     },
     port: int(env, 'BFF_PORT', 8787),
     rateLimitPerMinute: int(env, 'BFF_RATE_LIMIT', 240),
+    maxBodyBytes: int(env, 'BFF_MAX_BODY_BYTES', 12 * 1024 * 1024),
     // Deliberately not str(): an explicit ROADMAP_URL='' must disable, not
     // fall back to the default.
     roadmapUrl:

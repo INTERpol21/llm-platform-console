@@ -6,6 +6,16 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-07-24
+
+### Added
+- BFF request-body cap: all proxied `/api/*` traffic is limited to
+  `BFF_MAX_BODY_BYTES` (default 12 MiB — just above rag's 10 MiB cap so the
+  backends stay authoritative) via hono's bodyLimit, which checks
+  Content-Length up front and counts streamed bytes, covering chunked
+  uploads the backends' header-based caps cannot see. 413 on breach, the
+  upstream is never contacted.
+
 ## [1.3.1] - 2026-07-24
 
 ### Fixed
