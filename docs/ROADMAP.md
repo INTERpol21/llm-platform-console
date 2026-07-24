@@ -210,7 +210,7 @@ numbers and replica stories only mean something against something reachable.
       per-IP token budget; telemetry flush deadline on shutdown (256 stuck
       writes x pool timeout can stall stop); live/baked roadmap flip-flop
       damping in the panel. **Size:** S each.
-- [ ] **(d) hot-path connection reuse + pool knobs.** rag builds a fresh
+- [~] **(d) hot-path connection reuse + pool knobs.** rag builds a fresh
       `httpx.AsyncClient` twice per query (embed + synthesize) and the
       orchestrator once per node call; gateway providers and the BFF already
       pool. Share clients via app.state/lifespan. Expose rag's hardcoded
